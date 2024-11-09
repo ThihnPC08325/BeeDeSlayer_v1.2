@@ -264,4 +264,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 15
   trailRenderer: {fileID: 0}
-  maxDistance: 100
+  maxDistance: 75

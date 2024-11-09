@@ -6,13 +6,16 @@ public class Bullet : MonoBehaviour
     [SerializeField] private float damage = 10f; //Xác thương gây ra
     [SerializeField] private TrailRenderer trailRenderer; //Trail renderer để vẽ đường bay cho đạn
     [SerializeField] private float maxDistance = 100f; //Khoảng cách tối đa đạn có thể bay
+
     public bool IsInUse { get; private set; }
 
     private Vector3 startPosition;
+    private float maxDistanceSqr;
 
     private void Awake()
     {
         trailRenderer = GetComponent<TrailRenderer>();
+        maxDistanceSqr = maxDistance * maxDistance;
     }
 
     private void OnEnable()
@@ -30,8 +33,9 @@ public class Bullet : MonoBehaviour
         if (!IsInUse) return;
 
         // Kiểm tra khoảng cách đã bay
-        float totalDistance = Vector3.Distance(startPosition, transform.position);
-        if (totalDistance >= maxDistance)
+        float totalDistanceSqr = (startPosition - transform.position).sqrMagnitude;
+
+        if (totalDistanceSqr >= maxDistanceSqr)
         {
             ReturnToPool();
         }
@@ -93,7 +97,7 @@ public class Bullet : MonoBehaviour
 
     private void ResetBullet()
     {
-        IsInUse = true;
+        IsInUse = false;
         startPosition = transform.position; // Đặt lại vị trí bắt đầu
         if (trailRenderer != null)
         {
