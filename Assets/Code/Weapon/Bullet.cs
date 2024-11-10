@@ -84,15 +84,10 @@ public class Bullet : MonoBehaviour
 
     private void ReturnToPool()
     {
-        if (BulletPool.Instance != null)
-        {
-            IsInUse = false;
-            if (trailRenderer != null)
-            {
-                trailRenderer.Clear(); // Xóa trail khi đạn quay lại pool
-            }
-            BulletPool.Instance.ReturnToPool("Bullet", gameObject);
-        }
+        if (BulletPool.Instance == null) return;
+
+        ResetBullet();
+        BulletPool.Instance.ReturnToPool("Bullet", gameObject);
     }
 
     private void ResetBullet()
@@ -107,10 +102,9 @@ public class Bullet : MonoBehaviour
 
     private void ReturnImpactToPool()
     {
-        if (ImpactEffectPool.Instance != null)
-        {
-            IsInUse = false;
-            ImpactEffectPool.Instance.ReturnToPool("ImpactSoftBody", gameObject);
-        }
+        if (ImpactEffectPool.Instance == null) return;
+        IsInUse = false;
+        ImpactEffectPool.Instance.ReturnToPool("ImpactSoftBody", gameObject);
+
     }
 }
