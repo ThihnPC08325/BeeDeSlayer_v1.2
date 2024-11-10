@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1554,6 +1554,42 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -1225731953144752018, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
+--- !u!1 &154342455 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3672548509089925874, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
+  m_PrefabInstance: {fileID: 2021336575}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &154342457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154342455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: 5acd559cb8661fa428b338e1f14a497c, type: 2}
+  m_BuildHeightMesh: 0
 --- !u!1 &156602566 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -9133816213849981791, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
@@ -24432,6 +24468,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5824854775804800435, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1160235856}
+    - targetCorrespondingSourceObject: {fileID: 3672548509089925874, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 154342457}
     - targetCorrespondingSourceObject: {fileID: 4899576103646482219, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1469706094}
