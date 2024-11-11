@@ -22201,10 +22201,22 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0.0427
       objectReference: {fileID: 0}
+    - target: {fileID: -7422773047509877138, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d540fdae0458464479f4e4ba0842288f, type: 2}
+    - target: {fileID: -3021506202492699881, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d540fdae0458464479f4e4ba0842288f, type: 2}
     - target: {fileID: 919132149155446097, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
       propertyPath: m_Name
       value: Man1.1
       objectReference: {fileID: 0}
+    - target: {fileID: 2962921533693829675, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d540fdae0458464479f4e4ba0842288f, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: -5038582363304144124, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
