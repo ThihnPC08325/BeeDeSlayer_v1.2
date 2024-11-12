@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: d96b60a918d8b9747ae41d2e3c6c9a99, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.012952167, g: 0.01275656, b: 0.012699195, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -8512,7 +8512,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Color: {r: 0.42352942, g: 0.36078432, b: 0.36862746, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -18058,6 +18058,33 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 2385660264434133865, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
+--- !u!1 &1645831290 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6885317687946322244, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
+  m_PrefabInstance: {fileID: 2021336575}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1645831294
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1645831290}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -8723658776574385877, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
 --- !u!1 &1645864352 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -5527107370008286289, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
@@ -22170,10 +22197,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8131525004162826897, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.0427
+      objectReference: {fileID: 0}
+    - target: {fileID: -7422773047509877138, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d540fdae0458464479f4e4ba0842288f, type: 2}
+    - target: {fileID: -3021506202492699881, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d540fdae0458464479f4e4ba0842288f, type: 2}
     - target: {fileID: 919132149155446097, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
       propertyPath: m_Name
       value: Man1.1
       objectReference: {fileID: 0}
+    - target: {fileID: 2962921533693829675, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d540fdae0458464479f4e4ba0842288f, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: -5038582363304144124, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
@@ -22935,6 +22978,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4327536918075543828, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2042925187}
+    - targetCorrespondingSourceObject: {fileID: 6885317687946322244, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1645831294}
     - targetCorrespondingSourceObject: {fileID: 3195693128998300648, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1396478009}
