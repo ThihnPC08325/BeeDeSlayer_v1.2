@@ -265,3 +265,4 @@ MonoBehaviour:
   damage: 15
   trailRenderer: {fileID: 0}
   maxDistance: 75
+  bulletLifetime: 10
