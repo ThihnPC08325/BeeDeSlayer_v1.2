@@ -2,15 +2,20 @@
 
 public class Bullet : MonoBehaviour
 {
-    [Header("Bullet Settings")]
-    [SerializeField] private float damage = 10f; //Xác thương gây ra
-    [SerializeField] private TrailRenderer trailRenderer; //Trail renderer để vẽ đường bay cho đạn
-    [SerializeField] private float maxDistance = 100f; //Khoảng cách tối đa đạn có thể bay
+    [Range(0, 100)]
+    [SerializeField] private float damage = 10f;
 
-    public bool IsInUse { get; private set; }
+    [SerializeField] private TrailRenderer trailRenderer;
+
+    [SerializeField] private float maxDistance = 100f;
+    [SerializeField] private float bulletLifetime = 5f;
+
+    private bool IsInUse { get; set; }
+    private float currentDistance;
 
     private Vector3 startPosition;
     private float maxDistanceSqr;
+    private float spawnTime;
 
     private void Awake()
     {
@@ -21,6 +26,8 @@ public class Bullet : MonoBehaviour
     private void OnEnable()
     {
         startPosition = transform.position;
+        spawnTime = Time.time;
+        IsInUse = true;
     }
 
     private void OnDisable()
@@ -32,10 +39,18 @@ public class Bullet : MonoBehaviour
     {
         if (!IsInUse) return;
 
-        // Kiểm tra khoảng cách đã bay
-        float totalDistanceSqr = (startPosition - transform.position).sqrMagnitude;
+        // Kiểm tra khoảng cách
+        Vector3 displacement = transform.position - startPosition;
+        float currentDistanceSqr = displacement.sqrMagnitude;
 
-        if (totalDistanceSqr >= maxDistanceSqr)
+        // Cập nhật để debug
+        currentDistance = Mathf.Sqrt(currentDistanceSqr);
+
+        // Kiểm tra multiple conditions
+        bool isTooFar = currentDistanceSqr >= maxDistanceSqr;
+        bool timeoutReached = (Time.time - spawnTime) >= bulletLifetime;
+
+        if (isTooFar || timeoutReached)
         {
             ReturnToPool();
         }
