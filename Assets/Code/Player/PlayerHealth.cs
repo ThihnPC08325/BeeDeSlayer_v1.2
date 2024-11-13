@@ -17,7 +17,6 @@ public class PlayerHealth : MonoBehaviour
     private float durationTimer;
     private float lerpTimer;
     private DefenseSystem defenseSystem;
-    private Transform enemy;
 
     private void OnEnable()
     {
@@ -33,7 +32,6 @@ public class PlayerHealth : MonoBehaviour
 
     private void Awake()
     {
-        enemy = GameObject.FindGameObjectWithTag("Enemy").transform;
         defenseSystem = GetComponent<DefenseSystem>();
         health = maxHealth;
         defense = maxDefense;
