@@ -8,7 +8,9 @@ public class Bullet : MonoBehaviour
     [SerializeField] private TrailRenderer trailRenderer;
 
     [SerializeField] private float maxDistance = 100f;
+
     [SerializeField] private float bulletLifetime = 5f;
+
 
     private bool IsInUse { get; set; }
     private float currentDistance;

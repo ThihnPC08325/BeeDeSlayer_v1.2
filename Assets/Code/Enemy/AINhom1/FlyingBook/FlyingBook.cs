@@ -212,11 +212,9 @@ public class FlyingBook : MonoBehaviour
         if (Time.time > lastAttackTime + attackCooldown)
         {
             lastAttackTime = Time.time;
-            PlayerHealth playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
-            if (playerHealth != null)
-            {
-                playerHealth.TakeDamage(attackDamage,attackPen);
-            }
+
+            GameEvents.TriggerPlayerHit(attackDamage, attackPen);
+
             Debug.Log("Enemy attacks the player!");
         }
 

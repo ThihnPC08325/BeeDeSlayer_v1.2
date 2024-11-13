@@ -5,7 +5,7 @@ using static EnemyManager;
 public class EnemyHealth : MonoBehaviour, IPooledObject
 {
     [SerializeField] private float maxHealth;
-    private float currentHealth;
+    [SerializeField] private float currentHealth;
     [SerializeField] private ItemDropManager itemDropManager;
     [SerializeField] EnemyController enemyController;
     [SerializeField] EnemyAttack enemyAttack;

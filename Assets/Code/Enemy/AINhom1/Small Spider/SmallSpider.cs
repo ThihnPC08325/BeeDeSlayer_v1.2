@@ -158,12 +158,8 @@ public class SmallSpider : MonoBehaviour
         // Trigger attack animation delay
         yield return new WaitForSeconds(attackDelay);
 
-        // Apply attack effects here (e.g., damage to the player)
-        PlayerHealth playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
-        if (playerHealth != null)
-        {
-            playerHealth.TakeDamage(attackDamage,penetration);
-        }
+        GameEvents.TriggerPlayerHit(attackDamage, penetration);
+
         Debug.Log("Attacking Player!");
 
         // Wait for cooldown before allowing another attack
