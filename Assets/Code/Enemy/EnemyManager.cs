@@ -1,8 +1,10 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
+    public static EnemyManager Instance;
+
     public interface IPooledObject
     {
         void OnObjectSpawn();
@@ -11,30 +13,80 @@ public class EnemyManager : MonoBehaviour
     [System.Serializable]
     public class Pool
     {
-        public string tag;
-        public GameObject prefab;
-        public int size;
+        [SerializeField] private string _tag;
+        [SerializeField] private GameObject _prefab;
+        [SerializeField] private int _size;
+
+        public string Tag => _tag;
+        public GameObject Prefab => _prefab;
+        public int Size => _size;
     }
 
-    public List<Pool> pools;
-    public Dictionary<string, Queue<GameObject>> poolDictionary;
+    [SerializeField] private List<Pool> pools;
+    private Dictionary<string, Queue<GameObject>> poolDictionary;
+    [SerializeField] private Transform poolRoot; // Reference đến ---POOL---
 
     private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            SetupPoolStructure();
+            DontDestroyOnLoad(poolRoot.gameObject);
+            InitializePools();
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void SetupPoolStructure()
+    {
+        // Tìm hoặc tạo root pool
+        if (poolRoot == null)
+        {
+            GameObject root = GameObject.Find("---POOL---");
+            if (root == null)
+            {
+                root = new GameObject("---POOL---");
+            }
+            poolRoot = root.transform;
+        }
+
+        // Tạo EnemyPool container
+        Transform enemyPoolContainer = poolRoot.Find("EnemyPool");
+        if (enemyPoolContainer == null)
+        {
+            enemyPoolContainer = new GameObject("EnemyPool").transform;
+            enemyPoolContainer.SetParent(poolRoot);
+        }
+
+        // Đặt EnemyManager dưới EnemyPool
+        transform.SetParent(enemyPoolContainer);
+    }
+
+    private void InitializePools()
     {
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
 
         foreach (Pool pool in pools)
         {
+            // Tạo container cho từng loại enemy
+            GameObject enemyTypeContainer = new GameObject(pool.Tag);
+            enemyTypeContainer.transform.SetParent(transform);
+
             Queue<GameObject> objectPool = new Queue<GameObject>();
 
-            for (int i = 0; i < pool.size; i++)
+            for (int i = 0; i < pool.Size; i++)
             {
-                GameObject obj = Instantiate(pool.prefab);
+                GameObject obj = Instantiate(pool.Prefab, enemyTypeContainer.transform);
+                obj.name = $"PooledObject{i + 1}";
                 obj.SetActive(false);
                 objectPool.Enqueue(obj);
             }
 
-            poolDictionary.Add(pool.tag, objectPool);
+            poolDictionary.Add(pool.Tag, objectPool);
         }
     }
 
@@ -42,23 +94,30 @@ public class EnemyManager : MonoBehaviour
     {
         if (!poolDictionary.ContainsKey(tag))
         {
-            Debug.LogWarning($"Pool with tag {tag} doesn't exist.");
+            Debug.LogWarning($"Pool with tag {tag} doesn't exist! 🚫");
             return null;
         }
 
-        GameObject objectToSpawn = poolDictionary[tag].Dequeue();
+        Queue<GameObject> pool = poolDictionary[tag];
+        GameObject objectToSpawn;
 
-        objectToSpawn.SetActive(true);
-        objectToSpawn.transform.position = position;
-        objectToSpawn.transform.rotation = rotation;
-
-        IPooledObject pooledObj = objectToSpawn.GetComponent<IPooledObject>();
-        if (pooledObj != null)
+        if (pool.Count == 0)
         {
-            pooledObj.OnObjectSpawn();
+            // Tạo thêm enemy mới nếu pool hết
+            Pool originalPool = pools.Find(p => p.Tag == tag);
+            objectToSpawn = Instantiate(originalPool.Prefab);
+            objectToSpawn.transform.SetParent(transform.Find(tag));
+        }
+        else
+        {
+            objectToSpawn = pool.Dequeue();
         }
 
-        poolDictionary[tag].Enqueue(objectToSpawn);
+        objectToSpawn.SetActive(true);
+        objectToSpawn.transform.SetPositionAndRotation(position, rotation);
+
+        IPooledObject pooledObj = objectToSpawn.GetComponent<IPooledObject>();
+        pooledObj?.OnObjectSpawn();
 
         return objectToSpawn;
     }
