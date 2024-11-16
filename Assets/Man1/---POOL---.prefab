@@ -45,12 +45,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pools:
-  - tag: Heal
-    prefab: {fileID: 3107235666743222844, guid: 2f1114ac6ee965f438b3f56d4ebdb99f, type: 3}
-    size: 10
-  - tag: Ammo
-    prefab: {fileID: 875698474921439074, guid: ed780ea9c33e91541b5e0fe5e510c2b8, type: 3}
-    size: 10
+  - _type: 1
+    _prefab: {fileID: 3107235666743222844, guid: 2f1114ac6ee965f438b3f56d4ebdb99f, type: 3}
+    _size: 0
+  - _type: 2
+    _prefab: {fileID: 875698474921439074, guid: ed780ea9c33e91541b5e0fe5e510c2b8, type: 3}
+    _size: 0
   poolRoot: {fileID: 1086556364383672025}
 --- !u!1 &5572566975380354936
 GameObject:
@@ -133,9 +133,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pools:
-  - _tag: Bullet
+  - _type: 0
     _prefab: {fileID: 4440924034055739044, guid: 43e328bae3536a84eaca0891841b6f1d, type: 3}
-    _size: 50
+    _size: 40
   poolRoot: {fileID: 1086556364383672025}
 --- !u!1 &6148574730259866465
 GameObject:
@@ -182,12 +182,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pools:
-  - _tag: ShootingEnemy
-    _prefab: {fileID: 1597593250973240404, guid: 7af13459a73efaf4fb3d977dd3bd25e5, type: 3}
-    _size: 10
-  - _tag: MeleeEnemy
+  - _enemyType: 2
     _prefab: {fileID: 6952760662645229405, guid: 52b88b1182a7dfc448d430c923e2593e, type: 3}
-    _size: 10
+    _initialSize: 10
+    _maxSize: 20
+  - _enemyType: 1
+    _prefab: {fileID: 1597593250973240404, guid: 7af13459a73efaf4fb3d977dd3bd25e5, type: 3}
+    _initialSize: 10
+    _maxSize: 20
   poolRoot: {fileID: 1086556364383672025}
 --- !u!1 &6182408293474847741
 GameObject:
@@ -234,9 +236,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pools:
-  - _tag: ImpactSoftBody
+  - _effectType: 0
     _prefab: {fileID: 100002, guid: 3b1513bcb86426b4795879be6a128ed7, type: 3}
-    _size: 50
+    _size: 40
   poolRoot: {fileID: 1086556364383672025}
 --- !u!1 &6186505599387698384
 GameObject:
@@ -283,7 +285,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pools:
-  - _tag: EnemyBullet
+  - _bulletType: 0
     _prefab: {fileID: 4440924034055739044, guid: 92cbc9e8628321849924d0e0e4f1f6d0, type: 3}
     _size: 50
   poolRoot: {fileID: 1086556364383672025}

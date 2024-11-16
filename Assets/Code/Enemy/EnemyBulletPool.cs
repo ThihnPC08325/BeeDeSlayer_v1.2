@@ -3,35 +3,44 @@ using UnityEngine;
 
 public class EnemyBulletPool : MonoBehaviour
 {
-    public static EnemyBulletPool Instance;
+    public enum BulletType
+    {
+        Normal,
+        Fire,
+        Ice,
+        Poison,
+        // Thêm các loại đạn khác nếu cần
+    }
 
     [System.Serializable]
     public class Pool
     {
-        [SerializeField] private string _tag;
+        [SerializeField] private BulletType _bulletType;
         [SerializeField] private GameObject _prefab;
         [SerializeField] private int _size;
 
-        public string Tag => _tag;
+        public BulletType BulletType => _bulletType;
         public GameObject Prefab => _prefab;
         public int Size => _size;
     }
 
-    [SerializeField] private List<Pool> pools;
-    private Dictionary<string, Queue<GameObject>> poolDictionary;
+    private static EnemyBulletPool instance;
+    public static EnemyBulletPool Instance => instance;
 
-    // Thêm biến để reference đến root pool
-    [SerializeField] private Transform poolRoot; // Reference đến ---POOL---
+    [SerializeField] private List<Pool> pools;
+    [SerializeField] private Transform poolRoot;
+
+    private Dictionary<BulletType, Queue<GameObject>> poolDictionary;
+    private Dictionary<BulletType, Transform> containerDictionary;
+
+    private const string POOL_ROOT_NAME = "---POOL---";
 
     private void Awake()
     {
-        if (Instance == null)
+        if (instance == null)
         {
-            Instance = this;
-
-            // Kiểm tra và thiết lập cấu trúc pool
+            instance = this;
             SetupPoolStructure();
-
             DontDestroyOnLoad(poolRoot.gameObject);
             InitializePools();
         }
@@ -43,62 +52,59 @@ public class EnemyBulletPool : MonoBehaviour
 
     private void SetupPoolStructure()
     {
-        // Nếu chưa assign poolRoot trong Inspector
-        if (poolRoot == null)
-        {
-            // Tìm hoặc tạo root pool
-            GameObject root = GameObject.Find("---POOL---");
-            if (root == null)
-            {
-                root = new GameObject("---POOL---");
-            }
-            poolRoot = root.transform;
-        }
-
-        // Đảm bảo PoolManager là con của root pool
+        poolRoot ??= GameObject.Find(POOL_ROOT_NAME)?.transform
+                  ?? new GameObject(POOL_ROOT_NAME).transform;
         transform.parent = poolRoot;
     }
 
     private void InitializePools()
     {
-        poolDictionary = new Dictionary<string, Queue<GameObject>>();
+        poolDictionary = new Dictionary<BulletType, Queue<GameObject>>();
+        containerDictionary = new Dictionary<BulletType, Transform>();
 
         foreach (Pool pool in pools)
         {
-            // Tạo một container cho mỗi loại pool
-            GameObject poolContainer = new GameObject($"Pool_{pool.Tag}");
-            poolContainer.transform.parent = transform;
+            GameObject container = new GameObject($"Pool_{pool.BulletType}");
+            container.transform.parent = transform;
+            containerDictionary[pool.BulletType] = container.transform;
 
-            Queue<GameObject> objectPool = new Queue<GameObject>();
-
-            for (int i = 0; i < pool.Size; i++)
-            {
-                GameObject obj = Instantiate(pool.Prefab, poolContainer.transform);
-                obj.SetActive(false);
-                objectPool.Enqueue(obj);
-            }
-
-            poolDictionary.Add(pool.Tag, objectPool);
+            Queue<GameObject> objectPool = new Queue<GameObject>(pool.Size);
+            CreateInitialPoolObjects(pool, container.transform, objectPool);
+            poolDictionary[pool.BulletType] = objectPool;
         }
     }
 
-    public GameObject SpawnFromPool(string tag, Vector3 position, Quaternion rotation)
+    private void CreateInitialPoolObjects(Pool pool, Transform container, Queue<GameObject> objectPool)
     {
-        if (!poolDictionary.ContainsKey(tag))
+        for (int i = 0; i < pool.Size; i++)
         {
-            Debug.LogWarning($"Pool with tag {tag} doesn't exist! 🚫");
+            GameObject obj = CreateNewPoolObject(pool.Prefab, container);
+            objectPool.Enqueue(obj);
+        }
+    }
+
+    private GameObject CreateNewPoolObject(GameObject prefab, Transform parent)
+    {
+        GameObject obj = Instantiate(prefab, parent);
+        obj.SetActive(false);
+        return obj;
+    }
+
+    public GameObject SpawnFromPool(BulletType bulletType, Vector3 position, Quaternion rotation)
+    {
+        if (!poolDictionary.ContainsKey(bulletType))
+        {
+            Debug.LogWarning($"Pool with type {bulletType} doesn't exist! 🚫");
             return null;
         }
 
-        Queue<GameObject> pool = poolDictionary[tag];
+        Queue<GameObject> pool = poolDictionary[bulletType];
         GameObject objectToSpawn;
 
         if (pool.Count == 0)
         {
-            Pool originalPool = pools.Find(p => p.Tag == tag);
-            objectToSpawn = Instantiate(originalPool.Prefab);
-            // Thêm object mới vào đúng container
-            objectToSpawn.transform.parent = transform.Find($"Pool_{tag}");
+            Pool originalPool = pools.Find(p => p.BulletType == bulletType);
+            objectToSpawn = CreateNewPoolObject(originalPool.Prefab, containerDictionary[bulletType]);
         }
         else
         {
@@ -110,17 +116,16 @@ public class EnemyBulletPool : MonoBehaviour
         return objectToSpawn;
     }
 
-    public void ReturnToPool(string tag, GameObject obj)
+    public void ReturnToPool(BulletType bulletType, GameObject obj)
     {
-        if (!poolDictionary.ContainsKey(tag))
+        if (!poolDictionary.ContainsKey(bulletType))
         {
-            Debug.LogWarning($"Pool with tag {tag} doesn't exist! 🚫");
+            Debug.LogWarning($"Pool with type {bulletType} doesn't exist! 🚫");
             return;
         }
 
-        // Đảm bảo object trở về đúng container khi return
-        obj.transform.parent = transform.Find($"Pool_{tag}");
+        obj.transform.parent = containerDictionary[bulletType];
         obj.SetActive(false);
-        poolDictionary[tag].Enqueue(obj);
+        poolDictionary[bulletType].Enqueue(obj);
     }
 }

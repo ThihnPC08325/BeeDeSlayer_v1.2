@@ -47,11 +47,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyTypes:
-  - tag: ShootingEnemy
+  - enemyType: 2
     spawnWeight: 2
     maxCount: 5
     cooldown: 3
-  - tag: MeleeEnemy
+  - enemyType: 1
     spawnWeight: 1
     maxCount: 5
     cooldown: 2

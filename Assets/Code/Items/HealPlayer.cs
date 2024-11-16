@@ -20,7 +20,7 @@ public class HealPlayer : MonoBehaviour
         {
             IsInUse = false;
 
-            ItemsPoolManager.Instance.ReturnToPool("Heal", gameObject);
+            ItemsPoolManager.Instance.ReturnToPool(ItemsPoolManager.PoolType.Health, gameObject);
         }
     }
 }

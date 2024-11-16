@@ -63,7 +63,7 @@ public class enemyBullet : MonoBehaviour
             {
                 trailRenderer.Clear(); // Xóa trail khi đạn quay lại pool
             }
-            EnemyBulletPool.Instance.ReturnToPool("EnemyBullet", gameObject);
+            EnemyBulletPool.Instance.ReturnToPool(EnemyBulletPool.BulletType.Normal, gameObject);
         }
     }
 

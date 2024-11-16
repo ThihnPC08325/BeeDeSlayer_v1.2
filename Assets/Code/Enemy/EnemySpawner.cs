@@ -10,7 +10,7 @@ public class EnemySpawner : MonoBehaviour
     [System.Serializable]
     public class EnemyType
     {
-        public string tag;
+        public EnemyManager.EnemyType enemyType;
         public float spawnWeight;
         public int maxCount;
         public float cooldown;
@@ -181,7 +181,7 @@ public class EnemySpawner : MonoBehaviour
     private void SpawnEnemyAtPosition(int typeIndex, Transform spawnPoint)
     {
         GameObject enemy = enemyManager.SpawnFromPool(
-            enemyTypes[typeIndex].tag,
+            enemyTypes[typeIndex].enemyType,
             spawnPoint.position,
             spawnPoint.rotation
         );

@@ -72,7 +72,7 @@ public class EnemyAttack : MonoBehaviour
         Vector3 predictedPosition = PredictPlayerPosition(bulletTravelTime);
 
         Vector3 shootingDirection = CalculateDirectionAndSpread(predictedPosition);
-        GameObject bullet = EnemyBulletPool.Instance.SpawnFromPool("EnemyBullet", bulletSpawn.position, Quaternion.LookRotation(shootingDirection));
+        GameObject bullet = EnemyBulletPool.Instance.SpawnFromPool(EnemyBulletPool.BulletType.Normal, bulletSpawn.position, Quaternion.LookRotation(shootingDirection));
         Rigidbody bulletRb = bullet.GetComponent<Rigidbody>();
 
         bulletRb.velocity = shootingDirection * muzzleVelocity;

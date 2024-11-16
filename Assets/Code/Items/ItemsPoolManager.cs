@@ -3,31 +3,40 @@ using UnityEngine;
 
 public class ItemsPoolManager : MonoBehaviour
 {
-    public static ItemsPoolManager Instance;
+    public static ItemsPoolManager Instance { get; private set; }
+
+    public enum PoolType
+    {
+        None,
+        Health,
+        Ammo,
+        // Thêm các loại khác tùy nhu cầu
+    }
 
     [System.Serializable]
     public class Pool
     {
-        public string tag;
-        public GameObject prefab;
-        public int size;
+        [SerializeField] private PoolType _type;
+        [SerializeField] private GameObject _prefab;
+        [SerializeField] private int _size;
+
+        public PoolType Type => _type;
+        public GameObject Prefab => _prefab;
+        public int Size => _size;
     }
 
     [SerializeField] private List<Pool> pools;
-    private Dictionary<string, Queue<GameObject>> poolDictionary;
+    [SerializeField] private Transform poolRoot;
 
-    // Thêm biến để reference đến root pool
-    [SerializeField] private Transform poolRoot; // Reference đến ---POOL---
+    private Dictionary<PoolType, Queue<GameObject>> poolDictionary;
+    private Dictionary<PoolType, Transform> containerDictionary;
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-
-            // Kiểm tra và thiết lập cấu trúc pool
             SetupPoolStructure();
-
             DontDestroyOnLoad(poolRoot.gameObject);
             InitializePools();
         }
@@ -39,62 +48,54 @@ public class ItemsPoolManager : MonoBehaviour
 
     private void SetupPoolStructure()
     {
-        // Nếu chưa assign poolRoot trong Inspector
-        if (poolRoot == null)
-        {
-            // Tìm hoặc tạo root pool
-            GameObject root = GameObject.Find("---POOL---");
-            if (root == null)
-            {
-                root = new GameObject("---POOL---");
-            }
-            poolRoot = root.transform;
-        }
-
-        // Đảm bảo PoolManager là con của root pool
+        poolRoot ??= new GameObject("---POOL---").transform;
         transform.parent = poolRoot;
     }
 
     private void InitializePools()
     {
-        poolDictionary = new Dictionary<string, Queue<GameObject>>();
+        poolDictionary = new Dictionary<PoolType, Queue<GameObject>>();
+        containerDictionary = new Dictionary<PoolType, Transform>();
 
         foreach (Pool pool in pools)
         {
-            // Tạo một container cho mỗi loại pool
-            GameObject poolContainer = new GameObject($"Pool_{pool.tag}");
+            GameObject poolContainer = new GameObject($"Pool_{pool.Type}");
             poolContainer.transform.parent = transform;
 
             Queue<GameObject> objectPool = new Queue<GameObject>();
+            containerDictionary[pool.Type] = poolContainer.transform;
 
-            for (int i = 0; i < pool.size; i++)
+            for (int i = 0; i < pool.Size; i++)
             {
-                GameObject obj = Instantiate(pool.prefab, poolContainer.transform);
-                obj.SetActive(false);
-                objectPool.Enqueue(obj);
+                CreateNewPoolObject(pool, objectPool, poolContainer.transform);
             }
 
-            poolDictionary.Add(pool.tag, objectPool);
+            poolDictionary[pool.Type] = objectPool;
         }
     }
 
-    public GameObject SpawnFromPool(string tag, Vector3 position, Quaternion rotation)
+    private void CreateNewPoolObject(Pool pool, Queue<GameObject> objectPool, Transform parent)
     {
-        if (!poolDictionary.ContainsKey(tag))
+        GameObject obj = Instantiate(pool.Prefab, parent);
+        obj.SetActive(false);
+        objectPool.Enqueue(obj);
+    }
+
+    public GameObject SpawnFromPool(PoolType type, Vector3 position, Quaternion rotation)
+    {
+        if (!poolDictionary.ContainsKey(type))
         {
-            Debug.LogWarning($"Pool with tag {tag} doesn't exist! 🚫");
+            Debug.LogWarning($"Pool with type {type} doesn't exist! 🚫");
             return null;
         }
 
-        Queue<GameObject> pool = poolDictionary[tag];
+        Queue<GameObject> pool = poolDictionary[type];
         GameObject objectToSpawn;
 
         if (pool.Count == 0)
         {
-            Pool originalPool = pools.Find(p => p.tag == tag);
-            objectToSpawn = Instantiate(originalPool.prefab);
-            // Thêm object mới vào đúng container
-            objectToSpawn.transform.parent = transform.Find($"Pool_{tag}");
+            Pool originalPool = pools.Find(p => p.Type == type);
+            objectToSpawn = Instantiate(originalPool.Prefab, containerDictionary[type]);
         }
         else
         {
@@ -106,17 +107,16 @@ public class ItemsPoolManager : MonoBehaviour
         return objectToSpawn;
     }
 
-    public void ReturnToPool(string tag, GameObject obj)
+    public void ReturnToPool(PoolType type, GameObject obj)
     {
-        if (!poolDictionary.ContainsKey(tag))
+        if (!poolDictionary.ContainsKey(type))
         {
-            Debug.LogWarning($"Pool with tag {tag} doesn't exist! 🚫");
+            Debug.LogWarning($"Pool with type {type} doesn't exist! 🚫");
             return;
         }
 
-        // Đảm bảo object trở về đúng container khi return
-        obj.transform.parent = transform.Find($"Pool_{tag}");
+        obj.transform.parent = containerDictionary[type];
         obj.SetActive(false);
-        poolDictionary[tag].Enqueue(obj);
+        poolDictionary[type].Enqueue(obj);
     }
 }

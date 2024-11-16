@@ -3,37 +3,64 @@ using UnityEngine;
 
 public class ImpactEffectPool : MonoBehaviour
 {
-    public static ImpactEffectPool Instance;
+    private static ImpactEffectPool instance;
+    public static ImpactEffectPool Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                var obj = new GameObject("ImpactEffectPool");
+                instance = obj.AddComponent<ImpactEffectPool>();
+            }
+            return instance;
+        }
+    }
+
+    public enum EffectType
+    {
+        SoftBody,
+        Explosion,
+        Spark,
+        Smoke,
+        Hole,
+        // Thêm các effect khác ở đây nếu cần
+    }
 
     [System.Serializable]
     public class Pool
     {
-        [SerializeField] private string _tag;
+        [SerializeField] private EffectType _effectType;
         [SerializeField] private GameObject _prefab;
         [SerializeField] private int _size;
 
-        public string Tag => _tag;
+        public EffectType EffectType => _effectType;
         public GameObject Prefab => _prefab;
         public int Size => _size;
+
+        // Cache transform để tránh GetComponent liên tục
+        private Transform _containerTransform;
+        public Transform ContainerTransform
+        {
+            get => _containerTransform;
+            set => _containerTransform = value;
+        }
     }
 
-    [SerializeField] private List<Pool> pools;
-    private Dictionary<string, Queue<GameObject>> poolDictionary;
+    [SerializeField] private List<Pool> pools = new();
+    private readonly Dictionary<EffectType, Queue<GameObject>> poolDictionary = new();
+    private readonly Dictionary<EffectType, Pool> poolReference = new();
 
-    // Thêm biến để reference đến root pool
-    [SerializeField] private Transform poolRoot; // Reference đến ---POOL---
+    [SerializeField] private Transform poolRoot;
+    private const string POOL_ROOT_NAME = "---POOL---";
 
     private void Awake()
     {
-        if (Instance == null)
+        if (instance == null)
         {
-            Instance = this;
-
-            // Kiểm tra và thiết lập cấu trúc pool
-            SetupPoolStructure();
-
+            instance = this;
+            InitializePoolSystem();
             DontDestroyOnLoad(poolRoot.gameObject);
-            InitializePools();
         }
         else
         {
@@ -41,86 +68,92 @@ public class ImpactEffectPool : MonoBehaviour
         }
     }
 
-    private void SetupPoolStructure()
+    private void InitializePoolSystem()
     {
-        // Nếu chưa assign poolRoot trong Inspector
-        if (poolRoot == null)
-        {
-            // Tìm hoặc tạo root pool
-            GameObject root = GameObject.Find("---POOL---");
-            if (root == null)
-            {
-                root = new GameObject("---POOL---");
-            }
-            poolRoot = root.transform;
-        }
+        SetupPoolRoot();
+        InitializePools();
+    }
 
-        // Đảm bảo PoolManager là con của root pool
-        transform.parent = poolRoot;
+    private void SetupPoolRoot()
+    {
+        poolRoot = poolRoot ? poolRoot : GameObject.Find(POOL_ROOT_NAME)?.transform;
+        poolRoot = poolRoot != null ? poolRoot : new GameObject(POOL_ROOT_NAME).transform;
+        transform.SetParent(poolRoot);
     }
 
     private void InitializePools()
     {
-        poolDictionary = new Dictionary<string, Queue<GameObject>>();
-
         foreach (Pool pool in pools)
         {
-            // Tạo một container cho mỗi loại pool
-            GameObject poolContainer = new GameObject($"Pool_{pool.Tag}");
-            poolContainer.transform.parent = transform;
-
-            Queue<GameObject> objectPool = new Queue<GameObject>();
-
-            for (int i = 0; i < pool.Size; i++)
+            if (pool.Prefab == null)
             {
-                GameObject obj = Instantiate(pool.Prefab, poolContainer.transform);
-                obj.SetActive(false);
-                objectPool.Enqueue(obj);
+                Debug.LogError($"Invalid pool configuration detected!");
+                continue;
             }
 
-            poolDictionary.Add(pool.Tag, objectPool);
+            var container = new GameObject($"Pool_{pool.EffectType}").transform;
+            container.SetParent(transform);
+            pool.ContainerTransform = container;
+
+            var objectPool = new Queue<GameObject>(pool.Size);
+            PrewarmPool(pool, objectPool);
+
+            poolDictionary[pool.EffectType] = objectPool;
+            poolReference[pool.EffectType] = pool;
         }
     }
 
-    public GameObject SpawnFromPool(string tag, Vector3 position, Quaternion rotation)
+    private void PrewarmPool(Pool pool, Queue<GameObject> objectPool)
     {
-        if (!poolDictionary.ContainsKey(tag))
+        for (int i = 0; i < pool.Size; i++)
         {
-            Debug.LogWarning($"Pool with tag {tag} doesn't exist! 🚫");
-            return null;
+            CreateNewInstance(pool, objectPool);
         }
-
-        Queue<GameObject> pool = poolDictionary[tag];
-        GameObject objectToSpawn;
-
-        if (pool.Count == 0)
-        {
-            Pool originalPool = pools.Find(p => p.Tag == tag);
-            objectToSpawn = Instantiate(originalPool.Prefab);
-            // Thêm object mới vào đúng container
-            objectToSpawn.transform.parent = transform.Find($"Pool_{tag}");
-        }
-        else
-        {
-            objectToSpawn = pool.Dequeue();
-        }
-
-        objectToSpawn.SetActive(true);
-        objectToSpawn.transform.SetPositionAndRotation(position, rotation);
-        return objectToSpawn;
     }
 
-    public void ReturnToPool(string tag, GameObject obj)
+    private void CreateNewInstance(Pool pool, Queue<GameObject> objectPool)
     {
-        if (!poolDictionary.ContainsKey(tag))
-        {
-            Debug.LogWarning($"Pool with tag {tag} doesn't exist! 🚫");
-            return;
-        }
-
-        // Đảm bảo object trở về đúng container khi return
-        obj.transform.parent = transform.Find($"Pool_{tag}");
+        var obj = Instantiate(pool.Prefab, pool.ContainerTransform);
         obj.SetActive(false);
-        poolDictionary[tag].Enqueue(obj);
+        objectPool.Enqueue(obj);
+    }
+
+    public GameObject SpawnFromPool(EffectType type, Vector3 position, Quaternion rotation)
+    {
+        if (!ValidatePoolExistence(type)) return null;
+
+        var pool = poolDictionary[type];
+        var obj = pool.Count > 0 ? pool.Dequeue() : CreateNewPoolObject(type);
+
+        SetupSpawnedObject(obj, position, rotation);
+        return obj;
+    }
+
+    private bool ValidatePoolExistence(EffectType type)
+    {
+        if (poolDictionary.ContainsKey(type)) return true;
+        Debug.LogWarning($"Pool with type {type} doesn't exist!");
+        return false;
+    }
+
+    private GameObject CreateNewPoolObject(EffectType tag)
+    {
+        var pool = poolReference[tag];
+        return Instantiate(pool.Prefab, pool.ContainerTransform);
+    }
+
+    private void SetupSpawnedObject(GameObject obj, Vector3 position, Quaternion rotation)
+    {
+        obj.SetActive(true);
+        obj.transform.SetPositionAndRotation(position, rotation);
+    }
+
+    public void ReturnToPool(EffectType type, GameObject obj)
+    {
+        if (!ValidatePoolExistence(type)) return;
+
+        obj.SetActive(false);
+        obj.transform.SetParent(poolReference[type].ContainerTransform);
+        poolDictionary[type].Enqueue(obj);
     }
 }

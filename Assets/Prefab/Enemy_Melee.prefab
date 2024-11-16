@@ -257,6 +257,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  currentHealth: 0
   controller: {fileID: 6819071835944662389}
   attack: {fileID: 3813689397967245054}
   dodgeBullet: {fileID: 9004881799157710871}
@@ -317,11 +318,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   possibleDrops:
-  - poolTag: Heal
+  - poolTag: 1
     dropChance: 50
     minQuantity: 1
     maxQuantity: 2
-  - poolTag: Ammo
+  - poolTag: 2
     dropChance: 75
     minQuantity: 1
     maxQuantity: 2

@@ -6,7 +6,7 @@ public class ItemDropManager : MonoBehaviour
     [System.Serializable]
     public class DropItem
     {
-        public string poolTag;
+        public ItemsPoolManager.PoolType poolTag;
         public float dropChance;
         public int minQuantity = 1;
         public int maxQuantity = 1;

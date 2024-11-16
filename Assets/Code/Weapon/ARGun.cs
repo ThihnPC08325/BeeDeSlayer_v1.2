@@ -137,7 +137,7 @@ public class ARGun : MonoBehaviour
 
         GameEvents.TriggerWeaponFire(bulletSpawn.position, shootingDirection, muzzleVelocity);
 
-        GameObject bullet = BulletPool.Instance.SpawnFromPool("Bullet", bulletSpawn.position, bulletSpawn.rotation);
+        GameObject bullet = BulletPool.Instance.SpawnFromPool(BulletPool.PoolType.NormalBullet, bulletSpawn.position, bulletSpawn.rotation);
 
         var bulletRb = bullet.GetComponent<Rigidbody>();
 

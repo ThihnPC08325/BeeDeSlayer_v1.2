@@ -96,7 +96,7 @@ public class Bullet : MonoBehaviour
 
     private void HandleWallCollision(Vector3 collisionPoint)
     {
-        _ = ImpactEffectPool.Instance.SpawnFromPool("ImpactSoftBody", collisionPoint, Quaternion.identity);
+        _ = ImpactEffectPool.Instance.SpawnFromPool(ImpactEffectPool.EffectType.SoftBody, collisionPoint, Quaternion.identity);
     }
 
     private void ReturnToPool()
@@ -104,7 +104,7 @@ public class Bullet : MonoBehaviour
         if (BulletPool.Instance == null) return;
 
         ResetBullet();
-        BulletPool.Instance.ReturnToPool("Bullet", gameObject);
+        BulletPool.Instance.ReturnToPool(BulletPool.PoolType.NormalBullet, gameObject);
     }
 
     private void ResetBullet()
@@ -121,7 +121,7 @@ public class Bullet : MonoBehaviour
     {
         if (ImpactEffectPool.Instance == null) return;
         IsInUse = false;
-        ImpactEffectPool.Instance.ReturnToPool("ImpactSoftBody", gameObject);
+        ImpactEffectPool.Instance.ReturnToPool(ImpactEffectPool.EffectType.SoftBody, gameObject);
 
     }
 }

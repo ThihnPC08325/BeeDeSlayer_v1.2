@@ -3,35 +3,53 @@ using UnityEngine;
 
 public class BulletPool : MonoBehaviour
 {
-    public static BulletPool Instance;
+    private static BulletPool s_Instance;
+    public static BulletPool Instance
+    {
+        get
+        {
+            if (s_Instance == null)
+            {
+                var obj = new GameObject("PlayerBulletPool");
+                s_Instance = obj.AddComponent<BulletPool>();
+            }
+            return s_Instance;
+        }
+    }
+
+    // Sử dụng enum thay vì string
+    public enum PoolType
+    {
+        NormalBullet,
+        ArmorPiercingBullet,
+        // Thêm các loại khác
+    }
 
     [System.Serializable]
     public class Pool
     {
-        [SerializeField] private string _tag;
+        [SerializeField] private PoolType _type;
         [SerializeField] private GameObject _prefab;
         [SerializeField] private int _size;
 
-        public string Tag => _tag;
+        public PoolType Type => _type;
         public GameObject Prefab => _prefab;
         public int Size => _size;
     }
 
     [SerializeField] private List<Pool> pools;
-    private Dictionary<string, Queue<GameObject>> poolDictionary;
+    [SerializeField] private Transform poolRoot;
 
-    // Thêm biến để reference đến root pool
-    [SerializeField] private Transform poolRoot; // Reference đến ---POOL---
+    // Cache các components
+    private readonly Dictionary<PoolType, Queue<GameObject>> _poolDictionary = new();
+    private readonly Dictionary<PoolType, Transform> _poolContainers = new();
 
     private void Awake()
     {
-        if (Instance == null)
+        if (s_Instance == null)
         {
-            Instance = this;
-
-            // Kiểm tra và thiết lập cấu trúc pool
+            s_Instance = this;
             SetupPoolStructure();
-
             DontDestroyOnLoad(poolRoot.gameObject);
             InitializePools();
         }
@@ -43,84 +61,75 @@ public class BulletPool : MonoBehaviour
 
     private void SetupPoolStructure()
     {
-        // Nếu chưa assign poolRoot trong Inspector
         if (poolRoot == null)
         {
-            // Tìm hoặc tạo root pool
-            GameObject root = GameObject.Find("---POOL---");
-            if (root == null)
-            {
-                root = new GameObject("---POOL---");
-            }
-            poolRoot = root.transform;
+            var root = GameObject.Find("---POOL---");
+            poolRoot = root != null ? root.transform : new GameObject("---POOL---").transform;
         }
-
-        // Đảm bảo PoolManager là con của root pool
         transform.parent = poolRoot;
     }
 
     private void InitializePools()
     {
-        poolDictionary = new Dictionary<string, Queue<GameObject>>();
-
-        foreach (Pool pool in pools)
+        foreach (var pool in pools)
         {
-            // Tạo một container cho mỗi loại pool
-            GameObject poolContainer = new($"Pool_{pool.Tag}");
-            poolContainer.transform.parent = transform;
+            var container = new GameObject($"Pool_{pool.Type}").transform;
+            container.parent = transform;
+            _poolContainers[pool.Type] = container;
 
-            Queue<GameObject> objectPool = new();
+            var objectPool = new Queue<GameObject>(pool.Size);
 
             for (int i = 0; i < pool.Size; i++)
             {
-                GameObject obj = Instantiate(pool.Prefab, poolContainer.transform);
-                obj.SetActive(false);
-                objectPool.Enqueue(obj);
+                CreateNewInstance(pool, container, objectPool);
             }
 
-            poolDictionary.Add(pool.Tag, objectPool);
+            _poolDictionary[pool.Type] = objectPool;
         }
     }
 
-    public GameObject SpawnFromPool(string tag, Vector3 position, Quaternion rotation)
+    private void CreateNewInstance(Pool pool, Transform container, Queue<GameObject> objectPool)
     {
-        if (!poolDictionary.ContainsKey(tag))
+        var obj = Instantiate(pool.Prefab, container);
+        obj.SetActive(false);
+        objectPool.Enqueue(obj);
+    }
+
+    public GameObject SpawnFromPool(PoolType type, Vector3 position, Quaternion rotation)
+    {
+        if (!_poolDictionary.TryGetValue(type, out Queue<GameObject> pool))
         {
-            Debug.LogWarning($"Pool with tag {tag} doesn't exist! 🚫");
+            Debug.LogWarning($"Pool of type {type} doesn't exist!");
             return null;
         }
 
-        Queue<GameObject> pool = poolDictionary[tag];
-        GameObject objectToSpawn;
-
+        GameObject obj;
         if (pool.Count == 0)
         {
-            Pool originalPool = pools.Find(p => p.Tag == tag);
-            objectToSpawn = Instantiate(originalPool.Prefab);
-            // Thêm object mới vào đúng container
-            objectToSpawn.transform.parent = transform.Find($"Pool_{tag}");
+            var originalPool = pools.Find(p => p.Type == type);
+            obj = Instantiate(originalPool.Prefab, _poolContainers[type]);
         }
         else
         {
-            objectToSpawn = pool.Dequeue();
+            obj = pool.Dequeue();
         }
 
-        objectToSpawn.SetActive(true);
-        objectToSpawn.transform.SetPositionAndRotation(position, rotation);
-        return objectToSpawn;
+        obj.SetActive(true);
+        obj.transform.SetPositionAndRotation(position, rotation);
+
+        return obj;
     }
 
-    public void ReturnToPool(string tag, GameObject obj)
+    public void ReturnToPool(PoolType type, GameObject obj)
     {
-        if (!poolDictionary.ContainsKey(tag))
+        if (!_poolDictionary.ContainsKey(type))
         {
-            Debug.LogWarning($"Pool with tag {tag} doesn't exist! 🚫");
+            Debug.LogWarning($"Pool of type {type} doesn't exist!");
             return;
         }
 
-        // Đảm bảo object trở về đúng container khi return
-        obj.transform.parent = transform.Find($"Pool_{tag}");
+        obj.transform.parent = _poolContainers[type];
         obj.SetActive(false);
-        poolDictionary[tag].Enqueue(obj);
+        _poolDictionary[type].Enqueue(obj);
     }
 }

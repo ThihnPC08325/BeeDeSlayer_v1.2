@@ -504,6 +504,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  currentHealth: 0
   itemDropManager: {fileID: 5870802438495632244}
   enemyController: {fileID: 0}
   enemyAttack: {fileID: 0}
@@ -619,11 +620,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   possibleDrops:
-  - poolTag: Heal
+  - poolTag: 1
     dropChance: 50
     minQuantity: 1
     maxQuantity: 2
-  - poolTag: Ammo
+  - poolTag: 2
     dropChance: 80
     minQuantity: 1
     maxQuantity: 2

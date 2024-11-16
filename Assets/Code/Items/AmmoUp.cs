@@ -21,8 +21,8 @@ public class AmmoUp : MonoBehaviour
         if (ItemsPoolManager.Instance != null)
         {
             IsInUse = false;
-            
-            ItemsPoolManager.Instance.ReturnToPool("Ammo", gameObject);
+
+            ItemsPoolManager.Instance.ReturnToPool(ItemsPoolManager.PoolType.Ammo, gameObject);
         }
     }
 }
