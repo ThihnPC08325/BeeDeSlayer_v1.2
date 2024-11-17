@@ -92,6 +92,10 @@ public class Bullet : MonoBehaviour
         {
             enemyMeleeHealth.TakeDamage(damage);
         }
+        if (enemy.TryGetComponent(out BatEnemyHealth batEnemyHealth))
+        {
+            batEnemyHealth.TakeDamage(damage);
+        }
     }
 
     private void HandleWallCollision(Vector3 collisionPoint)
