@@ -93,7 +93,7 @@ public class MoveObjectController : MonoBehaviour
 					bool isOpen = anim.GetBool(animBoolNameNum);	//need current state for message.
 					msg = getGuiMsg(isOpen);
 
-					if (Input.GetKeyUp(KeyCode.E) || Input.GetButtonDown("Fire1"))
+					if (Input.GetKeyUp(KeyCode.E))
 					{
 						anim.enabled = true;
 						anim.SetBool(animBoolNameNum,!isOpen);

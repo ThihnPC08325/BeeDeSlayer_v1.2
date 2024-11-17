@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 4000013459059310}
   - component: {fileID: 65000013423189194}
   - component: {fileID: 114000014081552152}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: grp_doorsL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -237,7 +237,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 11.319146, y: -0.00000071525574, z: 4.2449374}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4000013462128566}
   - {fileID: 4000012614448490}
@@ -277,7 +277,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3174ace299f2b4c80baf44a6283329cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  reachRange: 1.8
+  reachRange: 8
 --- !u!65 &65000010569510288
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -689,7 +689,7 @@ GameObject:
   - component: {fileID: 4000011884112884}
   - component: {fileID: 65000013513775204}
   - component: {fileID: 114000014183735298}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: grp_doorsR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
