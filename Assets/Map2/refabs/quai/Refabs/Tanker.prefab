@@ -366,7 +366,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 314c0661fd0edd94fa27fb6503a5f995, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
   detectionRange: 10
   attackRange: 2.24
   specialAttackRange: 1.5
@@ -449,7 +448,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7793d8f0632132e42ab5c90e47ba3c77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 50
+  maxHealth: 200
   currentHealth: 0
   itemDropManager: {fileID: 6414486041659877068}
   smokePrefab: {fileID: 8656107223128203463, guid: b77d8afd1ff5bd84fa74292ba59c0f5b, type: 3}
