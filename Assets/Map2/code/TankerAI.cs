@@ -8,7 +8,6 @@ public class TankerAI : MonoBehaviour
     private State currentState;
 
     [Header("Target & Ranges")]
-    [SerializeField] private Transform player;
     [SerializeField] private float detectionRange = 10f;
     [SerializeField] private float attackRange = 2f;
     [SerializeField] private float specialAttackRange = 1.5f;
@@ -31,12 +30,13 @@ public class TankerAI : MonoBehaviour
     private float specialAttackCooldownTimer;
     private bool isAttacking;
     private bool canMove = true;
+    private Transform player;
 
     private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-
+        player = GameObject.FindGameObjectWithTag("Player").transform;
         normalAttackCooldownTimer = 0f;
         specialAttackCooldownTimer = 0f;
         isAttacking = false;

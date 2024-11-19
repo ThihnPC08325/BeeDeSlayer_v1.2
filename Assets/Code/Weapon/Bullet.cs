@@ -94,7 +94,13 @@ public class Bullet : MonoBehaviour
         }
         if (enemy.TryGetComponent(out BatEnemyHealth batEnemyHealth))
         {
+            Debug.Log("gay st bat");
             batEnemyHealth.TakeDamage(damage);
+        }
+        if (enemy.TryGetComponent(out TankerEnemyHealth tankEnemyHealth))
+        {
+            Debug.Log("gay st tank");
+            tankEnemyHealth.TakeDamage(damage);
         }
     }
 

@@ -1,29 +1,26 @@
-﻿using UnityEngine.AI;
+﻿using UnityEngine;
+using UnityEngine.AI;
 using System.Collections;
-using UnityEngine;
 
 public class BatAI : MonoBehaviour
 {
-    private enum State { Wander, Prey }
+    private enum State { Wander, Chase }
     private State currentState;
 
     [SerializeField] private float wanderRadius = 10f;
-    [SerializeField] private float detectionRange = 5f;
+    [SerializeField] private float detectionRange = 15f;
     [SerializeField] private float attackRange = 10f;
     [SerializeField] private float attackCooldown = 2f;
-    [SerializeField] private float circlingDistance = 70f;
-    [SerializeField] private float circlingSpeed = 20f;
     [SerializeField] private float projectileSpeed = 3f;
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private float coneAngle = 15f;
     [SerializeField] private float delayBetweenShots = 0.2f;
     [SerializeField] private float attackStartDelay = 0.5f;
-    private float originalSpeed; // Biến lưu tốc độ ban đầu của NavMeshAgent
+    private float originalSpeed;
 
     private NavMeshAgent agent;
     private Transform player;
     private float nextAttackTime;
-    private int circlingDirection = 1;
     private float attackTimer;
     private Animator animator;
 
@@ -35,7 +32,6 @@ public class BatAI : MonoBehaviour
         currentState = State.Wander;
         ResetAttackTimer();
 
-        // Lưu tốc độ ban đầu của NavMeshAgent
         originalSpeed = agent.speed;
     }
 
@@ -46,17 +42,23 @@ public class BatAI : MonoBehaviour
             case State.Wander:
                 Wander();
                 if (Vector3.Distance(transform.position, player.position) <= detectionRange)
-                    currentState = State.Prey;
+                    currentState = State.Chase;
                 break;
 
-            case State.Prey:
-                Prey();
+            case State.Chase:
+                ChasePlayer();
                 attackTimer -= Time.deltaTime;
+
+                // Kiểm tra khoảng cách và thời gian để tấn công
                 if (attackTimer <= 0f && Time.time >= nextAttackTime && Vector3.Distance(transform.position, player.position) <= attackRange)
                 {
                     StartCoroutine(ShootProjectileCone());
                     ResetAttackTimer();
                 }
+
+                // Quay lại trạng thái Wander nếu người chơi ra khỏi tầm phát hiện
+                if (Vector3.Distance(transform.position, player.position) > detectionRange)
+                    currentState = State.Wander;
                 break;
         }
     }
@@ -73,42 +75,21 @@ public class BatAI : MonoBehaviour
         }
     }
 
-    private void Prey()
+    private void ChasePlayer()
     {
-        // Calculate the direction to the player
-        Vector3 toPlayer = (player.position - transform.position).normalized;
-
-        // Get a perpendicular direction using Vector3.Cross to create the circling movement
-        Vector3 perpendicularDir = Vector3.Cross(toPlayer, Vector3.up) * circlingDirection;
-
-        // Calculate the target position by adding the perpendicular direction to the player's position
-        Vector3 targetPosition = player.position + perpendicularDir * circlingDistance;
-
-        // Move the agent to the target position while circling around the player
-        agent.SetDestination(targetPosition);
-
-        // Incrementally change circling direction to keep smooth motion
-        circlingDirection = (Random.value > 0.995f) ? -circlingDirection : circlingDirection;
+        // Đặt điểm đích của agent là vị trí của người chơi
+        agent.SetDestination(player.position);
     }
 
     private IEnumerator ShootProjectileCone()
     {
-        // Kiểm tra animator và player trước khi bắt đầu
         if (animator == null || player == null) yield break;
-
-        // Dừng di chuyển bằng cách đặt tốc độ của NavMeshAgent về 0
         agent.speed = 0;
-
-        // Xoay dơi từ từ về phía người chơi trong 0,5 giây
         yield return StartCoroutine(RotateTowardsPlayer(attackStartDelay));
 
-        // Kích hoạt animation "bat_attack"
         animator.SetBool("bat_attack", true);
-
-        // Thêm độ trễ trước khi bắn để chờ animation
         yield return new WaitForSeconds(attackStartDelay);
 
-        // Bắn đạn hình nón
         for (int i = -1; i <= 1; i++)
         {
             float angleOffset = i * coneAngle;
@@ -129,14 +110,9 @@ public class BatAI : MonoBehaviour
             yield return new WaitForSeconds(delayBetweenShots);
         }
 
-        // Dừng animation "bat_attack" sau khi hoàn tất bắn
         yield return new WaitForSeconds(0.1f);
         animator.SetBool("bat_attack", false);
-
-        // Phục hồi tốc độ ban đầu của NavMeshAgent để dơi có thể di chuyển lại
         agent.speed = originalSpeed;
-
-        // Cập nhật thời gian cho đợt tấn công tiếp theo
         nextAttackTime = Time.time + attackCooldown;
     }
 
@@ -154,12 +130,20 @@ public class BatAI : MonoBehaviour
             yield return null;
         }
 
-        // Đảm bảo xoay đúng góc cuối cùng
         transform.rotation = targetRotation;
     }
 
     private void ResetAttackTimer()
     {
         attackTimer = Random.Range(3f, 6f);
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, wanderRadius);
     }
 }
