@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Unity.VisualScripting.Antlr3.Runtime;
+using TMPro;
 
 public class MoveObjectController : MonoBehaviour 
 {
-	public float reachRange = 1.8f;			
+	public float reachRange = 1.8f;
+	
 
 	private Animator anim;
 	private Camera fpsCam;
@@ -156,7 +158,7 @@ public class MoveObjectController : MonoBehaviour
 		guiStyle.fontSize = 30;
 		guiStyle.fontStyle = FontStyle.Bold;
 		guiStyle.normal.textColor = Color.white;
-		msg = "Press E/Fire1 to Open";
+		msg = "Press [E] to Open";
 	}
 
 	private string getGuiMsg(bool isOpen)
@@ -164,10 +166,10 @@ public class MoveObjectController : MonoBehaviour
 		string rtnVal;
 		if (isOpen)
 		{
-			rtnVal = "Press E/Fire1 to Close";
+			rtnVal = "Press [E] to Close";
 		}else
 		{
-			rtnVal = "Press E/Fire1 to Open";
+			rtnVal = "Press [E] to Open";
 		}
 
 		return rtnVal;
@@ -177,8 +179,8 @@ public class MoveObjectController : MonoBehaviour
 	{
 		if (showInteractMsg)  //show on-screen prompts to user for guide.
 		{
-			GUI.Label(new Rect (50,Screen.height - 50,200,50), msg,guiStyle);
-		}
+            GUI.Label(new Rect(50, Screen.height - 50, 200, 50), msg, guiStyle);
+        }
 	}		
 	//End of GUI Config --------------
 	#endregion
