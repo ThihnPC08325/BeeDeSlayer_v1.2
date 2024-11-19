@@ -22,6 +22,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float dashSpeed = 30f;
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private int maxDashes = 2;
+
+    [Header("Animation")]
+    [SerializeField] private Animator ArGunReload;
     #endregion
 
     #region private
@@ -38,6 +41,7 @@ public class PlayerController : MonoBehaviour
     private InputAction moveAction;
     private InputAction jumpAction;
     private InputAction dashAction;
+    private InputAction reload;
     #endregion
 
     private void Awake()
@@ -56,6 +60,9 @@ public class PlayerController : MonoBehaviour
 
         dashAction = playerInput.Player.Dash;
         dashAction.Enable();
+
+        reload = playerInput.Player.Reload;
+        reload.Enable();
     }
 
     private void OnDisable()
@@ -183,5 +190,9 @@ public class PlayerController : MonoBehaviour
     public void RemoveSpeedModifier()
     {
         currentSpeedModifier = 1f;
+    }
+    private void OnReload() 
+    {
+        ArGunReload.Play("ArGunReload");
     }
 }

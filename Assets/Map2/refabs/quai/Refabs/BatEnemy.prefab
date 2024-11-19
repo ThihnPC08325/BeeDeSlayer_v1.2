@@ -442,7 +442,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: -1372625422
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 10
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -470,8 +470,6 @@ MonoBehaviour:
   detectionRange: 25
   attackRange: 25
   attackCooldown: 2
-  circlingDistance: 70
-  circlingSpeed: 20
   projectileSpeed: 20
   projectilePrefab: {fileID: 7964389746834086280, guid: eeabe686458c41143b739e0104999903, type: 3}
   coneAngle: 15
