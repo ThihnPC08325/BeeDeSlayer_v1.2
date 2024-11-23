@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using UnityEngine;
 using static EnemyManager;
+using UnityEngine.UI;
 
 public class BOSSHealth : MonoBehaviour
 {
     [SerializeField] private float maxHealth;
     [SerializeField] private float currentHealth;
     [SerializeField] private GameObject smokePrefab; // Reference to the smoke prefab
+    [SerializeField] private Slider bossHealthBar;
     private BoxCollider boxCollider;
 
     private void Awake()
@@ -14,7 +16,17 @@ public class BOSSHealth : MonoBehaviour
         boxCollider = GetComponent<BoxCollider>();
         currentHealth = maxHealth;
     }
+    void Start()
+    {
+        currentHealth = maxHealth;
 
+        // Thiết lập thanh máu
+        if (bossHealthBar != null)
+        {
+            bossHealthBar.maxValue = maxHealth;
+            bossHealthBar.value = currentHealth;
+        }
+    }
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
@@ -24,8 +36,17 @@ public class BOSSHealth : MonoBehaviour
             boxCollider.enabled = false;
             Die();
         }
-    }
+        if (bossHealthBar != null)
+        {
+            bossHealthBar.value = currentHealth;
+        }
 
+        // Kiểm tra nếu boss đã chết
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
     private void Die()
     {
 
