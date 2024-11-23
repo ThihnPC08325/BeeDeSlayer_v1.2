@@ -92,6 +92,8 @@ public class Bullet : MonoBehaviour
         {
             enemyMeleeHealth.TakeDamage(damage);
         }
+
+        //Boss quai map2
         if (enemy.TryGetComponent(out BatEnemyHealth batEnemyHealth))
         {
             Debug.Log("gay st bat");
@@ -101,6 +103,11 @@ public class Bullet : MonoBehaviour
         {
             Debug.Log("gay st tank");
             tankEnemyHealth.TakeDamage(damage);
+        }
+        if (enemy.TryGetComponent(out BOSSHealth bossHealth))
+        {
+            Debug.Log("gay st boss");
+            bossHealth.TakeDamage(damage);
         }
     }
 
