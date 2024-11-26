@@ -60,6 +60,7 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("va cham bullet");
         switch (collision.gameObject.tag)
         {
             case "Enemy":
@@ -71,6 +72,8 @@ public class Bullet : MonoBehaviour
             default:
                 // Xử lý các trường hợp va chạm khác nếu cần
                 break;
+            
+
         }
 
         ReturnToPool();

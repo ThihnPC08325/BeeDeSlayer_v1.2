@@ -83,7 +83,8 @@ public class BOSS : MonoBehaviour
         {
             foreach (Transform firePoint in normalFirePoints)
             {
-                GameObject projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
+                // lấy đạn từ POOL
+                GameObject projectile = EnemyBulletPool.Instance.SpawnFromPool(EnemyBulletPool.BulletType.SkillBossMap2_Eyes, firePoint.position, Quaternion.identity);
                 Rigidbody rb = projectile.GetComponent<Rigidbody>();
 
                 if (rb != null)
@@ -112,7 +113,7 @@ public class BOSS : MonoBehaviour
         {
             if (preBeamEffectPrefab != null)
             {
-                GameObject preEffect = Instantiate(preBeamEffectPrefab, firePoint.position, Quaternion.identity);
+                GameObject preEffect = EnemyBulletPool.Instance.SpawnFromPool(EnemyBulletPool.BulletType.SkillBossMap2_DeadBeam, firePoint.position, Quaternion.identity);
                 Destroy(preEffect, preBeamEffectDuration); // Hủy hiệu ứng sau 2 giây
             }
         }

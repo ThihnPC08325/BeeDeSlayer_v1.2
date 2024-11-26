@@ -9,6 +9,11 @@ public class EnemyBulletPool : MonoBehaviour
         Fire,
         Ice,
         Poison,
+
+        //Skill Boss map2
+        SkillBossMap2_Eyes,
+        SkillBossMap2_Table,
+        SkillBossMap2_DeadBeam,
         // Thêm các loại đạn khác nếu cần
     }
 
