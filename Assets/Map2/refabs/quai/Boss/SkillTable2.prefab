@@ -154,3 +154,8 @@ MonoBehaviour:
   rotationSpeedX: 10
   rotationSpeedY: 20
   rotationSpeedZ: 30
+  destroySounds:
+  - {fileID: 8300000, guid: 3fc1b2d35bfbb5d4e8365c2c2915c113, type: 3}
+  - {fileID: 8300000, guid: f7e89495409c4434695238e416f3e3e0, type: 3}
+  - {fileID: 8300000, guid: 43af667dd0cf36642a12290e63bfb4e8, type: 3}
+  particlePrefab: {fileID: 7835636795972193782, guid: a336d4bbf62bd7a43b10e8b1aaae8d99, type: 3}
