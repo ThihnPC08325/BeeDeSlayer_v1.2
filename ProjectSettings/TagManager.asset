@@ -9,6 +9,7 @@ TagManager:
   - Bullet
   - Health
   - FxTemporaire
+  - Ground
   layers:
   - Default
   - TransparentFX
