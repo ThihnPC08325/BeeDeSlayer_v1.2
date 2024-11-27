@@ -5,7 +5,6 @@ using UnityEngine;
 public class Skill2Boss : MonoBehaviour
 {
     [SerializeField] private float damage = 10f;
-    [SerializeField] private float lifetime = 5f;
     [SerializeField] private float damagePen = 0f;
 
     [SerializeField] private float rotationSpeedX = 10f;
@@ -28,8 +27,6 @@ public class Skill2Boss : MonoBehaviour
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
-
-        Destroy(gameObject, lifetime);
     }
 
     private void Update()
