@@ -451,4 +451,4 @@ MonoBehaviour:
   maxHealth: 200
   currentHealth: 0
   itemDropManager: {fileID: 6414486041659877068}
-  smokePrefab: {fileID: 8656107223128203463, guid: b77d8afd1ff5bd84fa74292ba59c0f5b, type: 3}
+  smokePrefab: {fileID: 3601312742425871408, guid: b77c39d05c1d1ce44b091891a344370f, type: 3}

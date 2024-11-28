@@ -70,7 +70,10 @@ public class Skill2Boss : MonoBehaviour
         {
             // Chọn ngẫu nhiên một âm thanh từ mảng
             AudioClip randomSound = destroySounds[Random.Range(0, destroySounds.Length)];
-            audioSource.PlayOneShot(randomSound);
+            if (!audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(randomSound);
+            }
 
             // Trì hoãn hủy đối tượng theo độ dài của âm thanh
             float destroyDelay = randomSound.length;
