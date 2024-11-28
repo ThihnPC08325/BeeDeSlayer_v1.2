@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Animation")]
     [SerializeField] private Animator ArGunReload;
+    [SerializeField] private Animator KBGunReload;
     #endregion
 
     #region private
@@ -194,5 +195,6 @@ public class PlayerController : MonoBehaviour
     private void OnReload() 
     {
         ArGunReload.Play("ArGunReload");
+        KBGunReload.Play("KBGunReload");
     }
 }

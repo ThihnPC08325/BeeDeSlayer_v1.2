@@ -1,12 +1,17 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class SwitchingWeapon : MonoBehaviour
 {
+    private PlayerInput playerInput;
+    private InputAction bullet;
+
     public enum AmmoType
     {
         Light,    // Đạn nhẹ (pistol, SMG)
@@ -22,7 +27,7 @@ public class SwitchingWeapon : MonoBehaviour
         public AmmoType ammoType;
         public int currentAmmo;
         public int maxAmmo;
-
+        public Animator animator;
         public int AddAmmo(int ammoToAdd)
         {
             int ammoBeforePickup = currentAmmo;
@@ -53,10 +58,13 @@ public class SwitchingWeapon : MonoBehaviour
     private Dictionary<AmmoType, WeaponAmmo[]> _ammoCache;
     private Queue<StringBuilder> _stringBuilderPool;
     private const int POOL_SIZE = 5;
+    private float timeReloadBullet;
 
     void OnEnable()
     {
         GameEvents.OnAmmoPickup += HandleAmmoPickup;
+        bullet = playerInput.Player.Reload;
+        bullet.Enable();
     }
 
     void OnDisable()
@@ -191,7 +199,7 @@ public class SwitchingWeapon : MonoBehaviour
             weaponTransforms[i].gameObject.SetActive(i == selectedWeaponIndex);
         }
 
-        UpdateAmmoDisplay();
+        UpdateBulletDisplay();
     }
 
     private bool IsValidWeaponIndex(int index)
@@ -254,7 +262,7 @@ public class SwitchingWeapon : MonoBehaviour
         {
             WeaponAmmo currentWeapon = weaponAmmos[selectedWeaponIndex];
             currentWeapon.currentAmmo = Mathf.Max(0, currentWeapon.currentAmmo - amount);
-            UpdateAmmoDisplay();
+            UpdateBulletDisplay();
         }
     }
 
@@ -281,11 +289,66 @@ public class SwitchingWeapon : MonoBehaviour
 
             if (weapons.Any(w => Array.IndexOf(weaponAmmos, w) == selectedWeaponIndex))
             {
-                UpdateAmmoDisplay();
+                UpdateBulletDisplay();
             }
 
             return totalAmmoAdded;
         }
         return 0;
+    }
+
+
+    private void OnReload()
+    {
+        WeaponAmmo currentWeapon = weaponAmmos[selectedWeaponIndex];
+        if (currentWeapon != null)
+        {
+            currentWeapon.animator.SetTrigger("Reload");
+            StartCoroutine(Rebullet());
+        }
+        else
+        {
+            Debug.LogError($"Animator not assigned for weapon: {currentWeapon.weaponName}");
+        }
+    }
+
+    public IEnumerator Rebullet()
+    {
+        WeaponAmmo currentWeapon = weaponAmmos[selectedWeaponIndex];
+
+        RuntimeAnimatorController controller = currentWeapon.animator.runtimeAnimatorController;
+        AnimationClip[] clips = controller.animationClips;
+        foreach (AnimationClip clip in clips)
+        {
+            timeReloadBullet = clip.length;
+        }
+        Debug.Log(timeReloadBullet);
+        yield return new WaitForSeconds(timeReloadBullet);
+        currentWeapon.currentAmmo = currentWeapon.maxAmmo;
+        UpdateBulletDisplay();
+    }
+    private void UpdateBulletDisplay()
+    {
+        if (ammoText == null || !IsValidWeaponIndex(selectedWeaponIndex)) return;
+
+        WeaponAmmo currentWeapon = weaponAmmos[selectedWeaponIndex];
+
+        currentWeapon.animator.Play("Idle");
+        StopAllCoroutines();
+        var sb = GetStringBuilder();
+
+        try
+        {
+            sb.Append(currentWeapon.currentAmmo)
+              .Append('/')
+              .Append(currentWeapon.maxAmmo);
+            ammoText.text = sb.ToString();
+        }
+        finally
+        {
+            ReleaseStringBuilder(sb);
+        }
+
+        UpdateAmmoColor(currentWeapon);
     }
 }
