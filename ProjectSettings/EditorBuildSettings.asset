@@ -8,5 +8,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/Map2/BossMap2.unity
+    guid: 21828e30f68b5aa44924cc591e06f623
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: eb2e7601e6b75c443bf77ec4406120ee, type: 2}

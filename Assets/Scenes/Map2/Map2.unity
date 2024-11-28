@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.012952167, g: 0.01275656, b: 0.012699195, a: 1}
+  m_IndirectSpecularColor: {r: 0.012952164, g: 0.012756556, b: 0.012699194, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1216,6 +1216,77 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &320516451
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 320516454}
+  - component: {fileID: 320516452}
+  - component: {fileID: 320516455}
+  m_Layer: 0
+  m_Name: TeleSceneBoss
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &320516452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 320516451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 819c399f41049c245a13befe846706ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bossSceneName: BossMap2
+  playerAnimator: {fileID: 0}
+  transitionDelay: 1
+  player: {fileID: 1196365497}
+  activationDistance: 5
+--- !u!4 &320516454
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 320516451}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 12.1, y: 32.07, z: 92.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &320516455
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 320516451}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0952301, y: 18.081554, z: 32.165863}
+  m_Center: {x: -0.04761505, y: 0.8528538, z: -0.8059845}
 --- !u!1 &322009588 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3681783973180972336, guid: b07e43af8fb77c743ac3d20cfc4e40ad, type: 3}
@@ -8345,6 +8416,33 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 756951176}
   m_Mesh: {fileID: -1169194175071857689, guid: 0db040ab07b436c4283023cec6fa22d2, type: 3}
+--- !u!1 &761488613 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1259006899089648110, guid: b07e43af8fb77c743ac3d20cfc4e40ad, type: 3}
+  m_PrefabInstance: {fileID: 1595105101165942942}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &761488617
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 761488613}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -7290416203500979383, guid: 061ff85d73ac5bf49a890edf7b5533a5, type: 3}
 --- !u!1001 &778124520
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24929,6 +25027,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 99f518cd8f487154593267229ab93ced, type: 2}
+    - target: {fileID: 466927922805062537, guid: b07e43af8fb77c743ac3d20cfc4e40ad, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.305
+      objectReference: {fileID: 0}
     - target: {fileID: 550763505950470249, guid: b07e43af8fb77c743ac3d20cfc4e40ad, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -25423,6 +25525,9 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1621625913}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1259006899089648110, guid: b07e43af8fb77c743ac3d20cfc4e40ad, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 761488617}
     - targetCorrespondingSourceObject: {fileID: 3681783973180972336, guid: b07e43af8fb77c743ac3d20cfc4e40ad, type: 3}
       insertIndex: -1
       addedObject: {fileID: 322009594}
@@ -25515,3 +25620,4 @@ SceneRoots:
   - {fileID: 2052041187}
   - {fileID: 645802224}
   - {fileID: 1107509519087745485}
+  - {fileID: 320516454}
