@@ -95,7 +95,19 @@ public class Bullet : MonoBehaviour
         {
             enemyMeleeHealth.TakeDamage(damage);
         }
-
+        //Boss quai map1
+        if (enemy.TryGetComponent(out TentacleHealth tentacleHealth))
+        {
+            tentacleHealth.TakeDamage(damage);
+        }
+        if (enemy.TryGetComponent(out SpiderHealth spiderHealth))
+        {
+            spiderHealth.TakeDamage(damage);
+        }
+        if (enemy.TryGetComponent(out BookHealth bookHealth))
+        {
+            bookHealth.TakeDamage(damage);
+        }
         //Boss quai map2
         if (enemy.TryGetComponent(out BatEnemyHealth batEnemyHealth))
         {

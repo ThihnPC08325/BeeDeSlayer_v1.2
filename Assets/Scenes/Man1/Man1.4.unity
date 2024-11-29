@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.012952167, g: 0.01275656, b: 0.012699195, a: 1}
+  m_IndirectSpecularColor: {r: 0.012952135, g: 0.012756538, b: 0.012699197, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -17343,6 +17343,9 @@ PrefabInstance:
     - {fileID: 8475569882302020097, guid: 221b609cea5c49e44aba5e41e211fa01, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 221b609cea5c49e44aba5e41e211fa01, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 893794662}
     - targetCorrespondingSourceObject: {fileID: -6014710633424249089, guid: 221b609cea5c49e44aba5e41e211fa01, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2133495939}
@@ -19807,6 +19810,42 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1216057104}
   m_SourcePrefab: {fileID: 100100000, guid: 221b609cea5c49e44aba5e41e211fa01, type: 3}
+--- !u!1 &893794661 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 221b609cea5c49e44aba5e41e211fa01, type: 3}
+  m_PrefabInstance: {fileID: 893794660}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &893794662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 893794661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: -334000983
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: a76a4780bb264834ab4b79ecf05dac24, type: 2}
+  m_BuildHeightMesh: 0
 --- !u!1001 &899441639
 PrefabInstance:
   m_ObjectHideFlags: 0

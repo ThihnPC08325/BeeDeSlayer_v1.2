@@ -4,7 +4,7 @@ public class TentacleHead : MonoBehaviour
 {
     [SerializeField] private TentacleEnemy enemyAI;
     [SerializeField] private Transform tentacleBody;
-    private EnemyHealth enemyHealth;
+    private TentacleHealth enemyHealth;
     private Vector3 initialScale;
     private bool isRetracting = false;
 
@@ -16,7 +16,7 @@ public class TentacleHead : MonoBehaviour
         }
 
         // Reference the main enemy's health component
-        enemyHealth = GetComponentInParent<EnemyHealth>();
+        enemyHealth = GetComponentInParent<TentacleHealth>();
 
         // Store the initial scale of the tentacle to control downward extension
         initialScale = tentacleBody.localScale;

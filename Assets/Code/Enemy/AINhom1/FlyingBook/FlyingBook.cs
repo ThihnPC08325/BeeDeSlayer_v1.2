@@ -47,7 +47,7 @@ public class FlyingBook : MonoBehaviour
     private NavMeshAgent agent;
     private Transform player;
     private EnemyState currentState = EnemyState.Idle;
-    private MeleeAttack enemyAttack;
+    private BookAttack bookAttack;
     private bool isAttacking = false;
     private bool canDodge = true;
     private float lastAttackTime = 0f;
@@ -62,7 +62,7 @@ public class FlyingBook : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        enemyAttack = GetComponent<MeleeAttack>();
+        bookAttack = GetComponent<BookAttack>();
 
         // Cache squared distances for efficiency
         sqrAttackRange = attackRange * attackRange;
@@ -104,35 +104,39 @@ public class FlyingBook : MonoBehaviour
     }
 
     private void Update()
+{
+    if (isAttacking || isDodging)
     {
-        if (isAttacking || isDodging)
-        {
-            return;
-        }
-
-        if (canDodgeAbility && DetectIncomingBullet(out Vector3 bulletDirection))
-        {
-            StartCoroutine(DodgeBullet(bulletDirection));
-        }
-
-        switch (currentState)
-        {
-            case EnemyState.Idle:
-                StartCoroutine(Wander());
-                break;
-            case EnemyState.Wandering:
-                break;
-            case EnemyState.Chasing:
-                if (player != null) ChasePlayer(normalSpeed);
-                break;
-            case EnemyState.Sprinting:
-                if (player != null) ChasePlayer(sprintSpeed);
-                break;
-            case EnemyState.Attacking:
-                StartCoroutine(AttackPlayer());
-                break;
-        }
+        return;
     }
+
+    if (canDodgeAbility && DetectIncomingBullet(out Vector3 bulletDirection))
+    {
+        StartCoroutine(DodgeBullet(bulletDirection));
+    }
+
+    switch (currentState)
+    {
+        case EnemyState.Idle:
+            StartCoroutine(Wander());
+            break;
+        case EnemyState.Wandering:
+            break;
+        case EnemyState.Chasing:
+            if (player != null) ChasePlayer(normalSpeed);
+            break;
+        case EnemyState.Sprinting:
+            if (player != null) ChasePlayer(sprintSpeed);
+            break;
+        case EnemyState.Attacking:
+            // Stop the NavMeshAgent immediately
+            agent.isStopped = true;
+                agent.velocity = Vector3.zero;
+                StartCoroutine(AttackPlayer());
+            break;
+    }
+}
+
 
     private void Idle()
     {
@@ -203,12 +207,14 @@ public class FlyingBook : MonoBehaviour
     private IEnumerator AttackPlayer()
     {
         isAttacking = true;
-        agent.isStopped = true;
 
+        // Rotate towards the player
         RotateTowardsPlayer();
 
+        // Wait for attack animation delay
         yield return new WaitForSeconds(attackDelay);
 
+        // Perform attack if cooldown is complete
         if (Time.time > lastAttackTime + attackCooldown)
         {
             lastAttackTime = Time.time;
@@ -218,9 +224,12 @@ public class FlyingBook : MonoBehaviour
             Debug.Log("Enemy attacks the player!");
         }
 
+        // Wait for the attack cooldown
         yield return new WaitForSeconds(attackCooldown);
-        agent.isStopped = false;
+
+        // Reset attacking state and allow NavMeshAgent to move again
         isAttacking = false;
+        agent.isStopped = false;
     }
 
     private void RotateTowardsPlayer()

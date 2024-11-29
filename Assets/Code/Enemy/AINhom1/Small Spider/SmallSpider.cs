@@ -64,7 +64,7 @@ public class SmallSpider : MonoBehaviour
     private IEnumerator Hop()
     {
         isHopping = true;
-        navMeshAgent.isStopped = false;  // Enable the agent to move during the hop
+        navMeshAgent.isStopped = false; // Enable the agent to move during the hop
 
         float elapsedTime = 0f;
         Vector3 originalPosition = transform.position;
@@ -73,6 +73,14 @@ public class SmallSpider : MonoBehaviour
         // Ascend phase of the hop
         while (elapsedTime < hopDuration / 2)
         {
+            // Stop hopping if the spider enters the attack state
+            if (currentState == EnemyState.Attack)
+            {
+                isHopping = false;
+                navMeshAgent.isStopped = true;
+                yield break;
+            }
+
             elapsedTime += Time.deltaTime;
             float newY = Mathf.Lerp(originalY, originalY + hopHeight, elapsedTime / (hopDuration / 2));
             transform.position = new Vector3(transform.position.x, newY, transform.position.z);
@@ -84,13 +92,21 @@ public class SmallSpider : MonoBehaviour
         // Descend phase of the hop
         while (elapsedTime < hopDuration / 2)
         {
+            // Stop hopping if the spider enters the attack state
+            if (currentState == EnemyState.Attack)
+            {
+                isHopping = false;
+                navMeshAgent.isStopped = true;
+                yield break;
+            }
+
             elapsedTime += Time.deltaTime;
             float newY = Mathf.Lerp(originalY + hopHeight, originalY, elapsedTime / (hopDuration / 2));
             transform.position = new Vector3(transform.position.x, newY, transform.position.z);
             yield return null;
         }
 
-        navMeshAgent.isStopped = true;  // Stop the agent after the hop
+        navMeshAgent.isStopped = true; // Stop the agent after the hop
         isHopping = false;
     }
 
@@ -137,7 +153,14 @@ public class SmallSpider : MonoBehaviour
 
     private void HandleAttackState()
     {
-        navMeshAgent.isStopped = true;  // Stop movement while attacking
+        // Stop hopping if entering the attack state
+        if (isHopping)
+        {
+            StopCoroutine(Hop());
+            isHopping = false;
+        }
+
+        navMeshAgent.isStopped = true; // Stop movement while attacking
 
         if (canAttack)
         {

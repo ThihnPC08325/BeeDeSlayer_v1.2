@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.012952167, g: 0.01275656, b: 0.012699195, a: 1}
+  m_IndirectSpecularColor: {r: 0.012952135, g: 0.012756538, b: 0.012699197, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -11968,6 +11968,37 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 32412de3f945ff942a32bd80e8af7506, type: 2}
   m_BuildHeightMesh: 0
+--- !u!114 &1142876175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1142876172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: -334000983
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: b216865ff9ed0ce48889f18e87a59853, type: 2}
+  m_BuildHeightMesh: 0
 --- !u!1 &1143505898 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8655861014918656593, guid: 5f616980cd8c257448e69832f4234cc0, type: 3}
@@ -19881,6 +19912,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5f616980cd8c257448e69832f4234cc0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1142876174}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5f616980cd8c257448e69832f4234cc0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1142876175}
     - targetCorrespondingSourceObject: {fileID: -9048248849316002998, guid: 5f616980cd8c257448e69832f4234cc0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 654879658}

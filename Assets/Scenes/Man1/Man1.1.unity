@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.012952167, g: 0.01275656, b: 0.012699195, a: 1}
+  m_IndirectSpecularColor: {r: 0.012952135, g: 0.012756538, b: 0.012699197, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -25383,6 +25383,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2021336578}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2021336579}
     - targetCorrespondingSourceObject: {fileID: 3267192374769563156, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2126763313}
@@ -27884,6 +27887,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noteCounter: {fileID: 11400000, guid: c6f59552882ab4d4aafde055d08f157b, type: 2}
+--- !u!114 &2021336579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2021336576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: -334000983
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: fabdc623fdcff8e4d9f7c55fef2ff085, type: 2}
+  m_BuildHeightMesh: 0
 --- !u!1 &2022533053 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -368605668887561747, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
@@ -28775,6 +28809,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4474768328398049895, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4862662956307280247, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
+      propertyPath: m_BackGroundColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4862662956307280247, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4862662956307280247, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4862662956307280247, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
+      propertyPath: m_BackGroundColor.r
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8700025055025808662, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
