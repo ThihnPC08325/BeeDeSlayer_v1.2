@@ -10,6 +10,7 @@ TagManager:
   - Health
   - FxTemporaire
   - Ground
+  - Note
   layers:
   - Default
   - TransparentFX
