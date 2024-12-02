@@ -107,7 +107,7 @@ public class BOSS : MonoBehaviour
     {
         FireBeamSound(); // Phát âm thanh trước khi bắn DeadBeam
         isFiringBeam = true;
-        
+
         // Tạo hiệu ứng tại vị trí các firePoint của DeadBeam trước khi bắn
         foreach (Transform firePoint in deadBeamFirePoints)
         {

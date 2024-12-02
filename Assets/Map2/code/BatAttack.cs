@@ -10,11 +10,7 @@ public class BatAttack : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
-            if (playerHealth != null)
-            {
-                playerHealth.TakeDamage(damage, damagePen);
-            }
+            GameEvents.TriggerPlayerHit(damage, damagePen);
         }
     }
 }

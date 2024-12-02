@@ -18,20 +18,39 @@ public class AudioManager : MonoBehaviour
     {
         [SerializeField] SoundType _soundType;
         [SerializeField] AudioClip _clip;
+
+        // Thêm các thuộc tính điều chỉnh âm thanh
         [Range(0f, 1f)]
         [SerializeField] float _volume = 1f;
+        [Range(0.5f, 1.5f)]
+        [SerializeField] float _pitch = 1f;
+        [Range(-1f, 1f)]
+        [SerializeField] float _stereoPan = 0f;
+        [SerializeField] bool _loop = false;
+
+        // 3D sound settings
         [SerializeField] bool _is3D;
-        [Range(1f, 500f)]
-        [SerializeField] float _maxDistance;
+        [Range(0f, 360f)]
+        [SerializeField] float _spread = 0f;
+        [Range(0f, 5f)]
+        [SerializeField] float _dopplerLevel = 1f;
         [Range(0f, 50f)]
         [SerializeField] float _minDistance = 1f;
+        [Range(1f, 500f)]
+        [SerializeField] float _maxDistance = 100f;
 
+        // Properties
         public SoundType SoundType => _soundType;
         public AudioClip Clip => _clip;
         public float Volume => _volume;
+        public float Pitch => _pitch;
+        public float StereoPan => _stereoPan;
+        public bool Loop => _loop;
         public bool Is3D => _is3D;
-        public float MaxDistance => _maxDistance;
+        public float Spread => _spread;
+        public float DopplerLevel => _dopplerLevel;
         public float MinDistance => _minDistance;
+        public float MaxDistance => _maxDistance;
     }
 
     [SerializeField] private SoundEffect[] soundEffects;
@@ -45,19 +64,17 @@ public class AudioManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
+
+            audioSources = new AudioSource[soundEffects.Length];
+            for (int i = 0; i < soundEffects.Length; i++)
+            {
+                audioSources[i] = gameObject.AddComponent<AudioSource>();
+                InitializeAudioSource(audioSources[i], soundEffects[i]);
+            }
         }
         else
         {
             Destroy(gameObject);
-            return;
-        }
-
-        audioSources = new AudioSource[soundEffects.Length];
-        for (int i = 0; i < soundEffects.Length; i++)
-        {
-            audioSources[i] = gameObject.AddComponent<AudioSource>();
-            audioSources[i].clip = soundEffects[i].Clip;
-            audioSources[i].volume = soundEffects[i].Volume;
         }
     }
 
@@ -78,6 +95,66 @@ public class AudioManager : MonoBehaviour
         GameEvents.OnPlayerHit -= PlayPlayerHitSound;
         GameEvents.OnEnemyHit -= PlayEnemyHitSound;
     }
+
+    private void InitializeAudioSource(AudioSource source, SoundEffect soundEffect)
+    {
+        // Basic settings
+        source.clip = soundEffect.Clip;
+        source.volume = soundEffect.Volume;
+        source.pitch = soundEffect.Pitch;
+        source.panStereo = soundEffect.StereoPan;
+        source.loop = soundEffect.Loop;
+
+        // 3D sound settings
+        source.spatialBlend = soundEffect.Is3D ? 1f : 0f;
+        if (soundEffect.Is3D)
+        {
+            source.spread = soundEffect.Spread;
+            source.dopplerLevel = soundEffect.DopplerLevel;
+            source.minDistance = soundEffect.MinDistance;
+            source.maxDistance = soundEffect.MaxDistance;
+            source.rolloffMode = AudioRolloffMode.Linear;
+        }
+    }
+
+    #region SOUND CONTROL
+    public void SetVolume(SoundType soundType, float volume)
+    {
+        var source = GetAudioSource(soundType);
+        if (source != null)
+        {
+            source.volume = Mathf.Clamp01(volume);
+        }
+    }
+
+    public void SetPitch(SoundType soundType, float pitch)
+    {
+        var source = GetAudioSource(soundType);
+        if (source != null)
+        {
+            source.pitch = Mathf.Clamp(pitch, 0.5f, 1.5f);
+        }
+    }
+
+    public void StopSound(SoundType soundType)
+    {
+        var source = GetAudioSource(soundType);
+        if (source != null && source.isPlaying)
+        {
+            source.Stop();
+        }
+    }
+
+    private AudioSource GetAudioSource(SoundType soundType)
+    {
+        for (int i = 0; i < soundEffects.Length; i++)
+        {
+            if (soundEffects[i].SoundType == soundType)
+                return audioSources[i];
+        }
+        return null;
+    }
+    #endregion
 
     #region PLAY SOUND
     private void PlaySoundEffect(SoundType soundType, Vector3? position = null)

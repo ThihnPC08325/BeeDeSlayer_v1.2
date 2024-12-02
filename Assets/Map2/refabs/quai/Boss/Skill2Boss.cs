@@ -43,11 +43,8 @@ public class Skill2Boss : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
-            if (playerHealth != null)
-            {
-                playerHealth.TakeDamage(damage, damagePen);
-            }
+            GameEvents.TriggerPlayerHit(damage, damagePen);
+
             CameraShake.Instance.TriggerShake(0.8f, 2f);
             // Gọi hiệu ứng particle system
             InstantiateParticleEffect();

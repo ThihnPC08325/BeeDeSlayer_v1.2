@@ -114,11 +114,7 @@ public class TankerAI : MonoBehaviour
         yield return new WaitForSeconds(attackDelay);
 
         // Gây sát thương
-        PlayerHealth playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
-        if (playerHealth != null)
-        {
-            playerHealth.TakeDamage(normalAttackDamage, normalPen);
-        }
+        GameEvents.TriggerPlayerHit(normalAttackDamage, normalPen);
 
         // Chờ animation kết thúc
         yield return new WaitForSeconds(animationLength - attackDelay);
