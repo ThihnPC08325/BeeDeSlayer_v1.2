@@ -7,7 +7,7 @@ public class BulletDirectionCalculator : MonoBehaviour
 
     private static readonly float[] precomputedSin;
     private static readonly float[] precomputedCos;
-    private const int PRECOMPUTE_STEPS = 36;
+    private const int PRECOMPUTE_STEPS = 180;
 
     // Cache Quaternion để tái sử dụng
     private static readonly Quaternion[] cachedRotations;
