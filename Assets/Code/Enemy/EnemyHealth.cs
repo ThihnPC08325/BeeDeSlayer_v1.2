@@ -5,11 +5,12 @@ using static EnemyManager;
 public class EnemyHealth : MonoBehaviour, IPooledObject
 {
     [SerializeField] private float maxHealth;
-    [SerializeField] private float currentHealth;
+    [SerializeField] public float currentHealth;
     [SerializeField] private ItemDropManager itemDropManager;
     [SerializeField] EnemyController enemyController;
     [SerializeField] EnemyAttack enemyAttack;
     [SerializeField] EnemyDodgeBullet enemyDodgeBullet;
+    [SerializeField] HealthBar healthBar;
     private BoxCollider BoxCollider;
 
     private void Awake()
@@ -25,6 +26,7 @@ public class EnemyHealth : MonoBehaviour, IPooledObject
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
+        healthBar.HealthEnemy(damage);
         if (currentHealth <= 0f)
         {
             currentHealth = 0f;
