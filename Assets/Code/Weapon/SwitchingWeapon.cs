@@ -60,12 +60,12 @@ public class SwitchingWeapon : MonoBehaviour
     private const int POOL_SIZE = 5;
     private float timeReloadBullet;
 
-    void OnEnable()
-    {
-        GameEvents.OnAmmoPickup += HandleAmmoPickup;
-        bullet = playerInput.Player.Reload;
-        bullet.Enable();
-    }
+    //void OnEnable()
+    //{
+    //    GameEvents.OnAmmoPickup += HandleAmmoPickup;
+    //    bullet = playerInput.Player.Reload;
+    //    bullet.Enable();
+    //}
 
     void OnDisable()
     {
@@ -333,7 +333,7 @@ public class SwitchingWeapon : MonoBehaviour
 
         WeaponAmmo currentWeapon = weaponAmmos[selectedWeaponIndex];
 
-        currentWeapon.animator.Play("Idle");
+        //currentWeapon.animator.Play("Idle");
         StopAllCoroutines();
         var sb = GetStringBuilder();
 

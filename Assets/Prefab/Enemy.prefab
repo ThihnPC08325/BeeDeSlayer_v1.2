@@ -503,7 +503,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ef6a73b011b73c4497b8e35990ad7d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 66.7
   currentHealth: 0
   itemDropManager: {fileID: 5870802438495632244}
   enemyController: {fileID: 0}
