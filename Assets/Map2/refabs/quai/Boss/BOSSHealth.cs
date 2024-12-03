@@ -11,7 +11,8 @@ public class BOSSHealth : MonoBehaviour
     [SerializeField] private Slider bossHealthBar;
     [SerializeField] private AudioClip deathSound; // Âm thanh khi chết
     [SerializeField] private AudioClip backgroundMusic; // Nhạc nền khi đang chiến đấu 🎵
-    
+
+    private BossVoiceController voiceController;
 
     private AudioSource audioSource; // Component phát nhạc cho hiệu ứng
     private AudioSource backgroundAudioSource; // Component phát nhạc nền
@@ -35,6 +36,7 @@ public class BOSSHealth : MonoBehaviour
 
     void Start()
     {
+        voiceController = GetComponent<BossVoiceController>();
         currentHealth = maxHealth;
 
         if (bossHealthBar != null)
@@ -89,8 +91,14 @@ public class BOSSHealth : MonoBehaviour
 
         StartCoroutine(TimeToDie(2f));
     }
-
-    private IEnumerator TimeToDie(float duration)
+    private void TriggerVoiceLine()
+    {
+        if (currentHealth > 0)
+        {
+            voiceController.PlayRandomVoiceLine();
+        }
+    }
+        private IEnumerator TimeToDie(float duration)
     {
         yield return new WaitForSeconds(duration);
         gameObject.SetActive(false);

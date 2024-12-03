@@ -32905,6 +32905,7 @@ GameObject:
   - component: {fileID: 1744912077}
   - component: {fileID: 1744912078}
   - component: {fileID: 1744912079}
+  - component: {fileID: 1744912080}
   m_Layer: 0
   m_Name: BOSS
   m_TagString: Enemy
@@ -33060,7 +33061,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 395cdfdf998d2904096e5af1e8ec5c55, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -33231,6 +33232,26 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!114 &1744912080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1744912068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b5c0aa58f9d335458d76b4eb2685824, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioSource: {fileID: 1744912077}
+  allVoiceLines:
+  - {fileID: 8300000, guid: 3f688a81bd09f404abb403af89e5a123, type: 3}
+  - {fileID: 8300000, guid: 39fe1d5ba90bfb14aa4cd8c7a664d3f0, type: 3}
+  - {fileID: 8300000, guid: 0ebf125819bc5b147a421f575f267bd1, type: 3}
+  minTimeBetweenLines: 8
+  maxTimeBetweenLines: 15
+  autoPlayVoiceLines: 1
 --- !u!4 &1752714180 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3097653103409111801, guid: b07e43af8fb77c743ac3d20cfc4e40ad, type: 3}
