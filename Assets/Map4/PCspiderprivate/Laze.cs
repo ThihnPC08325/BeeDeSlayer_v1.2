@@ -5,7 +5,7 @@ public class LaserScript : MonoBehaviour
 {
     [Header("Laser Settings")]
     [SerializeField] private float laserDamage = 2f; // Sát thương của laser
-    [SerializeField] private float laserDuration = 1f; // Thời gian tồn tại của laser
+    [SerializeField] private float laserDuration = 0.5f; // Thời gian tồn tại của laser
     [SerializeField] private float laserWidth = 0.1f; // Độ rộng của laser
     private LineRenderer lineRenderer; // Để vẽ laser
     private Vector3 targetPosition; // Vị trí mục tiêu
