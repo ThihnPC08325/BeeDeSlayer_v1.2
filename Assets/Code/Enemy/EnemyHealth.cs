@@ -5,11 +5,12 @@ using static EnemyManager;
 public class EnemyHealth : MonoBehaviour, IPooledObject
 {
     [SerializeField] private float maxHealth;
-    [SerializeField] private float currentHealth;
+    [SerializeField] public float currentHealth;
     [SerializeField] private ItemDropManager itemDropManager;
     [SerializeField] EnemyController enemyController;
     [SerializeField] EnemyAttack enemyAttack;
     [SerializeField] EnemyDodgeBullet enemyDodgeBullet;
+    [SerializeField] HealthBar healthBar; //Map 3
     private BoxCollider BoxCollider;
 
     private void Awake()
@@ -20,11 +21,19 @@ public class EnemyHealth : MonoBehaviour, IPooledObject
         enemyAttack = GetComponent<EnemyAttack>();
         enemyDodgeBullet = GetComponent<EnemyDodgeBullet>();
         currentHealth = maxHealth;
+
+        // Thêm debug
+        Debug.Log("ItemDropManager: " + itemDropManager);
+        Debug.Log("EnemyController: " + enemyController);
+        Debug.Log("EnemyAttack: " + enemyAttack);
+        Debug.Log("EnemyDodgeBullet: " + enemyDodgeBullet);
+        Debug.Log("HealthBar: " + healthBar);
     }
 
     public void TakeDamage(float damage)
     {
-        currentHealth -= damage;
+        currentHealth -= damage; 
+        healthBar.HealthEnemy(damage); //Map 3
         if (currentHealth <= 0f)
         {
             currentHealth = 0f;

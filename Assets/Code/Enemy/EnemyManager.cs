@@ -32,6 +32,8 @@ public class EnemyManager : MonoBehaviour
         Shooting,
         Melee,
         Skeleton,
+        Spider,
+
         // Thêm các loại enemy khác
     }
 
