@@ -28,12 +28,13 @@ public class EnemyHealth : MonoBehaviour, IPooledObject
         Debug.Log("EnemyAttack: " + enemyAttack);
         Debug.Log("EnemyDodgeBullet: " + enemyDodgeBullet);
         Debug.Log("HealthBar: " + healthBar);
+        Debug.Log("Current Health: " + currentHealth);
     }
 
     public void TakeDamage(float damage)
     {
-        currentHealth -= damage; 
-        healthBar.HealthEnemy(damage); //Map 3
+        currentHealth -= damage;
+        healthBar.HealthEnemy(damage);
         if (currentHealth <= 0f)
         {
             currentHealth = 0f;
