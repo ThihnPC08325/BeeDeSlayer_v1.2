@@ -10,7 +10,7 @@ public class EnemyHealth : MonoBehaviour, IPooledObject
     [SerializeField] EnemyController enemyController;
     [SerializeField] EnemyAttack enemyAttack;
     [SerializeField] EnemyDodgeBullet enemyDodgeBullet;
-    [SerializeField] HealthBar healthBar;
+    [SerializeField] HealthBar healthBar; //Map 3
     private BoxCollider BoxCollider;
 
     private void Awake()
@@ -32,8 +32,8 @@ public class EnemyHealth : MonoBehaviour, IPooledObject
 
     public void TakeDamage(float damage)
     {
-        currentHealth -= damage;
-        healthBar.HealthEnemy(damage);
+        currentHealth -= damage; 
+        healthBar.HealthEnemy(damage); //Map 3
         if (currentHealth <= 0f)
         {
             currentHealth = 0f;
