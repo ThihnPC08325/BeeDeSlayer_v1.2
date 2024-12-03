@@ -303,8 +303,15 @@ public class SwitchingWeapon : MonoBehaviour
         WeaponAmmo currentWeapon = weaponAmmos[selectedWeaponIndex];
         if (currentWeapon != null)
         {
-            currentWeapon.animator.SetTrigger("Reload");
-            StartCoroutine(Rebullet());
+            if (currentWeapon.currentAmmo != currentWeapon.maxAmmo)
+            {
+                currentWeapon.animator.SetTrigger("Reload");
+                StartCoroutine(Rebullet());
+            }
+            else
+            {
+                Debug.Log("Đạn đã đầy");
+            }
         }
         else
         {
