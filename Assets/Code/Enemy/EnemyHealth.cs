@@ -20,13 +20,21 @@ public class EnemyHealth : MonoBehaviour, IPooledObject
         enemyController = GetComponent<EnemyController>();
         enemyAttack = GetComponent<EnemyAttack>();
         enemyDodgeBullet = GetComponent<EnemyDodgeBullet>();
+        healthBar = GetComponent<HealthBar>(); // Gán giá trị cho healthBar
         currentHealth = maxHealth;
+
+        // Thêm debug
+        Debug.Log("ItemDropManager: " + itemDropManager);
+        Debug.Log("EnemyController: " + enemyController);
+        Debug.Log("EnemyAttack: " + enemyAttack);
+        Debug.Log("EnemyDodgeBullet: " + enemyDodgeBullet);
+        Debug.Log("HealthBar: " + healthBar);
     }
 
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
-        healthBar.HealthEnemy(damage);
+        healthBar = GetComponent<HealthBar>(); // Kiểm tra xem có cần gán lại không
         if (currentHealth <= 0f)
         {
             currentHealth = 0f;

@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class FollowEnemy : MonoBehaviour
 {
-    [SerializeField] private string targetObjectName = "PCspider"; // Tên đối tượng mà đối tượng sẽ theo
+    [SerializeField] private string targetObjectName = "spiderpc:Mesh"; // Tên đối tượng mà đối tượng sẽ theo
     [SerializeField] private Vector3 offset; // Khoảng cách giữa đối tượng và enemy
-    [SerializeField] private float maxHealth = 50f; // Máu tối đa
+    [SerializeField] private float maxHealth = 100f; // Máu tối đa
     private float currentHealth; // Máu hiện tại
     private Transform target; // Biến để lưu trữ đối tượng mục tiêu
 
@@ -22,7 +22,7 @@ public class FollowEnemy : MonoBehaviour
         }
 
         // Bắt đầu coroutine để tự động trừ máu
-        StartCoroutine(DeductHealthOverTime(5f, 200f));
+        StartCoroutine(DeductHealthOverTime(3f, 200f));
     }
 
     private void Update()
