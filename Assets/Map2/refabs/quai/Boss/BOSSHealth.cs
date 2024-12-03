@@ -7,26 +7,50 @@ public class BOSSHealth : MonoBehaviour
 {
     [SerializeField] private float maxHealth;
     [SerializeField] private float currentHealth;
-    [SerializeField] private GameObject smokePrefab; // Reference to the smoke prefab
+    [SerializeField] private GameObject smokePrefab;
     [SerializeField] private Slider bossHealthBar;
+    [SerializeField] private AudioClip deathSound; // Âm thanh khi chết
+    [SerializeField] private AudioClip backgroundMusic; // Nhạc nền khi đang chiến đấu 🎵
+    
+
+    private AudioSource audioSource; // Component phát nhạc cho hiệu ứng
+    private AudioSource backgroundAudioSource; // Component phát nhạc nền
     private BoxCollider boxCollider;
+    private bool isVictoryMusicPlaying = false; // Kiểm tra đã phát nhạc chiến thắng chưa
 
     private void Awake()
     {
         boxCollider = GetComponent<BoxCollider>();
+
+        // Tạo 2 AudioSource riêng biệt
+        audioSource = gameObject.AddComponent<AudioSource>();
+        backgroundAudioSource = gameObject.AddComponent<AudioSource>();
+
+        // Cài đặt cho nhạc nền
+        backgroundAudioSource.loop = true; // Lặp lại
+        backgroundAudioSource.volume = 0.5f; // Âm lượng nhỏ hơn
+
         currentHealth = maxHealth;
     }
+
     void Start()
     {
         currentHealth = maxHealth;
 
-        // Thiết lập thanh máu
         if (bossHealthBar != null)
         {
             bossHealthBar.maxValue = maxHealth;
             bossHealthBar.value = currentHealth;
         }
+
+        // Phát nhạc nền khi bắt đầu
+        if (backgroundMusic != null)
+        {
+            backgroundAudioSource.clip = backgroundMusic;
+            backgroundAudioSource.Play();
+        }
     }
+
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
@@ -40,32 +64,35 @@ public class BOSSHealth : MonoBehaviour
         {
             bossHealthBar.value = currentHealth;
         }
-
-        // Kiểm tra nếu boss đã chết
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
     }
+
     private void Die()
     {
+        // Dừng nhạc nền
+        if (backgroundAudioSource.isPlaying)
+        {
+            backgroundAudioSource.Stop();
+        }
 
-        // Instantiate the smoke effect at the enemy's position
+
+        // Phát âm thanh chết
+        if (deathSound != null)
+        {
+            audioSource.PlayOneShot(deathSound);
+        }
+
+        // Hiệu ứng khói
         if (smokePrefab != null)
         {
             Instantiate(smokePrefab, transform.position, Quaternion.identity);
         }
 
-        // Start coroutine to handle delay and deactivation
         StartCoroutine(TimeToDie(2f));
     }
 
     private IEnumerator TimeToDie(float duration)
     {
-        // Wait for the duration of the death animation (2 seconds)
         yield return new WaitForSeconds(duration);
-
-        // Deactivate the enemy GameObject
         gameObject.SetActive(false);
     }
 }
