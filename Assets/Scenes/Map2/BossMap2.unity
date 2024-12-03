@@ -31548,8 +31548,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d18d4aa381a7d76408a63463a79d741c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blackScreen: {fileID: 0}
+  deathText: {fileID: 596566012}
   deathMessage: {fileID: 596566012}
   delayBeforeRespawn: 2
+  PlayerController: {fileID: 1234669415}
 --- !u!65 &1139554640
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -31983,6 +31986,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4474768328398049895, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
   m_PrefabInstance: {fileID: 1098329680}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1234669415 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3107693949628225526, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
+  m_PrefabInstance: {fileID: 1098329680}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70e1229527cf0374e87944a18089d0db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1244770534
 GameObject:
   m_ObjectHideFlags: 0
@@ -38936,7 +38950,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 832988782329155592, guid: fa91ca5138d8513438da2b9d436c05af, type: 3}
       propertyPath: m_TagString
-      value: Player
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 8914980273706694858, guid: fa91ca5138d8513438da2b9d436c05af, type: 3}
       propertyPath: m_Pivot.x
