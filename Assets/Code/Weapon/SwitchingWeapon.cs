@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -307,10 +308,12 @@ public class SwitchingWeapon : MonoBehaviour
             {
                 currentWeapon.animator.SetTrigger("Reload");
                 StartCoroutine(Rebullet());
+                return;
             }
             else
             {
                 Debug.Log("Đạn đã đầy");
+                return;
             }
         }
         else
