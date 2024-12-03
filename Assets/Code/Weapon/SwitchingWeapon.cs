@@ -343,7 +343,7 @@ public class SwitchingWeapon : MonoBehaviour
 
         WeaponAmmo currentWeapon = weaponAmmos[selectedWeaponIndex];
 
-        //currentWeapon.animator.Play("Idle");
+        currentWeapon.animator.Play("Idle");
         StopAllCoroutines();
         var sb = GetStringBuilder();
 
