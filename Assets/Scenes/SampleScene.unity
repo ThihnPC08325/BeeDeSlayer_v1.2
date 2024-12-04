@@ -1177,6 +1177,10 @@ PrefabInstance:
       value: ---SPAWN_POINT---
       objectReference: {fileID: 0}
     - target: {fileID: 7180335567157856883, guid: c3d6ee6e352c46843aeddc0b47b45eec, type: 3}
+      propertyPath: baseSpawnInterval
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7180335567157856883, guid: c3d6ee6e352c46843aeddc0b47b45eec, type: 3}
       propertyPath: enemyTypes.Array.data[1].maxCount
       value: 5
       objectReference: {fileID: 0}
