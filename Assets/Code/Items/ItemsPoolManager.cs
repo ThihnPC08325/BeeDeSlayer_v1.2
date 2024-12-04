@@ -36,8 +36,8 @@ public class ItemsPoolManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
             SetupPoolStructure();
-            DontDestroyOnLoad(poolRoot.gameObject);
             InitializePools();
         }
         else
@@ -49,7 +49,6 @@ public class ItemsPoolManager : MonoBehaviour
     private void SetupPoolStructure()
     {
         poolRoot ??= new GameObject("---POOL---").transform;
-        transform.parent = poolRoot;
     }
 
     private void InitializePools()
@@ -59,48 +58,43 @@ public class ItemsPoolManager : MonoBehaviour
 
         foreach (Pool pool in pools)
         {
-            GameObject poolContainer = new GameObject($"Pool_{pool.Type}");
-            poolContainer.transform.parent = transform;
-
-            Queue<GameObject> objectPool = new Queue<GameObject>();
-            containerDictionary[pool.Type] = poolContainer.transform;
-
-            for (int i = 0; i < pool.Size; i++)
-            {
-                CreateNewPoolObject(pool, objectPool, poolContainer.transform);
-            }
-
-            poolDictionary[pool.Type] = objectPool;
+            CreatePool(pool);
         }
     }
 
-    private void CreateNewPoolObject(Pool pool, Queue<GameObject> objectPool, Transform parent)
+    private void CreatePool(Pool pool)
     {
-        GameObject obj = Instantiate(pool.Prefab, parent);
+        Transform container = new GameObject($"Pool_{pool.Type}").transform;
+        container.parent = poolRoot;
+
+        Queue<GameObject> objectPool = new Queue<GameObject>();
+        for (int i = 0; i < pool.Size; i++)
+        {
+            objectPool.Enqueue(CreateNewPoolObject(pool.Prefab, container));
+        }
+
+        containerDictionary[pool.Type] = container;
+        poolDictionary[pool.Type] = objectPool;
+    }
+
+    private GameObject CreateNewPoolObject(GameObject prefab, Transform parent)
+    {
+        GameObject obj = Instantiate(prefab, parent);
         obj.SetActive(false);
-        objectPool.Enqueue(obj);
+        return obj;
     }
 
     public GameObject SpawnFromPool(PoolType type, Vector3 position, Quaternion rotation)
     {
-        if (!poolDictionary.ContainsKey(type))
+        if (!poolDictionary.TryGetValue(type, out var pool))
         {
-            Debug.LogWarning($"Pool with type {type} doesn't exist! 🚫");
+            Debug.LogWarning($"Pool with type {type} does not exist! 🚫");
             return null;
         }
 
-        Queue<GameObject> pool = poolDictionary[type];
-        GameObject objectToSpawn;
-
-        if (pool.Count == 0)
-        {
-            Pool originalPool = pools.Find(p => p.Type == type);
-            objectToSpawn = Instantiate(originalPool.Prefab, containerDictionary[type]);
-        }
-        else
-        {
-            objectToSpawn = pool.Dequeue();
-        }
+        GameObject objectToSpawn = pool.Count > 0
+            ? pool.Dequeue()
+            : CreateNewPoolObject(pools.Find(p => p.Type == type).Prefab, containerDictionary[type]);
 
         objectToSpawn.SetActive(true);
         objectToSpawn.transform.SetPositionAndRotation(position, rotation);
@@ -109,14 +103,14 @@ public class ItemsPoolManager : MonoBehaviour
 
     public void ReturnToPool(PoolType type, GameObject obj)
     {
-        if (!poolDictionary.ContainsKey(type))
+        if (!poolDictionary.TryGetValue(type, out var pool))
         {
-            Debug.LogWarning($"Pool with type {type} doesn't exist! 🚫");
+            Debug.LogWarning($"Pool with type {type} does not exist! 🚫");
             return;
         }
 
-        obj.transform.parent = containerDictionary[type];
         obj.SetActive(false);
-        poolDictionary[type].Enqueue(obj);
+        obj.transform.parent = containerDictionary[type];
+        pool.Enqueue(obj);
     }
 }
