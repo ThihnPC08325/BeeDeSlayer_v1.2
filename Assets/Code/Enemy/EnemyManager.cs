@@ -8,53 +8,128 @@ public class EnemyManager : MonoBehaviour
         void OnObjectSpawn();
     }
 
+    private static EnemyManager instance;
+    public static EnemyManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<EnemyManager>();
+                if (instance == null)
+                {
+                    GameObject go = new("EnemyPool");
+                    instance = go.AddComponent<EnemyManager>();
+                }
+            }
+            return instance;
+        }
+    }
+
     public enum EnemyType
     {
         None = 0,
         Shooting,
         Melee,
         Skeleton,
-<<<<<<< Updated upstream
         Spider,
         Bat,
         Tanker,
 
         // Thêm các loại enemy khác
-=======
-        Spider
->>>>>>> Stashed changes
     }
 
     [System.Serializable]
     public class Pool
     {
-        public EnemyType enemyType;
-        public GameObject prefab;
-        public int initialSize;
-        public int maxSize = 100;
+        [SerializeField] private EnemyType _enemyType;
+        [SerializeField] private GameObject _prefab;
+        [SerializeField] private int _initialSize;
+        [SerializeField] private int _maxSize = 100;
+
+        public EnemyType EnemyType => _enemyType;
+        public GameObject Prefab => _prefab;
+        public int InitialSize => _initialSize;
+        public int MaxSize => _maxSize;
     }
 
     [SerializeField] private List<Pool> pools;
     [SerializeField] private Transform poolRoot;
-    private List<Queue<GameObject>> objectPools;
+
+    private Dictionary<EnemyType, Queue<GameObject>> poolDictionary;
+    private Dictionary<EnemyType, Transform> containerDictionary; // Cache container transforms
 
     private void Awake()
     {
-        objectPools = new List<Queue<GameObject>>();
+        if (instance == null)
+        {
+            instance = this;
+            Initialize();
+            DontDestroyOnLoad(poolRoot.gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void Initialize()
+    {
+        poolDictionary = new();
+        containerDictionary = new();
+        SetupPoolStructure();
         InitializePools();
+    }
+
+    private void SetupPoolStructure()
+    {
+        poolRoot = poolRoot ?? CreateOrFindPoolRoot();
+        Transform enemyPoolContainer = CreateOrFindContainer("EnemyPool", poolRoot);
+        transform.SetParent(enemyPoolContainer);
+    }
+
+    private Transform CreateOrFindPoolRoot()
+    {
+        GameObject root = GameObject.Find("---POOL---") ?? new GameObject("---POOL---");
+        return root.transform;
+    }
+
+    private Transform CreateOrFindContainer(string name, Transform parent)
+    {
+        Transform container = parent.Find(name);
+        if (container == null)
+        {
+            container = new GameObject(name).transform;
+            container.SetParent(parent);
+        }
+        return container;
     }
 
     private void InitializePools()
     {
         foreach (Pool pool in pools)
         {
-            Queue<GameObject> objectPool = new Queue<GameObject>();
-            for (int i = 0; i < pool.initialSize; i++)
+            if (pool.Prefab == null)
             {
-                GameObject obj = CreateNewPoolObject(pool.prefab, poolRoot, i);
-                objectPool.Enqueue(obj);
+                Debug.LogError($"Invalid pool configuration for {pool.EnemyType}! 🔴");
+                continue;
             }
-            objectPools.Add(objectPool);
+
+            Transform container = CreateOrFindContainer(pool.EnemyType.ToString(), transform);
+            containerDictionary[pool.EnemyType] = container;
+
+            Queue<GameObject> objectPool = new Queue<GameObject>();
+            CreateInitialObjects(pool, objectPool, container);
+            poolDictionary[pool.EnemyType] = objectPool;
+        }
+    }
+
+    private void CreateInitialObjects(Pool pool, Queue<GameObject> objectPool, Transform container)
+    {
+        for (int i = 0; i < pool.InitialSize; i++)
+        {
+            GameObject obj = CreateNewPoolObject(pool.Prefab, container, i);
+            objectPool.Enqueue(obj);
         }
     }
 
@@ -68,15 +143,13 @@ public class EnemyManager : MonoBehaviour
 
     public GameObject SpawnFromPool(EnemyType enemyType, Vector3 position, Quaternion rotation)
     {
-        int typeIndex = (int)enemyType;
-        if (typeIndex < 0 || typeIndex >= objectPools.Count)
+        if (!poolDictionary.TryGetValue(enemyType, out Queue<GameObject> pool))
         {
             Debug.LogWarning($"Pool for enemy type {enemyType} doesn't exist! 🚫");
             return null;
         }
 
-        Queue<GameObject> pool = objectPools[typeIndex];
-        GameObject obj = GetInactiveObject(pool);
+        GameObject obj = GetInactiveObject(pool, enemyType);
         if (obj != null)
         {
             SetupSpawnedObject(obj, position, rotation);
@@ -85,13 +158,27 @@ public class EnemyManager : MonoBehaviour
         return obj;
     }
 
-    private GameObject GetInactiveObject(Queue<GameObject> pool)
+    private GameObject GetInactiveObject(Queue<GameObject> pool, EnemyType enemyType)
     {
-        GameObject obj = null;
-        if (pool.Count > 0)
+        Pool originalPool = pools.Find(p => p.EnemyType == enemyType);
+        GameObject obj;
+
+        if (pool.Count == 0 && originalPool != null)
+        {
+            if (pool.Count < originalPool.MaxSize)
+            {
+                obj = CreateNewPoolObject(originalPool.Prefab, containerDictionary[enemyType], pool.Count);
+            }
+            else
+            {
+                obj = pool.Dequeue();
+            }
+        }
+        else
         {
             obj = pool.Dequeue();
         }
+
         return obj;
     }
 
@@ -99,15 +186,19 @@ public class EnemyManager : MonoBehaviour
     {
         obj.SetActive(true);
         obj.transform.SetPositionAndRotation(position, rotation);
+
+        if (obj.TryGetComponent(out IPooledObject pooledObj))
+        {
+            pooledObj.OnObjectSpawn();
+        }
     }
 
     public void ReturnToPool(GameObject obj, EnemyType enemyType)
     {
-        int typeIndex = (int)enemyType;
-        if (typeIndex >= 0 && typeIndex < objectPools.Count)
+        if (poolDictionary.TryGetValue(enemyType, out Queue<GameObject> pool))
         {
             obj.SetActive(false);
-            objectPools[typeIndex].Enqueue(obj);
+            pool.Enqueue(obj);
         }
     }
 }
