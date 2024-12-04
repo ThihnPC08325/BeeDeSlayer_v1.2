@@ -5,7 +5,7 @@ using UnityEngine;
 public class BossMap3 : MonoBehaviour
 {
     [Header("Skill Settings")]
-    [SerializeField] private GameObject spawnPrefab; // Prefab sẽ được tạo ra
+    [SerializeField] private GameObject[] spawnPrefabs; // Mảng các prefab sẽ được tạo ra
     [SerializeField] private Transform[] spawnPositions; // Mảng các Transform chứa các vị trí tạo prefab
     [SerializeField] private int prefabCount = 5; // Số lượng prefab tạo ra mỗi lần (có thể thay đổi trong Inspector)
     [SerializeField] private int maxPrefabs = 20; // Giới hạn số lượng prefab tối đa có thể tạo ra
@@ -16,7 +16,6 @@ public class BossMap3 : MonoBehaviour
 
     private int totalPrefabsCreated = 0; // Tổng số prefabs đã tạo ra
     private int spawnIndex = 0; // Chỉ số theo dõi vị trí tiếp theo trong spawnPositions
-    private bool isCooldown = false; // Kiểm tra trạng thái hồi chiêu
 
     private void Start()
     {
@@ -25,9 +24,9 @@ public class BossMap3 : MonoBehaviour
             bossHealth = GetComponent<BossMap3Health>();
         }
 
-        if (spawnPrefab == null || spawnPositions.Length == 0)
+        if (spawnPrefabs.Length == 0 || spawnPositions.Length == 0)
         {
-            Debug.LogError("Spawn Prefab or Spawn Positions are not assigned!");
+            Debug.LogError("Spawn Prefabs or Spawn Positions are not assigned!");
             enabled = false;
             return;
         }
@@ -41,13 +40,13 @@ public class BossMap3 : MonoBehaviour
         while (true)
         {
             // Kiểm tra điều kiện để sử dụng chiêu
-            if (!isCooldown && bossHealth.CurrentHealth > bossHealth.MaxHealth / 2 && totalPrefabsCreated < maxPrefabs)
+            if (bossHealth != null && bossHealth.CurrentHealth > bossHealth.MaxHealth / 2 && totalPrefabsCreated < maxPrefabs)
             {
                 Debug.Log("Using skill!");
                 SpawnPrefabsAround(prefabCount); // Tạo ra số lượng prefab tùy chỉnh
             }
 
-            yield return new WaitForSeconds(skillCooldown); // Mỗi 10 giây sẽ tạo thêm prefabs
+            yield return new WaitForSeconds(skillCooldown); // Mỗi 10 giây sẽ kiểm tra lại
         }
     }
 
@@ -61,23 +60,22 @@ public class BossMap3 : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            // Kiểm tra xem có đủ vị trí không
-            if (spawnIndex < spawnPositions.Length)
+            if (spawnIndex >= spawnPositions.Length)
             {
-                // Lấy vị trí từ spawnPositions
-                Transform spawnPosition = spawnPositions[spawnIndex];
-                Instantiate(spawnPrefab, spawnPosition.position, spawnPosition.rotation);
-
-                // Cập nhật spawnIndex để tạo prefab tại vị trí tiếp theo
-                spawnIndex++;
-
-                totalPrefabsCreated++; // Cập nhật tổng số prefabs đã tạo
+                spawnIndex = 0; // Nếu hết vị trí, vòng lại từ đầu
             }
-            else
-            {
-                // Nếu hết vị trí trong mảng, vòng lại từ đầu
-                spawnIndex = 0;
-            }
+
+            // Chọn prefab ngẫu nhiên từ mảng spawnPrefabs
+            GameObject randomPrefab = spawnPrefabs[Random.Range(0, spawnPrefabs.Length)];
+
+            // Lấy vị trí spawn từ mảng spawnPositions
+            Transform spawnPosition = spawnPositions[spawnIndex];
+
+            // Tạo prefab tại vị trí spawn
+            Instantiate(randomPrefab, spawnPosition.position, spawnPosition.rotation);
+
+            spawnIndex++; // Cập nhật spawnIndex
+            totalPrefabsCreated++; // Cập nhật tổng số prefabs đã tạo
         }
     }
 }
