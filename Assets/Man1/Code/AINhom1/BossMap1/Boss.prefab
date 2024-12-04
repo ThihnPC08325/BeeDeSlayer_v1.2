@@ -35,6 +35,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6253533472049415208}
+  - {fileID: 6223044564360064545}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -179.628, z: 0}
 --- !u!33 &7656937146403440666
@@ -236,3 +237,130 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1001 &5896913346722400714
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7866437582795936571}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.11515806
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.11515806
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.11515806
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.31
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.53
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7998025996549930817, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c1e751e91ddfd8a4ea52c010a86d0c7c, type: 2}
+    - target: {fileID: -7998025996549930817, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 36c084d9c8583ab4f8b9f95ffa86df54, type: 2}
+    - target: {fileID: -7998025996549930817, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+      propertyPath: m_Materials.Array.data[2]
+      value: 
+      objectReference: {fileID: 2100000, guid: 36c084d9c8583ab4f8b9f95ffa86df54, type: 2}
+    - target: {fileID: -7998025996549930817, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+      propertyPath: m_Materials.Array.data[3]
+      value: 
+      objectReference: {fileID: 2100000, guid: 36c084d9c8583ab4f8b9f95ffa86df54, type: 2}
+    - target: {fileID: -7998025996549930817, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+      propertyPath: m_Materials.Array.data[4]
+      value: 
+      objectReference: {fileID: 2100000, guid: bdf0de401d0bc3a4592741c5ec509e67, type: 2}
+    - target: {fileID: -5940626336568351845, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -18.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+      propertyPath: m_Name
+      value: Alien Animal
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6917491382380348792}
+  m_SourcePrefab: {fileID: 100100000, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+--- !u!4 &6223044564360064545 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+  m_PrefabInstance: {fileID: 5896913346722400714}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6707938626282140827 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0594edd96d90824428c1225cdf2976df, type: 3}
+  m_PrefabInstance: {fileID: 5896913346722400714}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &6917491382380348792
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6707938626282140827}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 313674da328b6bd418e9c9fcddbb6ceb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
