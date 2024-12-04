@@ -20497,6 +20497,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 665629417}
     - target: {fileID: 2577352098603837734, guid: 817a784a173402c4ba1f3e2d00a2ffb7, type: 3}
+      propertyPath: pools.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2577352098603837734, guid: 817a784a173402c4ba1f3e2d00a2ffb7, type: 3}
       propertyPath: pools.Array.data[0]._tag
       value: ShootingEnemy
       objectReference: {fileID: 0}
@@ -20520,6 +20524,54 @@ PrefabInstance:
       propertyPath: pools.Array.data[1]._prefab
       value: 
       objectReference: {fileID: 6952760662645229405, guid: 52b88b1182a7dfc448d430c923e2593e, type: 3}
+    - target: {fileID: 2577352098603837734, guid: 817a784a173402c4ba1f3e2d00a2ffb7, type: 3}
+      propertyPath: pools.Array.data[2]._prefab
+      value: 
+      objectReference: {fileID: 6479553421510426908, guid: 6407df7dc500a2b4496201853a5df9ea, type: 3}
+    - target: {fileID: 2577352098603837734, guid: 817a784a173402c4ba1f3e2d00a2ffb7, type: 3}
+      propertyPath: pools.Array.data[3]._prefab
+      value: 
+      objectReference: {fileID: 6599493095339706337, guid: 9eae217d19589c64c83282aa3d8a02f3, type: 3}
+    - target: {fileID: 2577352098603837734, guid: 817a784a173402c4ba1f3e2d00a2ffb7, type: 3}
+      propertyPath: pools.Array.data[4]._prefab
+      value: 
+      objectReference: {fileID: 8406845055882037674, guid: 36621476210b2c649b8aeea96b7c2587, type: 3}
+    - target: {fileID: 2577352098603837734, guid: 817a784a173402c4ba1f3e2d00a2ffb7, type: 3}
+      propertyPath: pools.Array.data[2]._maxSize
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2577352098603837734, guid: 817a784a173402c4ba1f3e2d00a2ffb7, type: 3}
+      propertyPath: pools.Array.data[3]._maxSize
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2577352098603837734, guid: 817a784a173402c4ba1f3e2d00a2ffb7, type: 3}
+      propertyPath: pools.Array.data[4]._maxSize
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2577352098603837734, guid: 817a784a173402c4ba1f3e2d00a2ffb7, type: 3}
+      propertyPath: pools.Array.data[2]._enemyType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2577352098603837734, guid: 817a784a173402c4ba1f3e2d00a2ffb7, type: 3}
+      propertyPath: pools.Array.data[3]._enemyType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2577352098603837734, guid: 817a784a173402c4ba1f3e2d00a2ffb7, type: 3}
+      propertyPath: pools.Array.data[4]._enemyType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2577352098603837734, guid: 817a784a173402c4ba1f3e2d00a2ffb7, type: 3}
+      propertyPath: pools.Array.data[2]._initialSize
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2577352098603837734, guid: 817a784a173402c4ba1f3e2d00a2ffb7, type: 3}
+      propertyPath: pools.Array.data[3]._initialSize
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2577352098603837734, guid: 817a784a173402c4ba1f3e2d00a2ffb7, type: 3}
+      propertyPath: pools.Array.data[4]._initialSize
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4507597837436778972, guid: 817a784a173402c4ba1f3e2d00a2ffb7, type: 3}
       propertyPath: poolRoot
       value: 
@@ -25479,6 +25531,14 @@ PrefabInstance:
     - target: {fileID: 1581975676796680593, guid: c3d6ee6e352c46843aeddc0b47b45eec, type: 3}
       propertyPath: m_Name
       value: ---SPAWN_POINT---
+      objectReference: {fileID: 0}
+    - target: {fileID: 7180335567157856883, guid: c3d6ee6e352c46843aeddc0b47b45eec, type: 3}
+      propertyPath: maxEnemies
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7180335567157856883, guid: c3d6ee6e352c46843aeddc0b47b45eec, type: 3}
+      propertyPath: baseSpawnInterval
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8527854399527421548, guid: c3d6ee6e352c46843aeddc0b47b45eec, type: 3}
       propertyPath: m_LocalPosition.x

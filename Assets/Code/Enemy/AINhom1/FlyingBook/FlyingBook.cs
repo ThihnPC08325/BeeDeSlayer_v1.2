@@ -72,6 +72,7 @@ public class FlyingBook : MonoBehaviour
 
     private void Start()
     {
+        agent = GetComponent<NavMeshAgent>();
         StartCoroutine(UpdateEnemyState());
     }
 
