@@ -33,6 +33,8 @@ public class EnemyManager : MonoBehaviour
         Melee,
         Skeleton,
         Spider,
+        Bat,
+        Tanker,
 
         // Thêm các loại enemy khác
     }
