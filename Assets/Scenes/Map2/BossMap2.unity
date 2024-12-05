@@ -11751,12 +11751,44 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 570649360246444991, guid: 7873aab2559afec45ba6f46c48a34a6c, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.7025628
+      objectReference: {fileID: 0}
+    - target: {fileID: 570649360246444991, guid: 7873aab2559afec45ba6f46c48a34a6c, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.7609
+      objectReference: {fileID: 0}
+    - target: {fileID: 570649360246444991, guid: 7873aab2559afec45ba6f46c48a34a6c, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 70
+      objectReference: {fileID: 0}
+    - target: {fileID: 570649360246444991, guid: 7873aab2559afec45ba6f46c48a34a6c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -75
+      objectReference: {fileID: 0}
+    - target: {fileID: 1338909655939793097, guid: 7873aab2559afec45ba6f46c48a34a6c, type: 3}
+      propertyPath: m_UiScaleMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1338909655939793097, guid: 7873aab2559afec45ba6f46c48a34a6c, type: 3}
+      propertyPath: m_ReferenceResolution.x
+      value: 1920
+      objectReference: {fileID: 0}
+    - target: {fileID: 1338909655939793097, guid: 7873aab2559afec45ba6f46c48a34a6c, type: 3}
+      propertyPath: m_ReferenceResolution.y
+      value: 1080
+      objectReference: {fileID: 0}
     - target: {fileID: 2868574194817559235, guid: 7873aab2559afec45ba6f46c48a34a6c, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2868574194817559235, guid: 7873aab2559afec45ba6f46c48a34a6c, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4729957455533875005, guid: 7873aab2559afec45ba6f46c48a34a6c, type: 3}
+      propertyPath: m_RenderMode
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8274108814433708263, guid: 7873aab2559afec45ba6f46c48a34a6c, type: 3}
@@ -17606,9 +17638,9 @@ MonoBehaviour:
   playerCamera: {fileID: 1098329682}
   bulletSpawn: {fileID: 155751882}
   weaponSwitcher: {fileID: 1098329684}
+  bulletType: 0
   shootingDelay: 0.15
   currentShootMode: 2
-  BulletSpreadIntensity: 0.5
 --- !u!114 &580415909
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32139,7 +32171,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1293822488
 Transform:
   m_ObjectHideFlags: 0
@@ -32696,9 +32728,9 @@ MonoBehaviour:
   playerCamera: {fileID: 1098329682}
   bulletSpawn: {fileID: 155751882}
   weaponSwitcher: {fileID: 1098329684}
+  bulletType: 0
   shootingDelay: 0.15
   currentShootMode: 2
-  BulletSpreadIntensity: 0.5
 --- !u!114 &1450006920
 MonoBehaviour:
   m_ObjectHideFlags: 0

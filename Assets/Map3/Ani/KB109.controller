@@ -14,7 +14,7 @@ AnimatorStateMachine:
     m_Position: {x: 408.80002, y: 161.6, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5525131409040011775}
-    m_Position: {x: 688.5944, y: 342.51117, z: 0}
+    m_Position: {x: 690, y: 340, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -109,7 +109,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Take 001
+  m_Name: ReloadKB109
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -123,7 +123,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 1827226128182048838, guid: df10dad241f26b84ba82ebb17a961c38, type: 3}
+  m_Motion: {fileID: 1827226128182048838, guid: ed9f18405ad33b44c9c4a1a2b28d7384, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
