@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public class SceneChanger : MonoBehaviour
 {
     private static System.Random random = new System.Random();
-    private List<string> scenes = new List<string> { "Man1.1", "Man1.2", "Man1.3", "Man1.4", "Man1.5" };
-    private const string targetScene = "Man1.6";
+    private List<string> scenes = new List<string> { "Man1.1", "Man1.2", "Man1.3", "Man1.4"};
+    private const string targetScene = "Man1.5";
 
     [SerializeField] private NoteCounter noteCounter; // Reference to NoteCounter
 
@@ -35,7 +35,7 @@ public class SceneChanger : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Debug.Log($"Player triggered scene change. Notes collected: {noteCounter?.CollectedNoteCount}");
-            if (noteCounter != null && noteCounter.CollectedNoteCount >= 5)
+            if (noteCounter != null && noteCounter.CollectedNoteCount >= 4)
             {
                 Debug.Log($"Loading target scene: {targetScene}");
                 SceneManager.LoadScene(targetScene);
