@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ImpactEffectPool : MonoBehaviour
@@ -60,7 +61,6 @@ public class ImpactEffectPool : MonoBehaviour
         {
             instance = this;
             InitializePoolSystem();
-            DontDestroyOnLoad(poolRoot.gameObject);
         }
         else
         {
@@ -83,31 +83,45 @@ public class ImpactEffectPool : MonoBehaviour
 
     private void InitializePools()
     {
+        StartCoroutine(InitializePoolsAsync());
+    }
+
+    private IEnumerator InitializePoolsAsync()
+    {
         foreach (Pool pool in pools)
         {
             if (pool.Prefab == null)
             {
-                Debug.LogError($"Invalid pool configuration detected!");
+                Debug.LogError($"Invalid pool configuration detected for {pool.EffectType}!");
                 continue;
             }
 
+            // Tạo container cho pool
             var container = new GameObject($"Pool_{pool.EffectType}").transform;
             container.SetParent(transform);
             pool.ContainerTransform = container;
 
+            // Tạo object pool
             var objectPool = new Queue<GameObject>(pool.Size);
-            PrewarmPool(pool, objectPool);
+            yield return StartCoroutine(PrewarmPoolAsync(pool, objectPool));
 
             poolDictionary[pool.EffectType] = objectPool;
             poolReference[pool.EffectType] = pool;
         }
     }
 
-    private void PrewarmPool(Pool pool, Queue<GameObject> objectPool)
+
+    private IEnumerator PrewarmPoolAsync(Pool pool, Queue<GameObject> objectPool)
     {
         for (int i = 0; i < pool.Size; i++)
         {
             CreateNewInstance(pool, objectPool);
+
+            // Nhả CPU sau mỗi 10 đối tượng để tránh làm Unity treo
+            if (i % 10 == 0)
+            {
+                yield return null;
+            }
         }
     }
 
@@ -115,8 +129,10 @@ public class ImpactEffectPool : MonoBehaviour
     {
         var obj = Instantiate(pool.Prefab, pool.ContainerTransform);
         obj.SetActive(false);
+        obj.hideFlags = HideFlags.HideAndDontSave; // Ẩn đối tượng trong Editor
         objectPool.Enqueue(obj);
     }
+
 
     public GameObject SpawnFromPool(EffectType type, Vector3 position, Quaternion rotation)
     {

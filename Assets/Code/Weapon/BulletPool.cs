@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BulletPool : MonoBehaviour
@@ -10,14 +11,19 @@ public class BulletPool : MonoBehaviour
         {
             if (s_Instance == null)
             {
-                var obj = new GameObject("PlayerBulletPool");
-                s_Instance = obj.AddComponent<BulletPool>();
+                // Tìm trong scene
+                s_Instance = FindObjectOfType<BulletPool>();
+                if (s_Instance == null)
+                {
+                    // Nếu không tìm thấy, tạo mới
+                    var obj = new GameObject("PlayerBulletPool");
+                    s_Instance = obj.AddComponent<BulletPool>();
+                }
             }
             return s_Instance;
         }
     }
 
-    // Sử dụng enum thay vì string
     public enum PoolType
     {
         NormalBullet,
@@ -51,7 +57,7 @@ public class BulletPool : MonoBehaviour
             s_Instance = this;
             SetupPoolStructure();
             DontDestroyOnLoad(poolRoot.gameObject);
-            InitializePools();
+            StartCoroutine(InitializePoolsAsync()); // Sử dụng Coroutine
         }
         else
         {
@@ -69,7 +75,7 @@ public class BulletPool : MonoBehaviour
         transform.parent = poolRoot;
     }
 
-    private void InitializePools()
+    private IEnumerator InitializePoolsAsync()
     {
         foreach (var pool in pools)
         {
@@ -82,10 +88,24 @@ public class BulletPool : MonoBehaviour
             for (int i = 0; i < pool.Size; i++)
             {
                 CreateNewInstance(pool, container, objectPool);
+                if (i % 10 == 0) yield return null; // Tạo 10 object mỗi frame
             }
 
             _poolDictionary[pool.Type] = objectPool;
         }
+    }
+
+    private IEnumerator InitializePoolAsync(Pool pool, Transform container)
+    {
+        var objectPool = new Queue<GameObject>(pool.Size);
+
+        for (int i = 0; i < pool.Size; i++)
+        {
+            CreateNewInstance(pool, container, objectPool);
+            if (i % 10 == 0) yield return null; // Giảm tải CPU mỗi 10 đối tượng
+        }
+
+        _poolDictionary[pool.Type] = objectPool;
     }
 
     private void CreateNewInstance(Pool pool, Transform container, Queue<GameObject> objectPool)

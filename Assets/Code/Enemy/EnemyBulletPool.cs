@@ -69,26 +69,29 @@ public class EnemyBulletPool : MonoBehaviour
 
         foreach (Pool pool in pools)
         {
-            GameObject container = new GameObject($"Pool_{pool.BulletType}");
-            container.transform.parent = transform;
-            containerDictionary[pool.BulletType] = container.transform;
+            // Tạo container cho mỗi loại đạn
+            Transform container = CreateContainer(pool.BulletType);
+            containerDictionary[pool.BulletType] = container;
 
+            // Tạo pool ban đầu
             Queue<GameObject> objectPool = new Queue<GameObject>(pool.Size);
-            CreateInitialPoolObjects(pool, container.transform, objectPool);
+            for (int i = 0; i < pool.Size; i++)
+            {
+                objectPool.Enqueue(CreateInactiveObject(pool.Prefab, container));
+            }
+
             poolDictionary[pool.BulletType] = objectPool;
         }
     }
 
-    private void CreateInitialPoolObjects(Pool pool, Transform container, Queue<GameObject> objectPool)
+    private Transform CreateContainer(BulletType bulletType)
     {
-        for (int i = 0; i < pool.Size; i++)
-        {
-            GameObject obj = CreateNewPoolObject(pool.Prefab, container);
-            objectPool.Enqueue(obj);
-        }
+        GameObject container = new GameObject($"Pool_{bulletType}");
+        container.transform.parent = poolRoot;
+        return container.transform;
     }
 
-    private GameObject CreateNewPoolObject(GameObject prefab, Transform parent)
+    private GameObject CreateInactiveObject(GameObject prefab, Transform parent)
     {
         GameObject obj = Instantiate(prefab, parent);
         obj.SetActive(false);
@@ -97,40 +100,32 @@ public class EnemyBulletPool : MonoBehaviour
 
     public GameObject SpawnFromPool(BulletType bulletType, Vector3 position, Quaternion rotation)
     {
-        if (!poolDictionary.ContainsKey(bulletType))
+        if (!poolDictionary.TryGetValue(bulletType, out var pool))
         {
-            Debug.LogWarning($"Pool with type {bulletType} doesn't exist! 🚫");
+            Debug.LogWarning($"Pool {bulletType} not found!");
             return null;
         }
 
-        Queue<GameObject> pool = poolDictionary[bulletType];
-        GameObject objectToSpawn;
+        GameObject objectToSpawn = pool.Count > 0
+            ? pool.Dequeue()
+            : CreateInactiveObject(pools.Find(p => p.BulletType == bulletType).Prefab, containerDictionary[bulletType]);
 
-        if (pool.Count == 0)
-        {
-            Pool originalPool = pools.Find(p => p.BulletType == bulletType);
-            objectToSpawn = CreateNewPoolObject(originalPool.Prefab, containerDictionary[bulletType]);
-        }
-        else
-        {
-            objectToSpawn = pool.Dequeue();
-        }
-
-        objectToSpawn.SetActive(true);
         objectToSpawn.transform.SetPositionAndRotation(position, rotation);
+        objectToSpawn.SetActive(true);
         return objectToSpawn;
     }
 
     public void ReturnToPool(BulletType bulletType, GameObject obj)
     {
-        if (!poolDictionary.ContainsKey(bulletType))
+        if (poolDictionary.TryGetValue(bulletType, out var pool))
         {
-            Debug.LogWarning($"Pool with type {bulletType} doesn't exist! 🚫");
-            return;
+            obj.SetActive(false);
+            obj.transform.parent = containerDictionary[bulletType];
+            pool.Enqueue(obj);
         }
-
-        obj.transform.parent = containerDictionary[bulletType];
-        obj.SetActive(false);
-        poolDictionary[bulletType].Enqueue(obj);
+        else
+        {
+            Debug.LogWarning($"Attempted to return object to nonexistent pool {bulletType}.");
+        }
     }
 }

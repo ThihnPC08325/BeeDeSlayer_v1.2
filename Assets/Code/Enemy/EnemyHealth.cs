@@ -34,7 +34,7 @@ public class EnemyHealth : MonoBehaviour, IPooledObject
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
-        healthBar = GetComponent<HealthBar>(); // Kiểm tra xem có cần gán lại không
+        healthBar.HealthEnemy(damage);
         if (currentHealth <= 0f)
         {
             currentHealth = 0f;

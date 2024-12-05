@@ -60,7 +60,6 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("va cham bullet");
         switch (collision.gameObject.tag)
         {
             case "Enemy":
@@ -72,10 +71,10 @@ public class Bullet : MonoBehaviour
             default:
                 // Xử lý các trường hợp va chạm khác nếu cần
                 break;
-            
+
 
         }
-
+        Debug.Log("va cham bullet");
         ReturnToPool();
         ReturnImpactToPool();
     }
@@ -96,9 +95,9 @@ public class Bullet : MonoBehaviour
             enemyMeleeHealth.TakeDamage(damage);
         }
         //Boss quai map1
-        if (enemy.TryGetComponent(out TentacleHealth tentacleHealth))
+        if (enemy.TryGetComponent(out GhostHealth ghostHealth))
         {
-            tentacleHealth.TakeDamage(damage);
+            ghostHealth.TakeDamage(damage);
         }
         if (enemy.TryGetComponent(out SpiderHealth spiderHealth))
         {
@@ -143,10 +142,8 @@ public class Bullet : MonoBehaviour
     {
         IsInUse = false;
         startPosition = transform.position; // Đặt lại vị trí bắt đầu
-        if (trailRenderer != null)
-        {
-            trailRenderer.Clear(); // Xóa trail khi reset đạn
-        }
+        trailRenderer.Clear(); // Xóa trail khi reset đạn
+
     }
 
     private void ReturnImpactToPool()

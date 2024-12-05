@@ -9,13 +9,11 @@ public class ARGun : MonoBehaviour
     [SerializeField] private Camera playerCamera;
     [SerializeField] private Transform bulletSpawn;
     [SerializeField] private SwitchingWeapon weaponSwitcher;
+    [SerializeField] private BulletPool.PoolType bulletType;
 
     [Header("Shooting")]
     [SerializeField] private float shootingDelay;
     [SerializeField] private ShootMode currentShootMode;
-
-    [Header("Spread")]
-    [SerializeField] float BulletSpreadIntensity;
 
     private Vector3 gravity = Physics.gravity; // Sử dụng trọng lực mặc định của Unity
     private void UpdateBulletTrajectory(Rigidbody bulletRb, float deltaTime)
@@ -45,15 +43,15 @@ public class ARGun : MonoBehaviour
         {
             case ShootMode.Single:
                 shootingDelay = 0.2f;
-                BulletSpreadIntensity = 0.02f;
+
                 break;
             case ShootMode.Burst:
                 shootingDelay = 0.1f;
-                BulletSpreadIntensity = 0.03f;
+
                 break;
             case ShootMode.Auto:
                 shootingDelay = 0.2f;
-                BulletSpreadIntensity = 0.5f;
+
                 break;
         }
     }
@@ -132,12 +130,12 @@ public class ARGun : MonoBehaviour
 
     private void FireBullet()
     {
-        Vector3 shootingDirection = BulletDirectionCalculator.CalculateDirection(bulletSpawn, BulletSpreadIntensity);
+        Vector3 shootingDirection = BulletDirectionCalculator.CalculateDirection(bulletSpawn);
         float muzzleVelocity = calculateMuzzleVelocity.MuzzleVelocity();
 
         GameEvents.TriggerWeaponFire(bulletSpawn.position, shootingDirection, muzzleVelocity);
 
-        GameObject bullet = BulletPool.Instance.SpawnFromPool(BulletPool.PoolType.NormalBullet, bulletSpawn.position, bulletSpawn.rotation);
+        GameObject bullet = BulletPool.Instance.SpawnFromPool(bulletType, bulletSpawn.position, bulletSpawn.rotation);
 
         var bulletRb = bullet.GetComponent<Rigidbody>();
 

@@ -1,0 +1,276 @@
+using UnityEngine;
+using UnityEngine.AI;
+using System.Collections.Generic;
+using System.Collections;
+public class No1BossAI : MonoBehaviour
+{
+    // State Enum
+    private enum BossState { Chasing, MeleeAttacking, RangedAttacking, Enraged }
+
+    [Header("References")]
+    [SerializeField] private Transform projectileSpawnPoint;
+    [SerializeField] private GameObject projectilePrefab;
+
+    [Header("Settings")]
+    [SerializeField] private float meleeRange = 3f;
+    [SerializeField] private float meleeDamage = 20f;
+    [SerializeField] private float meleeAttackCooldown = 1.5f;
+    [SerializeField] private float meleeAttackDelay = 0.5f; // Delay before dealing damage for animation
+    [SerializeField] private float penetration = 0f;
+
+    [SerializeField] private float rangedCooldown = 5f;
+    [SerializeField] private float rangedAttackDelay = 1f; // Delay before firing the projectile
+    [SerializeField] private float enrageDistance = 10f;
+    [SerializeField] private int enragedShots = 3;
+
+    private NavMeshAgent agent;
+    private Transform player;
+    private BossState currentState = BossState.Chasing;
+    private float lastRangedAttackTime;
+    private float lastMeleeAttackTime;
+    private int enragedShotsFired;
+    private bool isMeleeAttackOnCooldown;
+    private bool isEnragedShooting = false;
+    private void Awake()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+        if (playerObject != null)
+        {
+            player = playerObject.transform;
+        }
+        else
+        {
+            Debug.LogError("Player not found! Make sure the Player GameObject has the 'Player' tag.");
+        }
+    }
+
+    private void Start()
+    {
+        EnterState(BossState.Chasing); // Immediately chase the player
+    }
+
+    private void Update()
+    {
+        if (player == null) return; // Exit if player is not assigned
+        HandleState();
+    }
+
+    private void HandleState()
+    {
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        switch (currentState)
+        {
+            case BossState.Chasing:
+                agent.isStopped = false; // Resume movement
+                agent.SetDestination(player.position);
+
+                if (distanceToPlayer <= meleeRange && !isMeleeAttackOnCooldown)
+                {
+                    EnterState(BossState.MeleeAttacking);
+                }
+                else if (distanceToPlayer > enrageDistance)
+                {
+                    EnterState(BossState.Enraged);
+                }
+                else if (Time.time - lastRangedAttackTime >= rangedCooldown)
+                {
+                    EnterState(BossState.RangedAttacking);
+                }
+                break;
+
+            case BossState.MeleeAttacking:
+                agent.isStopped = true;
+
+                if (Time.time - lastMeleeAttackTime >= meleeAttackCooldown)
+                {
+                    PerformMeleeAttack();
+                }
+                else if (distanceToPlayer > meleeRange)
+                {
+                    EnterState(BossState.Chasing);
+                }
+                break;
+
+            case BossState.RangedAttacking:
+                agent.isStopped = true;
+                if (Time.time - lastRangedAttackTime >= rangedCooldown)
+                {
+                    PerformRangedAttack();
+                }
+                break;
+
+            case BossState.Enraged:
+                agent.isStopped = true;
+
+                if (enragedShotsFired < enragedShots)
+                {
+                    PerformEnragedShot();
+                }
+                else
+                {
+                    // Reset the shot count and return to Chasing
+                    enragedShotsFired = 0;
+                    EnterState(BossState.Chasing);
+                }
+                break;
+
+        }
+    }
+
+    private void EnterState(BossState newState)
+    {
+        currentState = newState;
+
+        switch (newState)
+        {
+            case BossState.Chasing:
+                agent.isStopped = false;
+                break;
+
+            case BossState.MeleeAttacking:
+                agent.isStopped = true;
+                break;
+
+            case BossState.RangedAttacking:
+                agent.isStopped = true;
+
+                // Reset ranged attack timer
+                lastRangedAttackTime = Time.time;
+
+                // Perform the ranged attack
+                PerformRangedAttack();
+                break;
+
+            case BossState.Enraged:
+                agent.isStopped = true;
+                break;
+        }
+    }
+
+
+    private void PerformMeleeAttack()
+    {
+        Debug.Log("Performing Melee Attack");
+        lastMeleeAttackTime = Time.time;
+        isMeleeAttackOnCooldown = true;
+        Invoke(nameof(DealMeleeDamage), meleeAttackDelay);
+        Invoke(nameof(ResetMeleeCooldown), meleeAttackCooldown);
+    }
+
+    private void DealMeleeDamage()
+    {
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        if (distanceToPlayer <= meleeRange && player != null)
+        {
+            PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage(meleeDamage, penetration);
+            }
+            Debug.Log($"Dealing {meleeDamage} damage to player.");
+        }
+    }
+
+    private void ResetMeleeCooldown()
+    {
+        isMeleeAttackOnCooldown = false;
+    }
+
+    private void PerformRangedAttack()
+    {
+        if (player == null) return;
+
+        Debug.Log("Preparing Ranged Attack");
+
+        // Delay the actual attack to allow for animations
+        Invoke(nameof(ExecuteRangedAttack), rangedAttackDelay);
+    }
+
+    private void ExecuteRangedAttack()
+    {
+        if (player == null) return;
+
+        Debug.Log("Preparing to spawn projectile");
+
+        // Instantiate the projectile but do not set its direction yet
+        GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
+
+        // Wait at the spawn point for a moment before firing
+        StartCoroutine(WaitAndFireProjectile(projectile));
+    }
+
+    private IEnumerator WaitAndFireProjectile(GameObject projectile)
+    {
+        // Make the boss wait at the spawn point for a short duration
+        float waitDuration = 1f; // Adjust this to change the delay
+        yield return new WaitForSeconds(waitDuration);
+
+        Debug.Log("Firing Projectile");
+
+        if (player == null || projectile == null) yield break;
+
+        // Aim and fire the projectile toward the player
+        Vector3 direction = (player.position - projectileSpawnPoint.position).normalized;
+        Projectile projectileScript = projectile.GetComponent<Projectile>();
+        if (projectileScript != null)
+        {
+            projectileScript.SetDirection(direction);
+        }
+        else
+        {
+            Debug.LogError("Projectile prefab must have a Projectile script.");
+        }
+
+        // Transition back to the Chasing state after firing
+        EnterState(BossState.Chasing);
+    }
+
+    private void ExitRangedAttackState()
+    {
+        if (currentState == BossState.RangedAttacking)
+        {
+            EnterState(BossState.Chasing);
+        }
+    }
+    private void PerformEnragedShot()
+    {
+        if (IsInvoking(nameof(FireEnragedShot))) return; // Prevent overlapping invokes
+
+        Debug.Log($"Enraged Shot {enragedShotsFired + 1} of {enragedShots}");
+
+        // Delay the next shot to allow for animation and pacing
+        Invoke(nameof(FireEnragedShot), rangedAttackDelay);
+    }
+
+    private void FireEnragedShot()
+    {
+        if (player == null) return;
+
+        Debug.Log($"Enraged Shot {enragedShotsFired + 1} of {enragedShots}");
+
+        // Instantiate and prepare the projectile
+        GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
+
+        // Wait and fire the projectile
+        StartCoroutine(WaitAndFireProjectile(projectile));
+
+        enragedShotsFired++;
+
+        // Automatically invoke the next shot until the sequence is complete
+        if (enragedShotsFired < enragedShots)
+        {
+            PerformEnragedShot();
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, enrageDistance);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, meleeRange);
+    }
+}

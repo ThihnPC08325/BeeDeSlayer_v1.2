@@ -1185,6 +1185,10 @@ PrefabInstance:
       propertyPath: baseMultiplier
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8700025055025808662, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
+      propertyPath: m_Center.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 4295213790301654413, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
