@@ -10,19 +10,26 @@ public class HealthBar : MonoBehaviour
 {
     [SerializeField] private Slider healthBar;
     [SerializeField] private Slider easeHealthBar;
-    private float lerpSpeed = 0.05f;
+    private float lerpSpeed = 0.03f;
 
     [SerializeField] EnemyHealth enemyHealth;
     void Start()
     {
         healthBar.maxValue = enemyHealth.currentHealth;
-        easeHealthBar.maxValue = healthBar.maxValue;
+        easeHealthBar.maxValue = enemyHealth.currentHealth;
     }
 
     public void HealthEnemy(float damage)
     {
         Debug.Log("Tru mau");
         enemyHealth.currentHealth -= damage;
+    }
+    private void Update()
+    {
+        UpdateSlider();
+    }
+    private void UpdateSlider()
+    {
         if (healthBar.value != enemyHealth.currentHealth)
         {
             healthBar.value = enemyHealth.currentHealth;
@@ -34,3 +41,4 @@ public class HealthBar : MonoBehaviour
         }
     }
 }
+
