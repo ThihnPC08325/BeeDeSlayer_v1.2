@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7656937146403440666}
   - component: {fileID: 205798716027810812}
   - component: {fileID: 8759528203502915917}
+  - component: {fileID: 4591832288563985506}
   - component: {fileID: 7091171875022120669}
   - component: {fileID: 1316625788871387089}
   m_Layer: 0
@@ -109,6 +110,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.4372369, y: 1.4340092, z: 2.840603}
   m_Center: {x: 0.026424434, y: 0.21700367, z: -0.11384145}
+--- !u!114 &4591832288563985506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6423028635461440228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f39ec59d914a1cb499340d1097169047, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 200
+  currentHealth: 0
+  smokePrefab: {fileID: 8656107223128203463, guid: b77d8afd1ff5bd84fa74292ba59c0f5b, type: 3}
+  bossHealthBar: {fileID: 0}
+  deathSound: {fileID: 0}
+  backgroundMusic: {fileID: 0}
 --- !u!114 &7091171875022120669
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -70,7 +70,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbc5ce0e43e7dd34e852d5011c109bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
+  health: 20
   itemDropManager: {fileID: 3730301437354127519}
 --- !u!114 &3730301437354127519
 MonoBehaviour:
