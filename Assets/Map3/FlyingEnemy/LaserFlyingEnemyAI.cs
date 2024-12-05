@@ -106,12 +106,6 @@ public class LaserFlyingEnemyAI : MonoBehaviour
         agent.isStopped = true;
         transform.LookAt(playerTransform);
 
-        //int GachaValue = Random.Range(0, 100);
-        //if (GachaValue < 25)
-        //{
-        //    Debug.Log("tỷ lệ 25%");
-        //}
-        //else 
         if (IsLookingAtPlayer() && !isAttacking)
         {
             isAttacking = true;
@@ -170,7 +164,15 @@ public class LaserFlyingEnemyAI : MonoBehaviour
 
         if (currentState == AIState.Attacking)
         {
-            laserShooter.GetFireLaserAtPlayer();
+            int GachaValue = Random.Range(0, 100);
+            if (GachaValue < 25)
+            {
+                laserShooter.GetBombtoPlayer();
+            }
+            else
+            {
+                laserShooter.GetFireLaserAtPlayer();
+            }
         }
 
         if (Vector3.Distance(transform.position, playerTransform.position) > attackRange)
