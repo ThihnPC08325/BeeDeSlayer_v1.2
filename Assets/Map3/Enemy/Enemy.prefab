@@ -528,7 +528,7 @@ MonoBehaviour:
   normalSpeed: 12
   sprintSpeed: 20
   attackRange: 16.6
-  detectionRange: 39.7
+  detectionRange: 84.8
   sprintThreshold: 34.1
   rotationSpeed: 720
   snapThreshold: 5
@@ -553,14 +553,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3570b0f5fa1f1b542a054d4b782c2a44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackCooldown: 0.5
+  attackCooldown: 0.05
   spreadIntensity: 0.2
   bulletMass: 0.01
   bulletDiameter: 0.00556
   bulletSpawn: {fileID: 7621099748768456516}
   barrelLength: 0.5
   propellantBurnRate: 0.8
-  chamberPressure: 30000000
+  chamberPressure: 3e+9
   atmosphericPressure: 101325
   maxAccuracy: 1
   minAccuracy: 0.5
@@ -17662,14 +17662,14 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: fdd44328a32d4bf4c976f154fb15cc96, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8634139457961625989}
+      addedObject: {fileID: 4511643701246040156}
   m_SourcePrefab: {fileID: 100100000, guid: fdd44328a32d4bf4c976f154fb15cc96, type: 3}
 --- !u!1 &444713223762343662 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: fdd44328a32d4bf4c976f154fb15cc96, type: 3}
   m_PrefabInstance: {fileID: 786609876159220671}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &8634139457961625989
+--- !u!95 &4511643701246040156
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0
