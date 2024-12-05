@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1345b7056d6d0f843b0f65425485296b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
+  health: 20
   itemDropManager: {fileID: 5121305975146235800}
 --- !u!114 &5121305975146235800
 MonoBehaviour:

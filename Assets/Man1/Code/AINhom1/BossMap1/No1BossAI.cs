@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 using System.Collections;
+
 public class No1BossAI : MonoBehaviour
 {
     // State Enum
@@ -10,6 +11,7 @@ public class No1BossAI : MonoBehaviour
     [Header("References")]
     [SerializeField] private Transform projectileSpawnPoint;
     [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private Animator animator;
 
     [Header("Settings")]
     [SerializeField] private float meleeRange = 3f;
@@ -31,9 +33,13 @@ public class No1BossAI : MonoBehaviour
     private int enragedShotsFired;
     private bool isMeleeAttackOnCooldown;
     private bool isEnragedShooting = false;
+
+    // Animation
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+
         GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
         if (playerObject != null)
         {
@@ -115,7 +121,6 @@ public class No1BossAI : MonoBehaviour
                     EnterState(BossState.Chasing);
                 }
                 break;
-
         }
     }
 
@@ -127,14 +132,18 @@ public class No1BossAI : MonoBehaviour
         {
             case BossState.Chasing:
                 agent.isStopped = false;
+                animator.SetBool("rangeAttack", false);
+                animator.SetBool("meleeAttack", false);
                 break;
 
             case BossState.MeleeAttacking:
                 agent.isStopped = true;
+                animator.SetBool("meleeAttack", true);
                 break;
 
             case BossState.RangedAttacking:
                 agent.isStopped = true;
+                animator.SetBool("rangeAttack", true);
 
                 // Reset ranged attack timer
                 lastRangedAttackTime = Time.time;
@@ -145,10 +154,10 @@ public class No1BossAI : MonoBehaviour
 
             case BossState.Enraged:
                 agent.isStopped = true;
+                animator.SetBool("rangeAttack", true);
                 break;
         }
     }
-
 
     private void PerformMeleeAttack()
     {
@@ -203,8 +212,7 @@ public class No1BossAI : MonoBehaviour
 
     private IEnumerator WaitAndFireProjectile(GameObject projectile)
     {
-        // Make the boss wait at the spawn point for a short duration
-        float waitDuration = 1f; // Adjust this to change the delay
+        float waitDuration = 0.6f; // Adjust this to change the delay
         yield return new WaitForSeconds(waitDuration);
 
         Debug.Log("Firing Projectile");
@@ -223,24 +231,15 @@ public class No1BossAI : MonoBehaviour
             Debug.LogError("Projectile prefab must have a Projectile script.");
         }
 
-        // Transition back to the Chasing state after firing
         EnterState(BossState.Chasing);
     }
 
-    private void ExitRangedAttackState()
-    {
-        if (currentState == BossState.RangedAttacking)
-        {
-            EnterState(BossState.Chasing);
-        }
-    }
     private void PerformEnragedShot()
     {
         if (IsInvoking(nameof(FireEnragedShot))) return; // Prevent overlapping invokes
 
         Debug.Log($"Enraged Shot {enragedShotsFired + 1} of {enragedShots}");
 
-        // Delay the next shot to allow for animation and pacing
         Invoke(nameof(FireEnragedShot), rangedAttackDelay);
     }
 
@@ -250,15 +249,12 @@ public class No1BossAI : MonoBehaviour
 
         Debug.Log($"Enraged Shot {enragedShotsFired + 1} of {enragedShots}");
 
-        // Instantiate and prepare the projectile
         GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
 
-        // Wait and fire the projectile
         StartCoroutine(WaitAndFireProjectile(projectile));
 
         enragedShotsFired++;
 
-        // Automatically invoke the next shot until the sequence is complete
         if (enragedShotsFired < enragedShots)
         {
             PerformEnragedShot();
