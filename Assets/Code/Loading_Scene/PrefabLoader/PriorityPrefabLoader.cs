@@ -29,6 +29,10 @@ public class PriorityPrefabLoader : MonoBehaviour
     private bool isLoading = false;
     private Dictionary<GameObject, Transform> prefabInstances = new Dictionary<GameObject, Transform>();
 
+    private void Awake()
+    {
+        StartCoroutine(LoadPrefabsAsync());
+    }
     public IEnumerator LoadPrefabsAsync()
     {
         if (isLoading)
@@ -64,6 +68,7 @@ public class PriorityPrefabLoader : MonoBehaviour
         }
 
         Debug.Log("All prefabs loaded!");
+        ActivateAllPrefabs();
         isLoading = false;
     }
 

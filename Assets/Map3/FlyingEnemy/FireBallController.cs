@@ -4,19 +4,27 @@ using UnityEngine;
 public class FireBallController : MonoBehaviour
 {
     public Vector3 Target;
-    private float speed = 10f;
-    private bool isExplosion = false;
-    [SerializeField] float dame = 10f;
-    [SerializeField] float penetration = 2;
+    [SerializeField] private float speed = 10f;
+    [SerializeField] private Vector3 explosionScale = new Vector3(10, 7, 10);
     [SerializeField] private GameObject BigExplosionEffect;
+    [SerializeField] private float dame = 10;
+    [SerializeField] private float penetration = 2;
+    private MeshRenderer MeshRenderer;
+    private bool isExplosion = false;
+
+    private void Start()
+    {
+        MeshRenderer = GetComponent<MeshRenderer>();
+    }
 
     void Update()
     {
         transform.position = Vector3.MoveTowards(transform.position, Target, speed * Time.deltaTime);
 
-        if (transform.position == Target)
+        if (Vector3.Distance(transform.position, Target) < 0.1f)
         {
-            transform.localScale = new Vector3(6, 6, 6);
+            transform.localScale = explosionScale;
+            MeshRenderer.enabled = false;
             if (!isExplosion)
             {
                 StartCoroutine(DestroyBomb());
@@ -27,9 +35,10 @@ public class FireBallController : MonoBehaviour
 
     private IEnumerator DestroyBomb()
     {
-        Instantiate(BigExplosionEffect, transform.position, Quaternion.identity);
-
-        gameObject.SetActive(false);
+        if (BigExplosionEffect != null)
+        {
+            Instantiate(BigExplosionEffect, transform.position, Quaternion.identity);
+        }
 
         yield return new WaitForSeconds(1f);
 
@@ -41,12 +50,10 @@ public class FireBallController : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
-            playerHealth.TakeDamage(dame, penetration);
-        }
-        else if (other)
-        {
-            Instantiate(BigExplosionEffect, transform.position, Quaternion.identity);
-            Destroy(gameObject);
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage(dame,penetration);
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using UnityEngine.AI;
+using UnityEngine.AI;
 using UnityEngine;
 using System.Collections;
 
