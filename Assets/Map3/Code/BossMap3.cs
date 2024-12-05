@@ -6,8 +6,8 @@ public class BossMap3 : MonoBehaviour
 {
     [Header("Skill Settings")]
     [SerializeField] private GameObject[] spawnPrefabs; // Mảng các prefab sẽ được tạo ra
+    [SerializeField] private int[] spawnCounts; // Mảng số lượng spawn tương ứng với từng prefab
     [SerializeField] private Transform[] spawnPositions; // Mảng các Transform chứa các vị trí tạo prefab
-    [SerializeField] private int prefabCount = 5; // Số lượng prefab tạo ra mỗi lần (có thể thay đổi trong Inspector)
     [SerializeField] private int maxPrefabs = 20; // Giới hạn số lượng prefab tối đa có thể tạo ra
     [SerializeField] private float skillCooldown = 10f; // Thời gian hồi chiêu
 
@@ -24,9 +24,9 @@ public class BossMap3 : MonoBehaviour
             bossHealth = GetComponent<BossMap3Health>();
         }
 
-        if (spawnPrefabs.Length == 0 || spawnPositions.Length == 0)
+        if (spawnPrefabs.Length == 0 || spawnPositions.Length == 0 || spawnCounts.Length != spawnPrefabs.Length)
         {
-            Debug.LogError("Spawn Prefabs or Spawn Positions are not assigned!");
+            Debug.LogError("Spawn Prefabs, Spawn Counts, or Spawn Positions are not properly assigned!");
             enabled = false;
             return;
         }
@@ -43,39 +43,49 @@ public class BossMap3 : MonoBehaviour
             if (bossHealth != null && bossHealth.CurrentHealth > bossHealth.MaxHealth / 2 && totalPrefabsCreated < maxPrefabs)
             {
                 Debug.Log("Using skill!");
-                SpawnPrefabsAround(prefabCount); // Tạo ra số lượng prefab tùy chỉnh
+                SpawnPrefabsByCounts(); // Tạo số lượng prefab tùy chỉnh
             }
 
             yield return new WaitForSeconds(skillCooldown); // Mỗi 10 giây sẽ kiểm tra lại
         }
     }
 
-    private void SpawnPrefabsAround(int count)
+    private void SpawnPrefabsByCounts()
     {
-        // Kiểm tra tổng số prefabs đã tạo ra
-        if (totalPrefabsCreated + count > maxPrefabs)
+        for (int i = 0; i < spawnPrefabs.Length; i++)
         {
-            count = maxPrefabs - totalPrefabsCreated; // Giới hạn số prefab tạo thêm không vượt quá maxPrefabs
-        }
+            // Lấy số lượng spawn tương ứng với prefab
+            int count = spawnCounts[i];
 
-        for (int i = 0; i < count; i++)
-        {
-            if (spawnIndex >= spawnPositions.Length)
+            // Kiểm tra tổng số prefabs đã tạo ra
+            if (totalPrefabsCreated + count > maxPrefabs)
             {
-                spawnIndex = 0; // Nếu hết vị trí, vòng lại từ đầu
+                count = maxPrefabs - totalPrefabsCreated; // Giới hạn số lượng spawn không vượt quá maxPrefabs
             }
 
-            // Chọn prefab ngẫu nhiên từ mảng spawnPrefabs
-            GameObject randomPrefab = spawnPrefabs[Random.Range(0, spawnPrefabs.Length)];
+            // Tạo từng prefab
+            for (int j = 0; j < count; j++)
+            {
+                if (spawnIndex >= spawnPositions.Length)
+                {
+                    spawnIndex = 0; // Nếu hết vị trí, vòng lại từ đầu
+                }
 
-            // Lấy vị trí spawn từ mảng spawnPositions
-            Transform spawnPosition = spawnPositions[spawnIndex];
+                // Lấy vị trí spawn từ mảng spawnPositions
+                Transform spawnPosition = spawnPositions[spawnIndex];
 
-            // Tạo prefab tại vị trí spawn
-            Instantiate(randomPrefab, spawnPosition.position, spawnPosition.rotation);
+                // Tạo prefab tại vị trí spawn
+                Instantiate(spawnPrefabs[i], spawnPosition.position, spawnPosition.rotation);
 
-            spawnIndex++; // Cập nhật spawnIndex
-            totalPrefabsCreated++; // Cập nhật tổng số prefabs đã tạo
+                spawnIndex++; // Cập nhật spawnIndex
+                totalPrefabsCreated++; // Cập nhật tổng số prefabs đã tạo
+
+                // Dừng nếu đạt giới hạn
+                if (totalPrefabsCreated >= maxPrefabs)
+                {
+                    return;
+                }
+            }
         }
     }
 }

@@ -553,7 +553,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3570b0f5fa1f1b542a054d4b782c2a44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackCooldown: 0.05
+  attackCooldown: 0.5
   spreadIntensity: 0.2
   bulletMass: 0.01
   bulletDiameter: 0.00556
