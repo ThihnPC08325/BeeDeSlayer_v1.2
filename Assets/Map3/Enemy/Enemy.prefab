@@ -553,7 +553,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3570b0f5fa1f1b542a054d4b782c2a44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackCooldown: 0.05
+  attackCooldown: 0.5
   spreadIntensity: 0.2
   bulletMass: 0.01
   bulletDiameter: 0.00556
@@ -10920,6 +10920,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8883643094273688053}
   - component: {fileID: 3638640851840377293}
+  - component: {fileID: 4725304905536453458}
   m_Layer: 5
   m_Name: HealthBar2
   m_TagString: Untagged
@@ -17823,6 +17824,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7145026137227213594, guid: 9010587e20c7f04449c917bd172330e1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3638640851840377293}
+    - targetCorrespondingSourceObject: {fileID: 7145026137227213594, guid: 9010587e20c7f04449c917bd172330e1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4725304905536453458}
   m_SourcePrefab: {fileID: 100100000, guid: 9010587e20c7f04449c917bd172330e1, type: 3}
 --- !u!114 &3638640851840377293
 MonoBehaviour:
@@ -17839,3 +17843,16 @@ MonoBehaviour:
   healthBar: {fileID: 9127592712345117142}
   easeHealthBar: {fileID: 7504069406183595717}
   enemyHealth: {fileID: 2524238919462993204}
+--- !u!114 &4725304905536453458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3622059769079781971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a9b2637e317fba479bdbd34b7fdb8a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tranformCamera: {fileID: 0}

@@ -383,6 +383,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5752086025412272066}
   - component: {fileID: 5890147751180402602}
+  - component: {fileID: 1484509777288663600}
   m_Layer: 5
   m_Name: HealthBar2
   m_TagString: Untagged
@@ -426,6 +427,19 @@ MonoBehaviour:
   healthBar: {fileID: 4278169638481527692}
   easeHealthBar: {fileID: 1293045613063611840}
   enemyHealth: {fileID: 6368346671471884374}
+--- !u!114 &1484509777288663600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5202481101430120341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a9b2637e317fba479bdbd34b7fdb8a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tranformCamera: {fileID: 0}
 --- !u!1 &6289830752729376656
 GameObject:
   m_ObjectHideFlags: 0
@@ -988,8 +1002,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 5.285908, y: 4.774509, z: 5.628494}
-  m_Center: {x: -0.05919489, y: 0.05391281, z: 0.5439684}
+  m_Size: {x: 7.018124, y: 4.8663645, z: 5.628494}
+  m_Center: {x: -0.12951677, y: 0.09984008, z: 0.5439684}
 --- !u!54 &2868887120381227950
 Rigidbody:
   m_ObjectHideFlags: 0

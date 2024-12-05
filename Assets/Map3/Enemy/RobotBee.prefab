@@ -1699,8 +1699,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 5.798121, y: 16.89116, z: 19.24849}
-  m_Center: {x: -0.043299478, y: 7.9455786, z: -0.53723425}
+  m_Size: {x: 21.502195, y: 16.89116, z: 4.6608415}
+  m_Center: {x: 1.4179232, y: 7.9455786, z: -0.39905015}
 --- !u!114 &5287774451133003680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1807,8 +1807,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0691a992b385b3c479ffb1565f3c1a15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionRange: 20
-  attackRange: 15
+  detectionRange: 75
+  attackRange: 55
   patrolSpeed: 3
   chaseSpeed: 6
   patrolRadius: 30

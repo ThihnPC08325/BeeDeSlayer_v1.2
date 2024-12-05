@@ -90,7 +90,7 @@ public class EnemyLaserShooter : MonoBehaviour
                 PlayerHealth playerHealth = hit.collider.GetComponent<PlayerHealth>();
                 if (playerHealth != null)
                 {
-                    playerHealth.TakeDamage(laserDamage,2);
+                    playerHealth.TakeDamage(laserDamage, 2);
                 }
             }
         }
@@ -114,7 +114,7 @@ public class EnemyLaserShooter : MonoBehaviour
             fireBall[i] = createBomb[i].GetComponent<FireBallController>();
 
             fireBall[i].Target = ZoneLaserAttack.list[i];
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(3f);
         }
 
         lastFireTime += Time.time;

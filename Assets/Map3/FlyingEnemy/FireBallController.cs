@@ -41,7 +41,12 @@ public class FireBallController : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
-            playerHealth.TakeDamage(dame,penetration);
+            playerHealth.TakeDamage(dame, penetration);
+        }
+        else if (other)
+        {
+            Instantiate(BigExplosionEffect, transform.position, Quaternion.identity);
+            Destroy(gameObject);
         }
     }
 }
