@@ -1,68 +1,47 @@
 ﻿using Unity.Mathematics;
 using UnityEngine;
 
-public readonly struct MuzzleVelocityCalculator
+public readonly struct SimpleMuzzleVelocityCalculator
 {
-    // Cache các giá trị tính toán trước
     private readonly float barrelArea;
     private readonly float barrelVolume;
-    private readonly float pressureDifference;
 
-    public MuzzleVelocityCalculator(float bulletDiameter, float barrelLength,
-        float chamberPressure, float atmosphericPressure)
+    public SimpleMuzzleVelocityCalculator(float bulletDiameter, float barrelLength)
     {
         float bulletRadius = bulletDiameter * 0.5f;
         barrelArea = math.PI * bulletRadius * bulletRadius;
         barrelVolume = barrelArea * barrelLength;
-        pressureDifference = chamberPressure - atmosphericPressure;
     }
 
-    public float Calculate(float bulletMass, float propellantBurnRate,
-        float efficiencyFactor, float atmosphericPressure)
+    public float Calculate(float bulletMass, float averagePressure)
     {
-        float averagePressure = atmosphericPressure + (pressureDifference * 0.5f);
-        float work = averagePressure * barrelVolume * efficiencyFactor;
-        float kineticEnergy = work * propellantBurnRate;
-
-        return math.sqrt(2f * kineticEnergy / bulletMass);
+        // Tính công thực hiện bởi khí gas
+        float work = averagePressure * barrelVolume;
+        // Động năng chuyển thành vận tốc đầu nòng
+        return math.sqrt(2f * work / bulletMass);
     }
 }
 
 public class CalculateMuzzleVelocity : MonoBehaviour
 {
     [Header("Bullet Properties")]
-    [SerializeField] float bulletMass = 0.01f;
-    [SerializeField] float bulletDiameter = 0.00556f;
-    [SerializeField] float dragCoefficient = 0.295f;
+    [SerializeField] private float bulletMass = 0.01f;
+    [SerializeField] private float bulletDiameter = 0.00556f;
 
     [Header("Barrel Properties")]
-    [SerializeField] float barrelLength = 0.5f;
-    [SerializeField] float propellantBurnRate = 0.8f;
-    [SerializeField] float chamberPressure = 30000000f;
-    [SerializeField] float atmosphericPressure = 101325f;
-    [SerializeField] float efficiencyFactor = 0.9f;
+    [SerializeField] private float barrelLength = 0.5f;
+    [SerializeField] private float averagePressure = 15000000f; // Áp suất trung bình
 
-    // Cache các giá trị
-    private MuzzleVelocityCalculator calculator;
-    private float bulletArea;
-    private const float AIR_DENSITY = 1.225f;
+    // Bộ tính toán
+    private SimpleMuzzleVelocityCalculator calculator;
 
     private void Awake()
     {
-        calculator = new MuzzleVelocityCalculator(
-            bulletDiameter, barrelLength, chamberPressure, atmosphericPressure);
-        bulletArea = math.PI * bulletDiameter * bulletDiameter * 0.25f;
+        calculator = new SimpleMuzzleVelocityCalculator(bulletDiameter, barrelLength);
     }
 
-    public float MuzzleVelocity() => calculator.Calculate(
-        bulletMass, propellantBurnRate, efficiencyFactor, atmosphericPressure);
-
-    public void ApplyAirResistance(Rigidbody bulletRb, float deltaTime)
+    public float MuzzleVelocity()
     {
-        float bulletSpeed = bulletRb.velocity.magnitude;
-        float dragForce = 0.5f * AIR_DENSITY * bulletSpeed * bulletSpeed *
-            dragCoefficient * bulletArea;
-
-        bulletRb.velocity += (dragForce / bulletMass) * deltaTime * -bulletRb.velocity.normalized;
+        return calculator.Calculate(bulletMass, averagePressure);
     }
 }

@@ -3,7 +3,7 @@
 public class Bullet : MonoBehaviour
 {
     [Range(0, 100)]
-    [SerializeField] private float damage = 1000f;
+    [SerializeField] private float damage = 100f;
 
     [SerializeField] private TrailRenderer trailRenderer;
 

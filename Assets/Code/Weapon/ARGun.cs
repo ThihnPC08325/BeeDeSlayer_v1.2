@@ -154,7 +154,6 @@ public class ARGun : MonoBehaviour
         while (bulletRb != null && bulletRb.gameObject.activeInHierarchy)
         {
             UpdateBulletTrajectory(bulletRb, Time.fixedDeltaTime);
-            calculateMuzzleVelocity.ApplyAirResistance(bulletRb, Time.fixedDeltaTime);
             yield return new WaitForFixedUpdate();
         }
     }
