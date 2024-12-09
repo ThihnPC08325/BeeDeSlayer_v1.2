@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.012952162, g: 0.012756554, b: 0.012699192, a: 1}
+  m_IndirectSpecularColor: {r: 0.012952164, g: 0.012756556, b: 0.012699194, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1459,6 +1459,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 319768852100845310, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
+      propertyPath: armorBar
+      value: 
+      objectReference: {fileID: 1631677339}
     - target: {fileID: 319768852100845310, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
       propertyPath: DamagaOverlay
       value: 
@@ -7502,12 +7506,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletMass: 0.03
   bulletDiameter: 0.00556
-  dragCoefficient: 0.295
   barrelLength: 0.5
-  propellantBurnRate: 0.8
-  chamberPressure: 300000000
-  atmosphericPressure: 101325
-  efficiencyFactor: 0.9
+  averagePressure: 15000000
 --- !u!114 &393108595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25606,6 +25606,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d2c58de5126748e4d8d78e340a49f55b, type: 3}
   m_PrefabInstance: {fileID: 1629812863}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1631677339 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7826565886698676061, guid: fa91ca5138d8513438da2b9d436c05af, type: 3}
+  m_PrefabInstance: {fileID: 984665966}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1662800439
 PrefabInstance:
   m_ObjectHideFlags: 0
