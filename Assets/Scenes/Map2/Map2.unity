@@ -1464,6 +1464,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1631677339}
     - target: {fileID: 319768852100845310, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
+      propertyPath: maxArmor
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 319768852100845310, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
       propertyPath: DamagaOverlay
       value: 
       objectReference: {fileID: 301141398}
