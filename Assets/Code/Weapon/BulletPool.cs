@@ -95,19 +95,6 @@ public class BulletPool : MonoBehaviour
         }
     }
 
-    private IEnumerator InitializePoolAsync(Pool pool, Transform container)
-    {
-        var objectPool = new Queue<GameObject>(pool.Size);
-
-        for (int i = 0; i < pool.Size; i++)
-        {
-            CreateNewInstance(pool, container, objectPool);
-            if (i % 10 == 0) yield return null; // Giảm tải CPU mỗi 10 đối tượng
-        }
-
-        _poolDictionary[pool.Type] = objectPool;
-    }
-
     private void CreateNewInstance(Pool pool, Transform container, Queue<GameObject> objectPool)
     {
         var obj = Instantiate(pool.Prefab, container);
