@@ -3,23 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthBarBoss : MonoBehaviour
+public class HealthBarLazer : MonoBehaviour
 {
     [SerializeField] private Slider healthBar;
     [SerializeField] private Slider easeHealthBar;
-    private float lerpSpeed = 0.3f;
+    private float lerpSpeed = 0.03f;
 
-    [SerializeField] HealthBoss bossHealth;
+    [SerializeField] LazerEnemyHealth enemyHealth;
     void Start()
     {
-        healthBar.maxValue = bossHealth.currentHealth;
-        easeHealthBar.maxValue = bossHealth.currentHealth;
+        healthBar.maxValue = enemyHealth.currentHealth;
+        easeHealthBar.maxValue = enemyHealth.currentHealth;
     }
 
     public void HealthEnemy(float damage)
     {
         Debug.Log("Tru mau");
-        bossHealth.currentHealth -= damage;
+        enemyHealth.currentHealth -= damage;
     }
     private void Update()
     {
@@ -27,14 +27,14 @@ public class HealthBarBoss : MonoBehaviour
     }
     private void UpdateSlider()
     {
-        if (healthBar.value != bossHealth.currentHealth)
+        if (healthBar.value != enemyHealth.currentHealth)
         {
-            healthBar.value = bossHealth.currentHealth;
+            healthBar.value = enemyHealth.currentHealth;
         }
 
         if (healthBar.value != easeHealthBar.value)
         {
-            easeHealthBar.value = Mathf.Lerp(easeHealthBar.value, bossHealth.currentHealth, lerpSpeed);
+            easeHealthBar.value = Mathf.Lerp(easeHealthBar.value, enemyHealth.currentHealth, lerpSpeed);
         }
     }
 }

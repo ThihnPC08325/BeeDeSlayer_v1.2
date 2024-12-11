@@ -129,6 +129,10 @@ public class Bullet : MonoBehaviour
         {
             healthBossMap3.TakeDamage(damage);
         }
+        if(enemy.TryGetComponent(out LazerEnemyHealth healthLazerMap3))
+        {
+            healthLazerMap3.TakeDamage(damage);
+        }
     }
 
     private void HandleWallCollision(Vector3 collisionPoint)

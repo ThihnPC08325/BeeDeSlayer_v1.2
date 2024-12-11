@@ -5,7 +5,7 @@ using static EnemyManager;
 
 public class HealthBoss : MonoBehaviour, IPooledObject
 {
-    [SerializeField] private float maxHealth;
+    [SerializeField] public float maxHealth;
     [SerializeField] public float currentHealth;
     [SerializeField] private ItemDropManager itemDropManager;
     [SerializeField] private GameObject smokePrefab; // Reference to the smoke prefab

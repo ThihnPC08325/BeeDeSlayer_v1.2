@@ -186,8 +186,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2740903608079242225}
-  - component: {fileID: 5938156452799196879}
   - component: {fileID: 7616721850076467493}
+  - component: {fileID: 6192351955744644321}
   m_Layer: 5
   m_Name: HealthBar2
   m_TagString: Untagged
@@ -216,21 +216,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &5938156452799196879
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4338581990290876551}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17ba8918555e10c4198db4a20a27c292, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthBar: {fileID: 8515538723745458359}
-  easeHealthBar: {fileID: 2679630832281816959}
-  enemyHealth: {fileID: 5287774451133003680}
 --- !u!114 &7616721850076467493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,6 +229,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tranformCamera: {fileID: 0}
+--- !u!114 &6192351955744644321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4338581990290876551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8428aef209aa5e548b02c8e9acea0126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthBar: {fileID: 8515538723745458359}
+  easeHealthBar: {fileID: 2679630832281816959}
+  enemyHealth: {fileID: 3012219446936173612}
 --- !u!1 &6093891699765172836
 GameObject:
   m_ObjectHideFlags: 0
@@ -1647,7 +1647,7 @@ PrefabInstance:
       addedObject: {fileID: 3617227224254592016}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 67252c6035fad08458902dfb758a38f7, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5287774451133003680}
+      addedObject: {fileID: 3012219446936173612}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 67252c6035fad08458902dfb758a38f7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2700431159669671061}
@@ -1715,7 +1715,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 21.502195, y: 16.89116, z: 4.6608415}
   m_Center: {x: 1.4179232, y: 7.9455786, z: -0.39905015}
---- !u!114 &5287774451133003680
+--- !u!114 &3012219446936173612
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1724,16 +1724,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 6141905636933852337}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ef6a73b011b73c4497b8e35990ad7d4, type: 3}
+  m_Script: {fileID: 11500000, guid: 54b61a8f7e4fe9f4caebba4cb9a31e8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 300
   currentHealth: 0
   itemDropManager: {fileID: 8317324715622515760}
   enemyController: {fileID: 2700431159669671061}
-  enemyAttack: {fileID: 0}
-  enemyDodgeBullet: {fileID: 0}
-  healthBar: {fileID: 5938156452799196879}
+  healthBar: {fileID: 6192351955744644321}
 --- !u!114 &2700431159669671061
 MonoBehaviour:
   m_ObjectHideFlags: 0

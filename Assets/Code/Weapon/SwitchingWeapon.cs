@@ -342,7 +342,7 @@ public class SwitchingWeapon : MonoBehaviour
         if (ammoText == null || !IsValidWeaponIndex(selectedWeaponIndex)) return;
 
         WeaponAmmo currentWeapon = weaponAmmos[selectedWeaponIndex];
-
+        currentWeapon.animator.Play("Idle");
         StopAllCoroutines();
         var sb = GetStringBuilder();
 

@@ -42,6 +42,7 @@ public class EnemyHealth : MonoBehaviour, IPooledObject
             enemyController.enabled = false;
             enemyAttack.enabled = false;
             enemyDodgeBullet.enabled = false;
+            gameObject.SetActive(false);
             Die();
         }
     }
@@ -53,7 +54,6 @@ public class EnemyHealth : MonoBehaviour, IPooledObject
             itemDropManager.TryDropLoot(transform.position);
         }
         StartCoroutine(TimeToDie(5f));
-        gameObject.SetActive(false);
     }
 
     private IEnumerator TimeToDie(float duration)
