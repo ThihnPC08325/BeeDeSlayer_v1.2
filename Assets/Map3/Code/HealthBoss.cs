@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 using static EnemyManager;
 
@@ -12,8 +11,11 @@ public class HealthBoss : MonoBehaviour, IPooledObject
     [SerializeField] private BoxCollider boxCollider;
     [SerializeField] private Boss bossController;
     [SerializeField] HealthBarBoss healthBar;
+
+    public static event System.Action OnBossDefeated;
     private void Awake()
     {
+        itemDropManager = GetComponent<ItemDropManager>();
         currentHealth = maxHealth;
     }
 
@@ -25,6 +27,9 @@ public class HealthBoss : MonoBehaviour, IPooledObject
         {
             currentHealth = 0f;
             boxCollider.enabled = false;
+
+            // Gọi sự kiện thông báo boss đã chết
+            OnBossDefeated?.Invoke();
             Die();
         }
     }
