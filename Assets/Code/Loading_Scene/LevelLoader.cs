@@ -23,7 +23,6 @@ public class LevelLoader : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
             ValidateReferences();
         }
         else

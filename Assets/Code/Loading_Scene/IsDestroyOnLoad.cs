@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,10 +12,10 @@ public class IsDestroyOnLoad : MonoBehaviour
     [SerializeField] private string[] scenesToDestroyOn;
 
     [Tooltip("Thời gian delay trước khi destroy (giây)")]
-    [SerializeField] private float destroyDelay = 0f;
+    [SerializeField] private float destroyDelay = 0.2f;
 
     [Header("Child Object Management")]
-    [Tooltip("Xử lý các object con khi parent bị destroy")]
+    [Tooltip("Cách xử lý các object con khi parent bị destroy")]
     [SerializeField] private ChildHandling childHandlingMode = ChildHandling.DestroyWithParent;
 
     [Tooltip("Danh sách các tag của child objects sẽ được giữ lại")]
@@ -28,7 +29,8 @@ public class IsDestroyOnLoad : MonoBehaviour
 
     private static int instanceCount = 0;
     private int instanceId;
-    private List<GameObject> preservedChildren = new List<GameObject>();
+    private readonly List<GameObject> preservedChildren = new();
+    private HashSet<string> scenesToDestroySet;
 
     // Enum định nghĩa cách xử lý các object con
     public enum ChildHandling
@@ -42,6 +44,7 @@ public class IsDestroyOnLoad : MonoBehaviour
     private void Awake()
     {
         instanceId = ++instanceCount;
+        scenesToDestroySet = scenesToDestroyOn != null ? new HashSet<string>(scenesToDestroyOn) : new HashSet<string>();
 
         if (!destroyOnSceneChange)
         {
@@ -73,20 +76,16 @@ public class IsDestroyOnLoad : MonoBehaviour
     {
         if (!destroyOnSceneChange) return;
 
-        if (scenesToDestroyOn != null && scenesToDestroyOn.Length > 0)
+        if (scenesToDestroySet.Contains(scene.name))
         {
-            bool shouldDestroy = System.Array.Exists(scenesToDestroyOn,
-                                                   sceneName => sceneName == scene.name);
-            if (!shouldDestroy) return;
-        }
-
-        if (destroyDelay > 0)
-        {
-            StartCoroutine(DestroyWithDelay());
-        }
-        else
-        {
-            DestroyObject();
+            if (destroyDelay > 0)
+            {
+                StartCoroutine(DestroyWithDelay());
+            }
+            else
+            {
+                DestroyObject();
+            }
         }
     }
 
@@ -106,24 +105,20 @@ public class IsDestroyOnLoad : MonoBehaviour
 
     private void HandleChildren()
     {
-        Transform[] children = GetComponentsInChildren<Transform>();
+        Transform[] children = GetComponentsInChildren<Transform>(true);
 
         switch (childHandlingMode)
         {
             case ChildHandling.PreserveAll:
                 PreserveAllChildren(children);
                 break;
-
             case ChildHandling.PreserveSelected:
                 PreserveSelectedChildren();
                 break;
-
             case ChildHandling.PreserveByTag:
                 PreserveChildrenByTag(children);
                 break;
-
             case ChildHandling.DestroyWithParent:
-            default:
                 LogDebug($"All children will be destroyed with parent {gameObject.name}");
                 break;
         }
@@ -133,7 +128,7 @@ public class IsDestroyOnLoad : MonoBehaviour
     {
         foreach (Transform child in children)
         {
-            if (child != transform) // Không xử lý chính nó
+            if (child != transform)
             {
                 PreserveChild(child.gameObject);
             }
@@ -142,29 +137,23 @@ public class IsDestroyOnLoad : MonoBehaviour
 
     private void PreserveSelectedChildren()
     {
-        if (childrenToPreserve != null)
+        if (childrenToPreserve == null) return;
+
+        foreach (GameObject child in childrenToPreserve.Where(child => child != null))
         {
-            foreach (GameObject child in childrenToPreserve)
-            {
-                if (child != null)
-                {
-                    PreserveChild(child);
-                }
-            }
+            PreserveChild(child);
         }
     }
 
     private void PreserveChildrenByTag(Transform[] children)
     {
-        if (childTagsToPreserve != null)
+        if (childTagsToPreserve == null) return;
+
+        foreach (Transform child in children)
         {
-            foreach (Transform child in children)
+            if (child != transform && childTagsToPreserve.Contains(child.tag))
             {
-                if (child != transform && // Không xử lý chính nó
-                    System.Array.Exists(childTagsToPreserve, tag => child.CompareTag(tag)))
-                {
-                    PreserveChild(child.gameObject);
-                }
+                PreserveChild(child.gameObject);
             }
         }
     }

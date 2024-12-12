@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 46487389}
   - component: {fileID: 46487388}
+  - component: {fileID: 46487390}
   m_Layer: 0
   m_Name: ---Level_Loader---
   m_TagString: Untagged
@@ -165,12 +166,31 @@ Transform:
   m_GameObject: {fileID: 46487387}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.4623536, y: 2.5394492, z: 147.05232}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &46487390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46487387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a009599e5f4ba1c4190e95befe1ac37a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyOnSceneChange: 0
+  scenesToDestroyOn: []
+  destroyDelay: 0.2
+  childHandlingMode: 2
+  childTagsToPreserve: []
+  childrenToPreserve: []
+  showDebugLogs: 0
 --- !u!1 &340074428
 GameObject:
   m_ObjectHideFlags: 0
@@ -1079,8 +1099,8 @@ CanvasRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1027142316}
   - {fileID: 46487389}
+  - {fileID: 1027142316}
   - {fileID: 1397539955}
   - {fileID: 1076410565}
   - {fileID: 1551047791}
