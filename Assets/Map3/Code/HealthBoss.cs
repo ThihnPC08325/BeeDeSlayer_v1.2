@@ -1,29 +1,26 @@
-﻿using System.Collections;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using static EnemyManager;
 
-public class BossMap3Health : MonoBehaviour, IPooledObject
+public class HealthBoss : MonoBehaviour, IPooledObject
 {
-    [SerializeField] private float maxHealth;
-    public float MaxHealth => maxHealth;
-
-    [SerializeField] private float currentHealth;
-    public float CurrentHealth => currentHealth; // Thuộc tính để truy cập currentHealth
-
+    [SerializeField] public float maxHealth;
+    [SerializeField] public float currentHealth;
     [SerializeField] private ItemDropManager itemDropManager;
     [SerializeField] private GameObject smokePrefab; // Reference to the smoke prefab
-    private BoxCollider boxCollider;
-
+    [SerializeField] private BoxCollider boxCollider;
+    [SerializeField] private Boss bossController;
+    [SerializeField] HealthBarBoss healthBar;
     private void Awake()
     {
-        boxCollider = GetComponent<BoxCollider>();
-        itemDropManager = GetComponent<ItemDropManager>();
         currentHealth = maxHealth;
     }
 
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
+        healthBar.HealthEnemy(damage);
         if (currentHealth <= 0f)
         {
             currentHealth = 0f;
@@ -38,8 +35,17 @@ public class BossMap3Health : MonoBehaviour, IPooledObject
         {
             itemDropManager.TryDropLoot(transform.position);
         }
+
+        // Instantiate the smoke effect at the enemy's position
+        if (smokePrefab != null)
+        {
+            Instantiate(smokePrefab, transform.position, Quaternion.identity);
+        }
+
+        // Set the bat_die animation trigger
+        bossController.GetComponent<BatAI>();
         // Start coroutine to handle delay and deactivation
-        StartCoroutine(TimeToDie(2f));
+        StartCoroutine(TimeToDie(0.3f));
     }
 
     private IEnumerator TimeToDie(float duration)
@@ -60,5 +66,7 @@ public class BossMap3Health : MonoBehaviour, IPooledObject
     {
         currentHealth = maxHealth;
         boxCollider.enabled = true;
+
+        // Reset the bat_die animation parameter
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossMap3 : MonoBehaviour
+public class SpawEnemy : MonoBehaviour
 {
     [Header("Skill Settings")]
     [SerializeField] private GameObject[] spawnPrefabs; // Mảng các prefab sẽ được tạo ra
@@ -12,21 +12,16 @@ public class BossMap3 : MonoBehaviour
     [SerializeField] private float skillCooldown = 10f; // Thời gian hồi chiêu
 
     [Header("Boss Health Reference")]
-    [SerializeField] private BossMap3Health bossHealth; // Tham chiếu đến mã máu của boss
+    [SerializeField] private HealthBoss bossHealth; // Tham chiếu đến mã máu của boss
 
     private int totalPrefabsCreated = 0; // Tổng số prefabs đã tạo ra
     private int spawnIndex = 0; // Chỉ số theo dõi vị trí tiếp theo trong spawnPositions
 
     private void Start()
     {
-        if (bossHealth == null)
-        {
-            bossHealth = GetComponent<BossMap3Health>();
-        }
 
         if (spawnPrefabs.Length == 0 || spawnPositions.Length == 0 || spawnCounts.Length != spawnPrefabs.Length)
         {
-            Debug.LogError("Spawn Prefabs, Spawn Counts, or Spawn Positions are not properly assigned!");
             enabled = false;
             return;
         }
@@ -40,7 +35,7 @@ public class BossMap3 : MonoBehaviour
         while (true)
         {
             // Kiểm tra điều kiện để sử dụng chiêu
-            if (bossHealth != null && bossHealth.CurrentHealth > bossHealth.MaxHealth / 2 && totalPrefabsCreated < maxPrefabs)
+            if (bossHealth != null && bossHealth.currentHealth > bossHealth.maxHealth / 2 && totalPrefabsCreated < maxPrefabs)
             {
                 Debug.Log("Using skill!");
                 SpawnPrefabsByCounts(); // Tạo số lượng prefab tùy chỉnh
