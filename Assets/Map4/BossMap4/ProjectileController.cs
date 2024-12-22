@@ -45,7 +45,7 @@ public class ProjectileController : MonoBehaviour
         }
 
         // Kiểm tra nếu viên đạn va chạm với Boss
-        if (other.CompareTag("Boss"))
+        if (other.CompareTag("Enemy"))
         {
             return;  // Không phát nổ khi va chạm với Boss
         }

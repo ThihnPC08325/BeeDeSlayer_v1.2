@@ -125,14 +125,22 @@ public class Bullet : MonoBehaviour
         }
 
         //Boss map 3
-        if(enemy.TryGetComponent(out HealthBoss healthBossMap3))
+        if (enemy.TryGetComponent(out HealthBoss healthBossMap3))
         {
             healthBossMap3.TakeDamage(damage);
         }
-        if(enemy.TryGetComponent(out LazerEnemyHealth healthLazerMap3))
+        if (enemy.TryGetComponent(out LazerEnemyHealth healthLazerMap3))
         {
             healthLazerMap3.TakeDamage(damage);
         }
+
+        //Boss map 3
+        if (enemy.TryGetComponent(out Boss4Health boss4Health))
+        {
+            Debug.Log("gay st boss4");
+            boss4Health.TakeDamage(damage);
+        }
+
     }
 
     private void HandleWallCollision(Vector3 collisionPoint)
