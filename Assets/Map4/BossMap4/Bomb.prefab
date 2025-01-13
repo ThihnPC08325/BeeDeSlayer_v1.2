@@ -121,7 +121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   explosionEffectPrefab: {fileID: 700752107342370221, guid: af743f94f2f2f7943aa5e2c5ee031ba5, type: 3}
   damageRadius: 10
-  damage: 10
+  damage: 20
   playerLayer:
     serializedVersion: 2
     m_Bits: 128

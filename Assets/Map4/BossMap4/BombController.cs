@@ -2,10 +2,10 @@
 
 public class BombController : MonoBehaviour
 {
-    public GameObject explosionEffectPrefab; // Particle Effect khi bom nổ
-    public float damageRadius = 5f;  // Bán kính vụ nổ
-    public int damage = 20;           // Sát thương
-    public LayerMask playerLayer;     // Layer của Player
+    [SerializeField] private GameObject explosionEffectPrefab; // Particle Effect khi bom nổ
+    [SerializeField] private float damageRadius = 5f;          // Bán kính vụ nổ
+    [SerializeField] private int damage = 20;                 // Sát thương
+    [SerializeField] private LayerMask playerLayer;           // Layer của Player
 
     void Explode()
     {

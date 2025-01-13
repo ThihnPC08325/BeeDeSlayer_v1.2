@@ -3,24 +3,24 @@ using System.Collections;
 
 public class BossController : MonoBehaviour
 {
-    public GameObject projectilePrefab; // Prefab của viên đạn
-    public float projectileSpeed = 100f; // Tốc độ của viên đạn
-    public float shootCooldown = 5f;   // Thời gian hồi chiêu giữa mỗi đợt bắn
-    public float projectileInterval = 5f; // Thời gian giữa các viên đạn
-    public int numberOfProjectiles = 5; // Số viên đạn mỗi đợt bắn
-    public int projectileDamage = 5;    // Sát thương mỗi viên đạn
-    public LayerMask playerLayer;       // Layer của Player
+    [SerializeField] private GameObject projectilePrefab; // Prefab của viên đạn
+    [SerializeField] private float projectileSpeed = 100f; // Tốc độ của viên đạn
+    [SerializeField] private float shootCooldown = 5f;   // Thời gian hồi chiêu giữa mỗi đợt bắn
+    [SerializeField] private float projectileInterval = 5f; // Thời gian giữa các viên đạn
+    [SerializeField] private int numberOfProjectiles = 5; // Số viên đạn mỗi đợt bắn
+    [SerializeField] private int projectileDamage = 5;    // Sát thương mỗi viên đạn
+    [SerializeField] private LayerMask playerLayer;       // Layer của Player
 
-    public GameObject bombPrefab; // Prefab bom
-    public float spawnRadius = 20f; // Bán kính spawn bom xung quanh vị trí người chơi
-    public float explosionDelay = 3f; // Thời gian chờ để bom nổ
-    public float damageRadius = 5f;  // Bán kính vụ nổ
-    public int bombDamage = 10;      // Sát thương bom
-    public GameObject explosionEffectPrefab; // Particle Effect khi bom nổ
+    [SerializeField] private GameObject bombPrefab; // Prefab bom
+    [SerializeField] private float spawnRadius = 20f; // Bán kính spawn bom xung quanh vị trí người chơi
+    [SerializeField] private float explosionDelay = 3f; // Thời gian chờ để bom nổ
+    [SerializeField] private float damageRadius = 5f;  // Bán kính vụ nổ
+    [SerializeField] private int bombDamage = 10;      // Sát thương bom
+    [SerializeField] private GameObject explosionEffectPrefab; // Particle Effect khi bom nổ
 
     private Transform player; // Vị trí người chơi
     private bool isShooting = false;  // Kiểm tra xem Boss có đang bắn không
-    public Transform projectileSpawnPoint; // Điểm xuất phát viên đạn (cần đặt trong Unity)
+    [SerializeField] private Transform projectileSpawnPoint; // Điểm xuất phát viên đạn (cần đặt trong Unity)
 
     void Start()
     {
@@ -85,7 +85,7 @@ public class BossController : MonoBehaviour
             ProjectileController pc = projectile.GetComponent<ProjectileController>();
             if (pc != null)
             {
-                pc.damage = projectileDamage;
+                pc.SetDamage(projectileDamage);  // Gọi phương thức SetDamage để thay đổi damage
 
                 // Gán hướng di chuyển và tốc độ cho viên đạn
                 Rigidbody rb = projectile.GetComponent<Rigidbody>();

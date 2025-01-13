@@ -2,11 +2,11 @@
 
 public class ProjectileController : MonoBehaviour
 {
-    public int damage = 5;  // Sát thương gây ra khi va chạm với người chơi
-    public float speed = 100f;  // Tốc độ di chuyển của viên đạn
-    public float lifetime = 15f;  // Thời gian sống của viên đạn
-    public GameObject explosionEffectPrefab;  // Particle Effect khi viên đạn phát nổ
-    public LayerMask playerLayer;  // Layer của Player để nhận diện khi va chạm
+    [SerializeField] private int damage = 5;  // Sát thương gây ra khi va chạm với người chơi
+    [SerializeField] private float speed = 100f;  // Tốc độ di chuyển của viên đạn
+    [SerializeField] private float lifetime = 15f;  // Thời gian sống của viên đạn
+    [SerializeField] private GameObject explosionEffectPrefab;  // Particle Effect khi viên đạn phát nổ
+    [SerializeField] private LayerMask playerLayer;  // Layer của Player để nhận diện khi va chạm
 
     private Rigidbody rb;  // Rigidbody của viên đạn
     private Transform target;  // Vị trí người chơi
@@ -69,5 +69,11 @@ public class ProjectileController : MonoBehaviour
         // Hiển thị bán kính vụ nổ trong Editor (nếu có)
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, damage); // Dùng sát thương để xác định bán kính vụ nổ
+    }
+
+    // Phương thức công khai để truy cập giá trị sát thương
+    public void SetDamage(int newDamage)
+    {
+        damage = newDamage;
     }
 }

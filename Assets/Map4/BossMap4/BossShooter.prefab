@@ -119,9 +119,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78b6ad79276330248a16ac5fef72746b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 5
+  damage: 10
   speed: 300
-  lifetime: 20
+  lifetime: 10
   explosionEffectPrefab: {fileID: 100004, guid: b46890100828db6429ff69c322b45893, type: 3}
   playerLayer:
     serializedVersion: 2
