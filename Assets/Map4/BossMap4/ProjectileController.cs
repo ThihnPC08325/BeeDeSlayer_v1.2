@@ -3,7 +3,7 @@
 public class ProjectileController : MonoBehaviour
 {
     [SerializeField] private int damage = 5;  // Sát thương gây ra khi va chạm với người chơi
-    [SerializeField] private float speed = 100f;  // Tốc độ di chuyển của viên đạn
+    [SerializeField] private float speed = 200;  // Tốc độ di chuyển của viên đạn
     [SerializeField] private float lifetime = 15f;  // Thời gian sống của viên đạn
     [SerializeField] private GameObject explosionEffectPrefab;  // Particle Effect khi viên đạn phát nổ
     [SerializeField] private LayerMask playerLayer;  // Layer của Player để nhận diện khi va chạm

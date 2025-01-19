@@ -5,10 +5,10 @@ public class BossController : MonoBehaviour
 {
     [SerializeField] private GameObject projectilePrefab; // Prefab của viên đạn
     [SerializeField] private float projectileSpeed = 100f; // Tốc độ của viên đạn
-    [SerializeField] private float shootCooldown = 5f;   // Thời gian hồi chiêu giữa mỗi đợt bắn
-    [SerializeField] private float projectileInterval = 5f; // Thời gian giữa các viên đạn
+    [SerializeField] private float shootCooldown = 20f;   // Thời gian hồi chiêu giữa mỗi đợt bắn
+    [SerializeField] private float projectileInterval = 3f; // Thời gian giữa các viên đạn
     [SerializeField] private int numberOfProjectiles = 5; // Số viên đạn mỗi đợt bắn
-    [SerializeField] private int projectileDamage = 5;    // Sát thương mỗi viên đạn
+    [SerializeField] private int projectileDamage = 10;    // Sát thương mỗi viên đạn
     [SerializeField] private LayerMask playerLayer;       // Layer của Player
 
     [SerializeField] private GameObject bombPrefab; // Prefab bom
@@ -20,6 +20,7 @@ public class BossController : MonoBehaviour
 
     private Transform player; // Vị trí người chơi
     private bool isShooting = false;  // Kiểm tra xem Boss có đang bắn không
+    private float lastShootTime; // Thời gian bắn cuối cùng
     [SerializeField] private Transform projectileSpawnPoint; // Điểm xuất phát viên đạn (cần đặt trong Unity)
 
     void Start()
@@ -47,8 +48,8 @@ public class BossController : MonoBehaviour
         // Kiểm tra nếu Boss đang hoạt động trước khi thực thi bất kỳ hành động nào
         if (!gameObject.activeInHierarchy) return;
 
-        // Kiểm tra nếu player tồn tại và boss ở trong phạm vi gần
-        if (player != null && !isShooting)
+        // Kiểm tra nếu player tồn tại và boss có thể bắn
+        if (player != null && Time.time >= lastShootTime + shootCooldown && !isShooting)
         {
             ShootProjectiles();
         }
@@ -100,6 +101,9 @@ public class BossController : MonoBehaviour
             // Chờ một khoảng thời gian trước khi bắn viên tiếp theo
             yield return new WaitForSeconds(projectileInterval);
         }
+
+        // Cập nhật thời gian bắn cuối cùng
+        lastShootTime = Time.time;
 
         // Đánh dấu Boss đã bắn xong
         isShooting = false;
