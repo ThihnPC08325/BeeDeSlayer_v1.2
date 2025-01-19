@@ -47,7 +47,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 5470170479902778310}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 10.41
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -146,8 +146,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 89.70859, y: 36.56893, z: 9.175318}
-  m_Center: {x: 2.8764877, y: 16.315773, z: -0.24629498}
+  m_Size: {x: 10.677212, y: 5.912904, z: 9.175318}
+  m_Center: {x: -0.17162895, y: 0.987759, z: -0.24629498}
 --- !u!114 &8413510453295659890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,7 +228,7 @@ PrefabInstance:
     - target: {fileID: 5113873483287094875, guid: 94008f16f1c30ab4f9af236f00f87b21, type: 3}
       propertyPath: m_Materials.Array.data[2]
       value: 
-      objectReference: {fileID: 2100000, guid: 3820a4cd2ec0d814893e42557295bd7a, type: 2}
+      objectReference: {fileID: 2100000, guid: e925eecdf168a51488f7dca9cb1d6c7a, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
