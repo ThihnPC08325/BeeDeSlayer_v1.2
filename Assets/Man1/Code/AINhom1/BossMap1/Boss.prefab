@@ -126,8 +126,8 @@ MonoBehaviour:
   currentHealth: 0
   smokePrefab: {fileID: 8656107223128203463, guid: b77d8afd1ff5bd84fa74292ba59c0f5b, type: 3}
   bossHealthBar: {fileID: 0}
-  deathSound: {fileID: 0}
-  backgroundMusic: {fileID: 0}
+  deathSound: {fileID: 8300000, guid: 9cd747839bf96d24b98ceaea5b63b41e, type: 3}
+  backgroundMusic: {fileID: 8300000, guid: a0b24958029d3684386f53effa00fe33, type: 3}
 --- !u!114 &7091171875022120669
 MonoBehaviour:
   m_ObjectHideFlags: 0
