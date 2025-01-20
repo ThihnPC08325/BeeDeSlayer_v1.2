@@ -133,6 +133,8 @@ public class Bullet : MonoBehaviour
             Debug.Log("gay st boss"); // Log cho việc gây sát thương cho Boss
             bossHealth.TakeDamage(damage);
         }
+
+        //Boss map 4
         if (enemy.TryGetComponent(out Boss4Health boss4Health))
         {
             Debug.Log("gay st boss4");
