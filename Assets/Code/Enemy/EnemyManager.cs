@@ -14,7 +14,9 @@ public class EnemyManager : MonoBehaviour
         Shooting,
         Melee,
         Skeleton,
-        Spider
+        Spider,
+        BrokenFly,
+        Worm
     }
 
     [System.Serializable]
