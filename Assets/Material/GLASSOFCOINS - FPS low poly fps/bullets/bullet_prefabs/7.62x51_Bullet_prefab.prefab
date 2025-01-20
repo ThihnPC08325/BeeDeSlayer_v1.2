@@ -262,7 +262,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 733e62342f889814182e04ac377c83e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 15
+  damage: 10
   trailRenderer: {fileID: 0}
   maxDistance: 2000
   bulletLifetime: 200
+  collisionSound: {fileID: 0}
