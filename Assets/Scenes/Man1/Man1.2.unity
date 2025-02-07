@@ -11533,12 +11533,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletMass: 0.01
   bulletDiameter: 0.00556
-  dragCoefficient: 0.295
   barrelLength: 0.5
-  propellantBurnRate: 0.8
-  chamberPressure: 3e+9
-  atmosphericPressure: 101325
-  efficiencyFactor: 0.9
+  averagePressure: 15000000
 --- !u!114 &442034288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15679,6 +15675,10 @@ PrefabInstance:
       value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 2979443568878690990, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
+      propertyPath: weaponAmmos.Array.data[1].maxAmmo
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979443568878690990, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
       propertyPath: weaponAmmos.Array.data[2].maxAmmo
       value: 60
       objectReference: {fileID: 0}
@@ -15689,7 +15689,7 @@ PrefabInstance:
     - target: {fileID: 2979443568878690990, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
       propertyPath: weaponAmmos.Array.data[0].animator
       value: 
-      objectReference: {fileID: 442034285}
+      objectReference: {fileID: 1896908474}
     - target: {fileID: 2979443568878690990, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
       propertyPath: weaponAmmos.Array.data[1].animator
       value: 
@@ -15712,6 +15712,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2979443568878690990, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
       propertyPath: weaponAmmos.Array.data[0].currentAmmo
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979443568878690990, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
+      propertyPath: weaponAmmos.Array.data[1].currentAmmo
       value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 2979443568878690990, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
@@ -47481,6 +47485,11 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -7570049210134433722, guid: 221b609cea5c49e44aba5e41e211fa01, type: 3}
+--- !u!95 &1896908474 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5769854418351623862, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
+  m_PrefabInstance: {fileID: 823924695}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1897143069 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5014848158359874709, guid: 221b609cea5c49e44aba5e41e211fa01, type: 3}
