@@ -4122,6 +4122,71 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 3035482853088355480, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
+--- !u!1001 &387442828
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 210745352544100667, guid: 01f46bba3e6df2f46ae9f8764c0e99e0, type: 3}
+      propertyPath: explosionDamage
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 210745352544100667, guid: 01f46bba3e6df2f46ae9f8764c0e99e0, type: 3}
+      propertyPath: explosionRadius
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 635763858022448060, guid: 01f46bba3e6df2f46ae9f8764c0e99e0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.312335
+      objectReference: {fileID: 0}
+    - target: {fileID: 635763858022448060, guid: 01f46bba3e6df2f46ae9f8764c0e99e0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 5.26
+      objectReference: {fileID: 0}
+    - target: {fileID: 635763858022448060, guid: 01f46bba3e6df2f46ae9f8764c0e99e0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2.6484127
+      objectReference: {fileID: 0}
+    - target: {fileID: 635763858022448060, guid: 01f46bba3e6df2f46ae9f8764c0e99e0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 635763858022448060, guid: 01f46bba3e6df2f46ae9f8764c0e99e0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 635763858022448060, guid: 01f46bba3e6df2f46ae9f8764c0e99e0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 635763858022448060, guid: 01f46bba3e6df2f46ae9f8764c0e99e0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 635763858022448060, guid: 01f46bba3e6df2f46ae9f8764c0e99e0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 635763858022448060, guid: 01f46bba3e6df2f46ae9f8764c0e99e0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 635763858022448060, guid: 01f46bba3e6df2f46ae9f8764c0e99e0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8275013998161635382, guid: 01f46bba3e6df2f46ae9f8764c0e99e0, type: 3}
+      propertyPath: m_Name
+      value: RocKet 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 01f46bba3e6df2f46ae9f8764c0e99e0, type: 3}
 --- !u!1 &390497479 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -1009840902242923536, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
@@ -12203,8 +12268,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rocketPrefab: {fileID: 8275013998161635382, guid: 01f46bba3e6df2f46ae9f8764c0e99e0, type: 3}
   firePoint: {fileID: 314756013}
-  rocketSpeed: 15
-  cooldownTime: 1
+  rocketSpeed: 30
+  cooldownTime: 1.5
 --- !u!1 &1104284566 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -1122944451146258763, guid: 531aa3d1a4605ff4096980ff6f1cf734, type: 3}
@@ -34068,3 +34133,4 @@ SceneRoots:
   - {fileID: 731140216}
   - {fileID: 259357568}
   - {fileID: 717955461}
+  - {fileID: 387442828}

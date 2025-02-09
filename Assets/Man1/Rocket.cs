@@ -3,22 +3,28 @@
 public class Rocket : MonoBehaviour
 {
     [Header("Explosion Settings")]
+    public float destroyDelay = 0.5f;  // Thời gian xóa model sau khi nổ
     public float explosionRadius = 5f;      // Bán kính tác động của vụ nổ
     public float explosionDamage = 50f;     // Sát thương gây ra từ vụ nổ
     public GameObject explosionEffectPrefab; // Prefab hiệu ứng vụ nổ (particle, ánh sáng, âm thanh)
 
-    private void OnCollisionEnter(Collision collision)
+    //private void ontrig(Collision collision)
+    //{
+    //    Explode();
+    //    Destroy(gameObject);
+    //}
+    private void OnTriggerEnter(Collider other)
     {
         Explode();
         Destroy(gameObject);
     }
-
     private void Explode()
     {
         // Tạo hiệu ứng vụ nổ tại vị trí va chạm
         if (explosionEffectPrefab != null)
         {
-            Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);
+            GameObject explosionEffect = Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);
+            Destroy(explosionEffect, destroyDelay);
         }
 
         // Lấy tất cả các collider trong bán kính explosionRadius
@@ -39,6 +45,10 @@ public class Rocket : MonoBehaviour
                 }
             }
         }
-
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, explosionRadius);
     }
 }

@@ -133,9 +133,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5777bd23de9642b4091b501a04f27583, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionRadius: 10
-  explosionDamage: 50
-  explosionEffectPrefab: {fileID: 0}
+  destroyDelay: 0.5
+  explosionRadius: 50
+  explosionDamage: 500
+  explosionEffectPrefab: {fileID: 1121192042590650, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
 --- !u!135 &704039452506764025
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -151,7 +152,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
