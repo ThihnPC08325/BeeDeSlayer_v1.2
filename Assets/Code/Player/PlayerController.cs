@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region private
+    private float originalSpeed;
     private CharacterController controller;
     private Vector2 moveInput;
     private Vector3 velocity;
@@ -49,6 +50,7 @@ public class PlayerController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         playerInput = new PlayerInput();
+        originalSpeed = moveSpeed;
     }
 
     private void OnEnable()
@@ -94,7 +96,15 @@ public class PlayerController : MonoBehaviour
             remainingDashes--;
         }
     }
+    public void ApplySlow(float slowPercentage)
+    {
+        moveSpeed = originalSpeed * (1 - slowPercentage);
+    }
 
+    public void RemoveSlow()
+    {
+        moveSpeed = originalSpeed;
+    }
     private void HandleMovement()
     {
         moveInput = moveAction.ReadValue<Vector2>();

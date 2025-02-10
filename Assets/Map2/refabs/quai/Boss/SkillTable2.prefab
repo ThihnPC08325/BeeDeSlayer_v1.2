@@ -64,9 +64,9 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -7296707158032895883, guid: 0db040ab07b436c4283023cec6fa22d2, type: 3}
-  - {fileID: 2100000, guid: 53a1f8b4b0752354c888f69797cab022, type: 2}
-  - {fileID: -7791486788655378091, guid: 0db040ab07b436c4283023cec6fa22d2, type: 3}
+  - {fileID: 2100000, guid: 6ebc19ce7c3f97b478be7735bdf89e13, type: 2}
+  - {fileID: 2100000, guid: 6ebc19ce7c3f97b478be7735bdf89e13, type: 2}
+  - {fileID: 2100000, guid: 6ebc19ce7c3f97b478be7735bdf89e13, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -149,7 +149,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
-  lifetime: 5
   damagePen: 0
   rotationSpeedX: 10
   rotationSpeedY: 20

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-3812256049856623
+--- !u!114 &-3766780306189687023
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,39 +20,45 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: floor
-  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
-  m_Parent: {fileID: 2100000, guid: f98105d06898e884c9fbe8a0cc817f32, type: 2}
+  m_Name: k
+  m_Shader: {fileID: -6465566751694194690, guid: 087483f885e42a24999d226733a93741, type: 3}
+  m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _ALPHAPREMULTIPLY_ON
-  - _SURFACE_TYPE_TRANSPARENT
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap:
-    RenderType: Transparent
-  disabledShaderPasses:
-  - DepthOnly
-  - SHADOWCASTER
+  stringTagMap: {}
+  disabledShaderPasses: []
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: 4819f1e18d385424ba07345a59f89a8c, type: 3}
-        m_Scale: {x: 40, y: 40}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 4819f1e18d385424ba07345a59f89a8c, type: 3}
-        m_Scale: {x: 40, y: 40}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Cutoff: 1
-    - _Metallic: 0.8
-    - _Smoothness: 0.51
-    m_Colors: []
+    - _Dissolve: 0
+    - _NoisePower: 1
+    - _NoiseScale: 20
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _TwirlAmount: 2
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 0}
+    - _NoiseSpeed: {r: 0, g: 0.5, b: 0, a: 0}
+    - _TwirlCenter: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _TwirlSpeed: {r: 0, g: 0.5, b: 0, a: 0}
   m_BuildTextureStacks: []
