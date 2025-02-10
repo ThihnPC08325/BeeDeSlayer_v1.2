@@ -81,7 +81,7 @@ public class BrokenFlyAI : MonoBehaviour
 
         // Instantiate the projectile and set its direction
         GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
-        Projectile projectileScript = projectile.GetComponent<Projectile>();
+        Boss1Projectile projectileScript = projectile.GetComponent<Boss1Projectile>();
         if (projectileScript != null)
         {
             projectileScript.SetDirection(directionToPlayer);

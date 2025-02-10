@@ -221,7 +221,7 @@ public class No1BossAI : MonoBehaviour
 
         // Aim and fire the projectile toward the player
         Vector3 direction = (player.position - projectileSpawnPoint.position).normalized;
-        Projectile projectileScript = projectile.GetComponent<Projectile>();
+        Boss1Projectile projectileScript = projectile.GetComponent<Boss1Projectile>();
         if (projectileScript != null)
         {
             projectileScript.SetDirection(direction);
