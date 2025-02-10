@@ -117,6 +117,10 @@ public class Bullet : MonoBehaviour
         {
             bookHealth.TakeDamage(damage);
         }
+        if (enemy.TryGetComponent(out GuardianHealth guardianHealth))
+        {
+            guardianHealth.TakeDamage(damage);
+        }
         //Boss quai map2
         if (enemy.TryGetComponent(out BatEnemyHealth batEnemyHealth))
         {
