@@ -9,14 +9,14 @@ public class BazookaSkill : MonoBehaviour
     [SerializeField] private float rocketSpeed = 15f;       // Vận tốc ban đầu của Rocket
     [SerializeField] private float cooldownTime = 5f;       // Thời gian hồi chiêu
 
-    // Nếu không cần hiệu ứng xoay, có thể xóa dòng torque này
-    //[SerializeField] private float torqueAmount = 0.5f;
+    [Header("Animation")]
+    [SerializeField] private Animator playerAnimator;       // Animator của cánh tay hoặc model súng Bazooka
 
     private bool canFire = true;
 
     void Update()
     {
-        // Sử dụng chuột trái để bắn Rocket
+        // Bắn rocket khi nhấn chuột trái
         if (Input.GetMouseButtonDown(0) && canFire)
         {
             FireRocket();
@@ -28,21 +28,34 @@ public class BazookaSkill : MonoBehaviour
         if (!canFire) return;
         canFire = false;
 
-        // Instantiate Rocket với rotation của firePoint
+        // Kích hoạt animation bằng cách gọi trigger "FireBazooka"
+        if (playerAnimator != null)
+        {
+            playerAnimator.SetTrigger("FireBazooka");
+            // Nếu cần, bạn có thể reset trigger sau một khoảng thời gian bằng coroutine
+            // StartCoroutine(ResetBazookaTrigger(0.5f)); // 0.5f là thời gian chờ, điều chỉnh theo length của animation
+        }
+
+        // Instantiate Rocket tại vị trí firePoint với rotation của firePoint
         GameObject rocket = Instantiate(rocketPrefab, firePoint.position, firePoint.rotation);
         Rigidbody rb = rocket.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            // Không freeze rotation để Rocket có thể xoay theo vận tốc
-            // rb.constraints = RigidbodyConstraints.FreezeRotation; // Bỏ dòng này
-
-            // Áp dụng lực xung ban đầu với AddForce
             rb.AddForce(firePoint.forward * rocketSpeed, ForceMode.Impulse);
         }
 
         StartCoroutine(RocketCooldown());
     }
 
+    // Coroutine để reset trigger sau khi animation hoàn thành (nếu cần)
+    private IEnumerator ResetBazookaTrigger(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (playerAnimator != null)
+        {
+            playerAnimator.ResetTrigger("FireBazooka");
+        }
+    }
 
     private IEnumerator RocketCooldown()
     {
