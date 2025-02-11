@@ -11,6 +11,7 @@ TagManager:
   - FxTemporaire
   - Ground
   - Note
+  - Landmine
   layers:
   - Default
   - TransparentFX
