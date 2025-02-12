@@ -1,67 +1,73 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class BrokenFlyDebuff : MonoBehaviour
 {
     [SerializeField] private Material debuffMaterial;
-    [SerializeField] private float fadeOutDuration = 2f; // How long it takes to fade out
-    [SerializeField] private float dotDuration = 3f; // Total DOT time
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            PlayerDebuffEffect player = other.GetComponent<PlayerDebuffEffect>();
-            if (player != null)
-            {
-                Debug.Log("Debuff Hit");
-                player.ApplyDebuff(dotDuration);
-            }
-        }
-    }
+    [SerializeField] private float fadeInDuration = 0.5f;  // Time to reach max intensity
+    [SerializeField] private float fadeOutDuration = 2f;   // Time to fade out after duration
+    private RawImage debuffOverlay;
     private float maxIntensity = 2.0f;
-    private int dotHits = 3;
-    private float interval;
 
-    public void ApplyDebuff(float dotDamage, float duration)
+    void Awake()
     {
-        interval = duration / dotHits;
-        StartCoroutine(DebuffEffect(dotDamage));
+        debuffOverlay = GetComponent<RawImage>();
+        debuffMaterial.SetFloat("_VoronoiIntensity", 0f);
+        debuffMaterial.SetFloat("_VignetteIntensity", 0f);
+        debuffMaterial.SetFloat("_VignettePower", 0f);
     }
-
-    private IEnumerator DebuffEffect(float dotDamage)
+    void Start()
     {
-        float time = 0f;
-        float intensity = 0f;
+        debuffOverlay = GetComponent<RawImage>();
 
-        // Debuff starts
-        while (time < dotHits * interval)
+        if (debuffOverlay == null)
         {
-            int hitNumber = Mathf.FloorToInt(time / interval);
-            intensity = Mathf.Lerp(intensity, maxIntensity * (hitNumber + 1) / dotHits, 0.5f);
-            debuffMaterial.SetFloat("VoronoiIntensity", intensity);
-
-            yield return new WaitForSeconds(interval); // Wait for next DOT hit
-            time += interval;
+            Debug.LogError("No RawImage found on this GameObject!");
+            return;
         }
-
-        // Fade out effect
-        StartCoroutine(FadeOutEffect());
+        debuffMaterial.SetFloat("_VoronoiIntensity", 0f);
+        debuffMaterial.SetFloat("_VignetteIntensity", 0f);
+        debuffMaterial.SetFloat("_VignettePower", 0f);
+        debuffOverlay.material = debuffMaterial;
+        // Ensure starting intensity is 0
     }
 
-    private IEnumerator FadeOutEffect()
+    public void ApplyDebuff(float duration)
     {
-        float time = 0f;
-        float startIntensity = debuffMaterial.GetFloat("VoronoiIntensity");
+        Debug.Log("Debuff Applied!");
+        StartCoroutine(DebuffEffect(duration));
+    }
 
-        while (time < fadeOutDuration)
+    private IEnumerator DebuffEffect(float duration)
+    {
+        // Fade In
+        float elapsedTime = 0f;
+        while (elapsedTime < fadeInDuration)
         {
-            float newIntensity = Mathf.Lerp(startIntensity, 0, time / fadeOutDuration);
-            debuffMaterial.SetFloat("VoronoiIntensity", newIntensity);
-            time += Time.deltaTime;
+            float intensity = Mathf.Lerp(0, maxIntensity, elapsedTime / fadeInDuration);
+            debuffMaterial.SetFloat("_VoronoiIntensity", intensity);
+            debuffMaterial.SetFloat("_VignetteIntensity", 1.6f);
+            debuffMaterial.SetFloat("_VignettePower", 3.2f);
+            elapsedTime += Time.deltaTime;
             yield return null;
         }
+        debuffMaterial.SetFloat("_VoronoiIntensity", maxIntensity); // Ensure max value is set
 
-        debuffMaterial.SetFloat("VoronoiIntensity", 0);
+        // Wait for debuff duration
+        yield return new WaitForSeconds(duration);
+
+        // Fade Out
+        elapsedTime = 0f;
+        while (elapsedTime < fadeOutDuration)
+        {
+            float intensity = Mathf.Lerp(maxIntensity, 0, elapsedTime / fadeOutDuration);
+            debuffMaterial.SetFloat("_VoronoiIntensity", intensity);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        debuffMaterial.SetFloat("_VoronoiIntensity", 0f); // Ensure it's fully off
+        debuffMaterial.SetFloat("_VignetteIntensity", 0f);
+        debuffMaterial.SetFloat("_VignettePower", 0f);
     }
 }

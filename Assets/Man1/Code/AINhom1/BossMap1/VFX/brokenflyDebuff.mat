@@ -37,11 +37,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _OutlineThickness: 0.217
-    - _VignetteIntensity: 1.941
-    - _VignettePower: 3.15
-    - _VoronoiDensity: 16.7
-    - _VoronoiIntensity: 1.325
+    - _OutlineThickness: 1.2
+    - _VignetteIntensity: 0
+    - _VignettePower: 0
+    - _VoronoiDensity: 65.1
+    - _VoronoiIntensity: 0
     - _VoronoiPower: 10
     - _VoronoiSpeed: 2.63
     m_Colors:

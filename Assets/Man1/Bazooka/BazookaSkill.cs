@@ -27,20 +27,23 @@ public class BazookaSkill : MonoBehaviour
     {
         if (!canFire) return;
         canFire = false;
-
+        Debug.Log(canFire);
         // Kích hoạt animation bằng cách gọi trigger "FireBazooka"
         if (playerAnimator != null)
         {
+            Debug.Log("animtion start");
             playerAnimator.SetTrigger("FireBazooka");
             // Nếu cần, bạn có thể reset trigger sau một khoảng thời gian bằng coroutine
-            // StartCoroutine(ResetBazookaTrigger(0.5f)); // 0.5f là thời gian chờ, điều chỉnh theo length của animation
+            /*StartCoroutine(ResetBazookaTrigger(0.5f));*/ // 0.5f là thời gian chờ, điều chỉnh theo length của animation
         }
 
         // Instantiate Rocket tại vị trí firePoint với rotation của firePoint
         GameObject rocket = Instantiate(rocketPrefab, firePoint.position, firePoint.rotation);
+        Debug.Log(rocket);
         Rigidbody rb = rocket.GetComponent<Rigidbody>();
         if (rb != null)
         {
+            Debug.Log(canFire);
             rb.AddForce(firePoint.forward * rocketSpeed, ForceMode.Impulse);
         }
 
