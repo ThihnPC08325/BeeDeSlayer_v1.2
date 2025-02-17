@@ -7,6 +7,7 @@ public class GuardianAI : MonoBehaviour
     private NavMeshAgent navMeshAgent;
     private Transform player;
     private GuardianHealth guardianHealth;
+    private Animator animator;
 
     [Header("AI Stats")]
     [SerializeField] private float moveSpeed = 2f;
@@ -25,29 +26,33 @@ public class GuardianAI : MonoBehaviour
 
     // Sự kiện thay đổi sức khỏe
     public event Action<float, float> OnHealthChangedEvent;
-
-    // Sự kiện cái chết của Guardian
     public event Action OnGuardianDeathEvent;
 
     private void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
         guardianHealth = GetComponent<GuardianHealth>();
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        animator = GetComponent<Animator>(); // Lấy Animator
+
+        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+        if (playerObject) player = playerObject.transform;
 
         navMeshAgent.speed = moveSpeed;
         MoveToNest();
 
-        // Đăng ký sự kiện khi sức khỏe thay đổi
         guardianHealth.OnHealthChanged += HandleHealthChanged;
-
-        // Đăng ký sự kiện khi Guardian chết
         guardianHealth.OnGuardianDeath += HandleGuardianDeath;
     }
 
     private void Update()
     {
+        if (player == null) return;
+
         float playerDistance = Vector3.Distance(transform.position, player.position);
+        bool isMoving = navMeshAgent.velocity.magnitude > 0.1f; // Kiểm tra có di chuyển không
+
+        // Cập nhật Animation (Idle ↔ Run)
+        animator.SetBool("isMoving", isMoving);
 
         if (playerDistance <= defendRadius)
         {
@@ -55,16 +60,15 @@ public class GuardianAI : MonoBehaviour
         }
         else
         {
-            if (!navMeshAgent.hasPath)
+            if (!navMeshAgent.hasPath || navMeshAgent.remainingDistance < 0.1f)
             {
                 MoveToNest();
             }
         }
 
-        // Ví dụ: khi Guardian có sức khỏe dưới 50%, bắt đầu hồi phục sức khỏe
         if (guardianHealth.health <= guardianHealth.maxHealth / 2)
         {
-            guardianHealth.StartHealing(1f);  // Hồi phục 5 điểm sức khỏe mỗi giây
+            guardianHealth.StartHealing(1f);
         }
     }
 
@@ -79,8 +83,11 @@ public class GuardianAI : MonoBehaviour
 
     private void KnockbackPlayer()
     {
-        Vector3 knockbackDirection = (player.position - transform.position).normalized;
-        player.GetComponent<Rigidbody>().AddForce(knockbackDirection * knockbackForce, ForceMode.Impulse);
+        if (player.TryGetComponent<Rigidbody>(out Rigidbody rb))
+        {
+            Vector3 knockbackDirection = (player.position - transform.position).normalized;
+            rb.AddForce(knockbackDirection * knockbackForce, ForceMode.Impulse);
+        }
     }
 
     private void MoveToNest()
@@ -88,12 +95,10 @@ public class GuardianAI : MonoBehaviour
         navMeshAgent.SetDestination(nestPosition.position);
     }
 
-    // Xử lý sự kiện thay đổi sức khỏe
     private void HandleHealthChanged(float currentHealth, float maxHealth)
     {
-        OnHealthChangedEvent?.Invoke(currentHealth, maxHealth); // Gọi sự kiện thay đổi sức khỏe
+        OnHealthChangedEvent?.Invoke(currentHealth, maxHealth);
 
-        // Kiểm tra khi sức khỏe dưới 50% và chưa đủ số BeeWorkers
         if (currentHealth <= maxHealth / 2 && currentBeeWorkers < maxBeeWorkers)
         {
             SummonBeeWorker();
@@ -106,10 +111,9 @@ public class GuardianAI : MonoBehaviour
         currentBeeWorkers++;
     }
 
-    // Xử lý sự kiện cái chết của Guardian
     private void HandleGuardianDeath()
     {
-        OnGuardianDeathEvent?.Invoke(); // Gọi sự kiện khi Guardian chết
+        OnGuardianDeathEvent?.Invoke();
         Debug.Log("Guardian has been defeated!");
         Destroy(gameObject);
     }
