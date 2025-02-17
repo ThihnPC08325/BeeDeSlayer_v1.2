@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System.Collections;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -101,7 +103,22 @@ public class PlayerHealth : MonoBehaviour
         durationTimer = 0f;
         DamagaOverlay.color = new Color(DamagaOverlay.color.r, DamagaOverlay.color.g, DamagaOverlay.color.b, 1);
     }
+    public void ApplyDOT(float dotDamage, int dotTicks, float dotInterval)
+    {
+        StartCoroutine(DOTCoroutine(dotDamage, dotTicks, dotInterval));
+    }
 
+    private IEnumerator DOTCoroutine(float dotDamage, int dotTicks, float dotInterval)
+    {
+        Debug.Log("DOT applied!");
+
+        for (int i = 0; i < dotTicks; i++)
+        {
+            yield return new WaitForSeconds(dotInterval);
+            Debug.Log($"DOT Tick {i + 1}: {dotDamage} damage applied.");
+            TakeDamage(dotDamage, 0);
+        }
+    }
     public void RestoreHealth(float heal)
     {
         float HealthBeforePickup = health;
