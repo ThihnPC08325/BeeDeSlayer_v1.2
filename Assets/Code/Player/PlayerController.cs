@@ -207,4 +207,19 @@ public class PlayerController : MonoBehaviour
         ArGunReload.Play("ArGunReload");
         KBGunReload.Play("KBGunReload");
     }
+    private IEnumerator SlowDown(float multiplier, float duration)
+    {
+        currentSpeedModifier = multiplier; // Giảm tốc độ bằng modifier
+        Debug.Log("Speed reduced to: " + (moveSpeed * currentSpeedModifier)); // Debug kiểm tra
+
+        yield return new WaitForSeconds(duration); // Chờ hết thời gian làm chậm
+
+        currentSpeedModifier = 1f; // Khôi phục tốc độ bình thường
+        Debug.Log("Speed restored to: " + (moveSpeed * currentSpeedModifier)); // Debug kiểm tra
+    }
+
+    public void ModifySpeed(float multiplier, float duration)
+    {
+        StartCoroutine(SlowDown(multiplier, duration));
+    }
 }
