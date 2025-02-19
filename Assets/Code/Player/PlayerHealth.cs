@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-
+using System.Collections.Generic;
+using System.Collections;
 public class PlayerHealth : MonoBehaviour
 {
     [SerializeField] private float health;
@@ -90,7 +91,20 @@ public class PlayerHealth : MonoBehaviour
             frontHealthBar.fillAmount = Mathf.Lerp(fillFrontHealth, backHealthBar.fillAmount, percent);
         }
     }
+    public void ApplyDOT(float dotDamage, int dotTicks, float dotInterval)
+    {
+        StartCoroutine(DOTCoroutine(dotDamage, dotTicks, dotInterval));
+    }
 
+    private IEnumerator DOTCoroutine(float dotDamage, int dotTicks, float dotInterval)
+    {
+
+        for (int i = 0; i < dotTicks; i++)
+        {
+            yield return new WaitForSeconds(dotInterval);
+            TakeDamage(dotDamage, 0);
+        }
+    }
     public void TakeDamage(float damage, float penetration)
     {
         float HealthBeforeDamage = health;

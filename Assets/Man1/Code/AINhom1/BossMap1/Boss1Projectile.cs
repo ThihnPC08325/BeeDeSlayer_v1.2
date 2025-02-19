@@ -42,40 +42,15 @@ public class Boss1Projectile : MonoBehaviour
             if (playerHealth != null)
             {
                 playerHealth.TakeDamage(damage, penetration);
+                playerHealth.ApplyDOT(dotDamage, dotTicks, dotInterval);
             }
 
             PlayerDebuffEffect playerDebuff = other.GetComponent<PlayerDebuffEffect>();
             if (playerDebuff != null)
             {
-                Debug.Log("Debuff Hit");
                 playerDebuff.ApplyDebuff(duration);
             }
-
-            if (dotEnabled)
-            {
-                StartCoroutine(ApplyDOT(other.GetComponent<PlayerHealth>()));
-            }
-
-            Debug.Log($"Projectile hit player for {damage} damage.");
             Destroy(gameObject);
         }
-    }
-
-    private IEnumerator ApplyDOT(PlayerHealth playerHealth)
-    {
-        if (playerHealth == null) yield break;
-
-        for (int i = 0; i < dotTicks; i++)
-        {
-            yield return new WaitForSeconds(dotInterval);
-            playerHealth.TakeDamage(dotDamage, 0);
-            Debug.Log($"DOT Tick {i + 1}: {dotDamage} damage applied.");
-        }
-    }
-
-    public void EnableDOT(bool enable)
-    {
-        dotEnabled = enable;
-        Debug.Log("DOT Enabled: " + enable);
     }
 }

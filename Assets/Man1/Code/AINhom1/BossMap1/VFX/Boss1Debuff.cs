@@ -23,7 +23,6 @@ public class PlayerDebuffEffect : MonoBehaviour
 
         if (debuffOverlay == null)
         {
-            Debug.LogError("No RawImage found on this GameObject!");
             return;
         }
         debuffMaterial.SetFloat("_VoronoiIntensity", 0f);
@@ -35,7 +34,6 @@ public class PlayerDebuffEffect : MonoBehaviour
 
     public void ApplyDebuff(float duration)
     {
-        Debug.Log("Debuff Applied!");
         StartCoroutine(DebuffEffect(duration));
     }
 
