@@ -9,6 +9,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float sensitivityY = 2f;
     [SerializeField] private bool useMouseAcceleration = false;
     [SerializeField] private bool invertY = false;
+    [SerializeField] private bool invertX = false; // New: Invert horizontal input
 
     [Header("AnimationCurve")]
     [SerializeField] private AnimationCurve sensitivityCurve = AnimationCurve.Linear(0, 1, 1, 1);
@@ -22,6 +23,7 @@ public class CameraController : MonoBehaviour
     private PlayerInput playerInput;
     private InputAction lookAction;
     private readonly bool isAiming = false;
+    private bool isConfused = false; // New: Confusion status
     #endregion
 
     private void Awake()
@@ -50,40 +52,42 @@ public class CameraController : MonoBehaviour
         Vector2 lookInput = lookAction.ReadValue<Vector2>();
         float inputMagnitude = lookInput.magnitude;
 
-        // Áp dụng sensitivity curve
+        // Apply sensitivity curve
         float sensitivityMultiplier = sensitivityCurve.Evaluate(inputMagnitude);
 
-        // Xử lý ADS
-        float adsMultiplier = 1f;
-        if (isAiming)
-        {
-            adsMultiplier = adsCurve.Evaluate(inputMagnitude);
-        }
+        // Apply ADS (Aim Down Sight) sensitivity
+        float adsMultiplier = isAiming ? adsCurve.Evaluate(inputMagnitude) : 1f;
 
-        // Xử lý acceleration
-        float accelerationMultiplier = 1f;
-        if (useMouseAcceleration)
-        {
-            accelerationMultiplier = accelerationCurve.Evaluate(inputMagnitude);
-        }
+        // Apply acceleration
+        float accelerationMultiplier = useMouseAcceleration ? accelerationCurve.Evaluate(inputMagnitude) : 1f;
 
-        // Tính toán độ nhạy cuối cùng
+        // Final sensitivity calculation
         float finalMultiplier = baseMultiplier * sensitivityMultiplier * adsMultiplier * accelerationMultiplier;
 
-        // Áp dụng độ nhạy riêng cho từng trục
+        // Process input with sensitivity
         Vector2 processedInput = new Vector2(
             lookInput.x * sensitivityX * finalMultiplier,
             lookInput.y * sensitivityY * finalMultiplier
         ) * Time.deltaTime;
 
-        if (invertY)
-            processedInput.y = -processedInput.y;
+        // Apply inversion
+        if (invertX) processedInput.x = -processedInput.x;
+        if (invertY) processedInput.y = -processedInput.y;
 
-        // Cập nhật rotation
+        // Apply confusion effect
+        if (isConfused)
+        {
+            // Swap X and Y input
+            float temp = processedInput.x;
+            processedInput.x = processedInput.y;
+            processedInput.y = temp;
+        }
+
+        // Update rotation
         currentRotation.x = Mathf.Clamp(currentRotation.x - processedInput.y, -90f, 90f);
         currentRotation.y += processedInput.x;
 
-        // Áp dụng rotation
+        // Apply rotation
         transform.localRotation = Quaternion.Euler(currentRotation.x, 0f, 0f);
         playerBody.localRotation = Quaternion.Euler(0f, currentRotation.y, 0f);
     }
@@ -100,5 +104,22 @@ public class CameraController : MonoBehaviour
             lookAction.Disable();
             Cursor.lockState = CursorLockMode.None;
         }
+    }
+
+    // Apply confusion for a set duration
+    public void ApplyConfusion(float duration)
+    {
+        if (!isConfused)
+        {
+            isConfused = true;
+            Debug.Log("Camera Confusion Activated! X and Y swapped.");
+            Invoke(nameof(RemoveConfusion), duration);
+        }
+    }
+
+    private void RemoveConfusion()
+    {
+        isConfused = false;
+        Debug.Log("Camera Confusion Wore Off! Controls restored.");
     }
 }

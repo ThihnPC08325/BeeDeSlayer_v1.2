@@ -34,9 +34,13 @@ public class BrokenflyProjectile : MonoBehaviour
         {
             // Deal damage to the player
             PlayerHealth playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
+            PlayerController playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+            CameraController cameraController = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
             if (playerHealth != null)
             {
                 playerHealth.TakeDamage(damage, penertration);
+                cameraController.GetComponent<CameraController>().ApplyConfusion(3f); // 5 seconds of confusion
+
             }
             Debug.Log($"Projectile hit player for {damage} damage.");
             Destroy(gameObject);
