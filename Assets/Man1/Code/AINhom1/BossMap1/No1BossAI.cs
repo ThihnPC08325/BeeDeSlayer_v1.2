@@ -161,7 +161,6 @@ public class No1BossAI : MonoBehaviour
 
     private void PerformMeleeAttack()
     {
-        Debug.Log("Performing Melee Attack");
         lastMeleeAttackTime = Time.time;
         isMeleeAttackOnCooldown = true;
         Invoke(nameof(DealMeleeDamage), meleeAttackDelay);
@@ -178,7 +177,6 @@ public class No1BossAI : MonoBehaviour
             {
                 playerHealth.TakeDamage(meleeDamage, penetration);
             }
-            Debug.Log($"Dealing {meleeDamage} damage to player.");
         }
     }
 
@@ -191,7 +189,6 @@ public class No1BossAI : MonoBehaviour
     {
         if (player == null) return;
 
-        Debug.Log("Preparing Ranged Attack");
 
         // Delay the actual attack to allow for animations
         Invoke(nameof(ExecuteRangedAttack), rangedAttackDelay);
@@ -201,7 +198,6 @@ public class No1BossAI : MonoBehaviour
     {
         if (player == null) return;
 
-        Debug.Log("Preparing to spawn projectile");
 
         // Instantiate the projectile but do not set its direction yet
         GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
@@ -215,7 +211,6 @@ public class No1BossAI : MonoBehaviour
         float waitDuration = 0.6f; // Adjust this to change the delay
         yield return new WaitForSeconds(waitDuration);
 
-        Debug.Log("Firing Projectile");
 
         if (player == null || projectile == null) yield break;
 
@@ -247,7 +242,6 @@ public class No1BossAI : MonoBehaviour
     {
         if (player == null) return;
 
-        Debug.Log($"Enraged Shot {enragedShotsFired + 1} of {enragedShots}");
 
         GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
 
