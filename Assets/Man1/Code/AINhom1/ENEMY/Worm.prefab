@@ -227,6 +227,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: monter2
       objectReference: {fileID: 0}
+    - target: {fileID: 7926839288223873370, guid: 2f36a1935fb441e4a99155b78a084689, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 392656c0f9d9f40498b031567ce22c6e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
