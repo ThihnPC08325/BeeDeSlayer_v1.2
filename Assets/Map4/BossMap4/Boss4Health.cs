@@ -94,5 +94,6 @@ public class Boss4Health : MonoBehaviour
     {
         yield return new WaitForSeconds(duration);
         gameObject.SetActive(false);
+        //Test
     }
 }
