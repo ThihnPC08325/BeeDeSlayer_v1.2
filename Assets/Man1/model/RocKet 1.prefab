@@ -99,7 +99,7 @@ GameObject:
   - component: {fileID: 410684730774593378}
   - component: {fileID: 1050918593262157811}
   m_Layer: 0
-  m_Name: RocKet 1 - Copy
+  m_Name: RocKet 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
