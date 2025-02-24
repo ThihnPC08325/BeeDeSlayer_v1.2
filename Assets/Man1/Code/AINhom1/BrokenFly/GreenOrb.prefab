@@ -162,6 +162,7 @@ MonoBehaviour:
   damage: 15
   lifetime: 5
   penertration: 0.5
+  duration: 4
 --- !u!114 &6346309046627931098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,6 +176,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debuffMaterial: {fileID: 2100000, guid: cbc38204f0020fc4e8df28a6d4a3cc28, type: 2}
+  fadeInDuration: 0.5
   fadeOutDuration: 2
-  dotDamage: 5
-  dotDuration: 3
