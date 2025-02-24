@@ -126,7 +126,7 @@ public class EnemyAttack : MonoBehaviour
     private Vector3 PredictPlayerPosition(float bulletTravelTime)
     {
         Vector3 gravity = Physics.gravity;
-        return player.position + playerVelocity * bulletTravelTime + 0.5f * gravity * bulletTravelTime * bulletTravelTime;
+        return player.position + playerVelocity * bulletTravelTime + gravity * (0.5f * bulletTravelTime * bulletTravelTime);
     }
 
     private float CalculateBulletTravelTime(float distance)
@@ -137,10 +137,20 @@ public class EnemyAttack : MonoBehaviour
 
     private float CalculateMuzzleVelocity()
     {
-        float barrelArea = Mathf.PI * bulletDiameter * bulletDiameter / 4f;
-        float barrelVolume = barrelArea * barrelLength;
-        float averagePressure = (chamberPressure + atmosphericPressure) / 2f;
+        // Các hằng số (tính trước nếu giá trị không đổi):
+        const float Pi = Mathf.PI;
+
+        // Tính toán các giá trị ít thay đổi và lưu lại:
+        float barrelRadius = bulletDiameter / 2f; // Đường kính thành bán kính
+        float barrelArea = Pi * barrelRadius * barrelRadius; // Diện tích nòng súng
+        float barrelVolume = barrelArea * barrelLength; // Thể tích
+
+        // Áp suất trung bình:
+        float averagePressure = (chamberPressure + atmosphericPressure) * 0.5f;
+        
         float work = averagePressure * barrelVolume;
+
+        // Động năng và vận tốc
         float kineticEnergy = work * propellantBurnRate;
         return Mathf.Sqrt(2f * kineticEnergy / bulletMass);
     }
