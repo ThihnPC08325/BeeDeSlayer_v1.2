@@ -129,7 +129,7 @@ public class EnemyController : MonoBehaviour
         // Tính toán địa điểm tiếp theo trong vòng tròn
         currentAngle += circleSpeed * Time.fixedDeltaTime;
         Vector3 horizontalOffset = new Vector3(Mathf.Sin(currentAngle), 0, Mathf.Cos(currentAngle)) * circleRadius;
-        Vector3 verticalOffset = Vector3.up * Mathf.Sin(currentAngle * verticalFrequency) * verticalAmplitude;
+        Vector3 verticalOffset = Vector3.up * (Mathf.Sin(currentAngle * verticalFrequency) * verticalAmplitude);
 
         // Dự đoán vị trí của người chơi
         Vector3 predictedPlayerPos = PredictPlayerPosition();
@@ -175,7 +175,7 @@ public class EnemyController : MonoBehaviour
         averageVelocity /= (positions.Count - 1);
 
         // Sử dụng thêm gia tốc để dự đoán người chơi tốt hơn
-        Vector3 acceleration = (positions[positions.Count - 1] - positions[positions.Count - 2]) / Time.fixedDeltaTime - averageVelocity;
+        Vector3 acceleration = (positions[^1] - positions[^2]) / Time.fixedDeltaTime - averageVelocity;
 
         return player.position + averageVelocity * predictionTime + acceleration * (0.5f * predictionTime * predictionTime);
     }

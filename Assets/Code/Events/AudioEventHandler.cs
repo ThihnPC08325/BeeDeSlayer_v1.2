@@ -80,7 +80,7 @@ public class AudioEventHandler : MonoBehaviour
         PlaySoundWithVariation(_soundMappings.enemyHit);
     }
 
-    private void PlaySoundWithVariation(AudioEventMapping mapping)
+    private static void PlaySoundWithVariation(AudioEventMapping mapping)
     {
         if (string.IsNullOrEmpty(mapping.SoundName)) return;
 
