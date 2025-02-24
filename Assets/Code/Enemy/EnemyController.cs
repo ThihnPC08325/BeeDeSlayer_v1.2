@@ -177,7 +177,7 @@ public class EnemyController : MonoBehaviour
         // Sử dụng thêm gia tốc để dự đoán người chơi tốt hơn
         Vector3 acceleration = (positions[positions.Count - 1] - positions[positions.Count - 2]) / Time.fixedDeltaTime - averageVelocity;
 
-        return player.position + averageVelocity * predictionTime + 0.5f * acceleration * predictionTime * predictionTime;
+        return player.position + averageVelocity * predictionTime + acceleration * (0.5f * predictionTime * predictionTime);
     }
 
     private bool IsPathClear(Vector3 targetPosition)

@@ -55,21 +55,21 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField] private SoundEffect[] soundEffects;
 
-    private AudioSource[] audioSources;
-    private static AudioManager instance;
+    private AudioSource[] _audioSources;
+    private static AudioManager _instance;
 
-    void Awake()
+    private void Awake()
     {
-        if (instance == null)
+        if (_instance == null)
         {
-            instance = this;
+            _instance = this;
             DontDestroyOnLoad(gameObject);
 
-            audioSources = new AudioSource[soundEffects.Length];
+            _audioSources = new AudioSource[soundEffects.Length];
             for (int i = 0; i < soundEffects.Length; i++)
             {
-                audioSources[i] = gameObject.AddComponent<AudioSource>();
-                InitializeAudioSource(audioSources[i], soundEffects[i]);
+                _audioSources[i] = gameObject.AddComponent<AudioSource>();
+                InitializeAudioSource(_audioSources[i], soundEffects[i]);
             }
         }
         else
@@ -78,7 +78,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    void OnEnable()
+    private void OnEnable()
     {
         GameEvents.OnAmmoPickup += PlayAmmoPickupSound;
         GameEvents.OnHealthPickup += PlayHealthPickupSound;
@@ -87,7 +87,7 @@ public class AudioManager : MonoBehaviour
         GameEvents.OnEnemyHit += PlayEnemyHitSound;
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         GameEvents.OnAmmoPickup -= PlayAmmoPickupSound;
         GameEvents.OnHealthPickup -= PlayHealthPickupSound;
@@ -96,7 +96,7 @@ public class AudioManager : MonoBehaviour
         GameEvents.OnEnemyHit -= PlayEnemyHitSound;
     }
 
-    private void InitializeAudioSource(AudioSource source, SoundEffect soundEffect)
+    private static void InitializeAudioSource(AudioSource source, SoundEffect soundEffect)
     {
         // Basic settings
         source.clip = soundEffect.Clip;
@@ -150,7 +150,7 @@ public class AudioManager : MonoBehaviour
         for (int i = 0; i < soundEffects.Length; i++)
         {
             if (soundEffects[i].SoundType == soundType)
-                return audioSources[i];
+                return _audioSources[i];
         }
         return null;
     }
@@ -178,12 +178,12 @@ public class AudioManager : MonoBehaviour
 
     private void PlaySound(int soundIndex)
     {
-        audioSources[soundIndex].Play();
+        _audioSources[soundIndex].Play();
     }
 
     private void PlaySoundAtPosition(int soundIndex, Vector3 position)
     {
-        AudioSource source = audioSources[soundIndex];
+        AudioSource source = _audioSources[soundIndex];
         source.transform.position = position;
         float distance = Vector3.Distance(Camera.main.transform.position, position);
         float volumeScale = CalculateVolumeByDistance(distance, soundEffects[soundIndex]);

@@ -125,7 +125,7 @@ public class ARGun : MonoBehaviour
 
     private void PlayMuzzleEffect()
     {
-        if (muzzleFlash != null) muzzleFlash.Play();
+        muzzleFlash?.Play();
     }
 
     private void FireBullet()
@@ -151,7 +151,7 @@ public class ARGun : MonoBehaviour
 
     private IEnumerator HandleBulletPhysics(Rigidbody bulletRb)
     {
-        while (bulletRb != null && bulletRb.gameObject.activeInHierarchy)
+        while (bulletRb && bulletRb.gameObject.activeInHierarchy)
         {
             UpdateBulletTrajectory(bulletRb, Time.fixedDeltaTime);
             yield return new WaitForFixedUpdate();
@@ -166,11 +166,9 @@ public class ARGun : MonoBehaviour
             allowReset = false;
         }
 
-        if (currentShootMode == ShootMode.Burst && currentBurst > 1)
-        {
-            currentBurst--;
-            Invoke(nameof(FireWeapon), shootingDelay);
-        }
+        if (currentShootMode != ShootMode.Burst || currentBurst <= 1) return;
+        currentBurst--;
+        Invoke(nameof(FireWeapon), shootingDelay);
     }
 
     private void ResetShoot()
