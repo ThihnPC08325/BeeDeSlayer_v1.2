@@ -17,6 +17,7 @@ public class BrokenFlyAI : MonoBehaviour
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform projectileSpawnPoint;
     [SerializeField] private float projectileSpeed = 5f; // Projectile speed
+    [SerializeField] private Animator animator;
 
     private float lastAttackTime;
 
@@ -46,6 +47,7 @@ public class BrokenFlyAI : MonoBehaviour
         float playerDistance = Vector3.Distance(transform.position, player.position);
         if (playerDistance <= detectionRange)
         {
+            animator.SetTrigger("Fly_Atk");
             TryShootAtPlayer();
         }
     }

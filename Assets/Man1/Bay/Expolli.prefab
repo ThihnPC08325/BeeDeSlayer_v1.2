@@ -150,6 +150,6 @@ MonoBehaviour:
   destroyDelay: 1.5
   numberOfExplosions: 5
   radius: 10
-  cameraShakeRadius: 50
+  cameraShakeRadius: 40
   shakeDuration: 1
-  shakeMagnitude: 6
+  shakeMagnitude: 2
