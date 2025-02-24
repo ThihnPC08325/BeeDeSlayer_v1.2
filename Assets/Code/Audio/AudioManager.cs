@@ -107,14 +107,12 @@ public class AudioManager : MonoBehaviour
 
         // 3D sound settings
         source.spatialBlend = soundEffect.Is3D ? 1f : 0f;
-        if (soundEffect.Is3D)
-        {
-            source.spread = soundEffect.Spread;
-            source.dopplerLevel = soundEffect.DopplerLevel;
-            source.minDistance = soundEffect.MinDistance;
-            source.maxDistance = soundEffect.MaxDistance;
-            source.rolloffMode = AudioRolloffMode.Linear;
-        }
+        if (!soundEffect.Is3D) return;
+        source.spread = soundEffect.Spread;
+        source.dopplerLevel = soundEffect.DopplerLevel;
+        source.minDistance = soundEffect.MinDistance;
+        source.maxDistance = soundEffect.MaxDistance;
+        source.rolloffMode = AudioRolloffMode.Linear;
     }
 
     #region SOUND CONTROL
@@ -193,7 +191,7 @@ public class AudioManager : MonoBehaviour
     #endregion
 
     #region CALCULATE VOLUME
-    private float CalculateVolumeByDistance(float distance, SoundEffect soundEffect)
+    private static float CalculateVolumeByDistance(float distance, SoundEffect soundEffect)
     {
         if (distance <= soundEffect.MinDistance) return 1f;
         if (distance >= soundEffect.MaxDistance) return 0f;
