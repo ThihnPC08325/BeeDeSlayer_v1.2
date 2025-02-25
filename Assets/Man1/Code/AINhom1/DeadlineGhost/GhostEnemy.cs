@@ -1,6 +1,5 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
-using System.Collections.Generic;
 using System.Collections;
 
 public class GhostEnemy : MonoBehaviour
@@ -8,21 +7,22 @@ public class GhostEnemy : MonoBehaviour
     private enum GhostState { Wander, Chasing, Grabbing, Cooldown }
     private GhostState currentState = GhostState.Wander;
 
-    [SerializeField] private float detectionRange = 15f; // Range within which the ghost can detect the player
-    [SerializeField] private float grabRange = 3f; // Distance within which the ghost can grab the player
-    [SerializeField] private float shakeIntensity = 0.2f; // How much the player shakes
-    [SerializeField] private float shakeDuration = 2f; // How long the shaking lasts
-    [SerializeField] private float damagePerSecond = 10f; // Damage dealt per second while grabbing
-    [SerializeField] private float grabCooldown = 5f; // Cooldown before the ghost can grab again
-    [SerializeField] private float chaseSpeed = 3.5f; // Speed of the ghost when chasing
-    [SerializeField] private float wanderSpeed = 2f; // Speed of the ghost when wandering
-    [SerializeField] private float wanderRadius = 10f; // Radius within which the ghost can wander
-    [SerializeField] private float wanderDelay = 3f; // Delay between wander movements
+    [SerializeField] private float detectionRange = 15f;
+    [SerializeField] private float grabRange = 3f;
+    [SerializeField] private float shakeIntensity = 0.2f;
+    [SerializeField] private float shakeDuration = 2f;
+    [SerializeField] private float damagePerSecond = 10f;
+    [SerializeField] private float grabCooldown = 5f;
+    [SerializeField] private float chaseSpeed = 3.5f;
+    [SerializeField] private float wanderSpeed = 2f;
+    [SerializeField] private float wanderRadius = 10f;
+    [SerializeField] private float wanderDelay = 3f;
 
     private Transform player;
     private PlayerHealth playerHealth;
     private PlayerController playerMovement;
     private NavMeshAgent navMeshAgent;
+    private Animator animator; // Thêm Animator
 
     private bool isGrabbing = false;
     private Vector3 originalPlayerPosition;
@@ -35,6 +35,8 @@ public class GhostEnemy : MonoBehaviour
         playerHealth = player.GetComponent<PlayerHealth>();
         playerMovement = player.GetComponent<PlayerController>();
         navMeshAgent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>(); // Lấy Animator
+
         navMeshAgent.speed = wanderSpeed;
     }
 
@@ -46,6 +48,7 @@ public class GhostEnemy : MonoBehaviour
         {
             case GhostState.Wander:
                 Wander();
+                animator.SetBool("isRunning", false); // Idle khi lang thang
                 if (distanceToPlayer <= detectionRange)
                 {
                     navMeshAgent.speed = chaseSpeed;
@@ -54,6 +57,7 @@ public class GhostEnemy : MonoBehaviour
                 break;
 
             case GhostState.Chasing:
+                animator.SetBool("isRunning", true); // Chạy khi đuổi theo
                 if (distanceToPlayer <= grabRange)
                 {
                     navMeshAgent.ResetPath();
@@ -72,6 +76,7 @@ public class GhostEnemy : MonoBehaviour
                 break;
 
             case GhostState.Cooldown:
+                animator.SetBool("isRunning", false); // Idle khi cooldown
                 cooldownTimer -= Time.deltaTime;
                 if (cooldownTimer <= 0f)
                 {
@@ -102,16 +107,15 @@ public class GhostEnemy : MonoBehaviour
     {
         isGrabbing = true;
         navMeshAgent.ResetPath();
-        playerMovement.enabled = false; // Disable player movement
-        originalPlayerPosition = player.position;
+        playerMovement.enabled = false;
 
+        originalPlayerPosition = player.position;
         float elapsedTime = 0f;
-        float damageInterval = 1f; // Apply damage every second
+        float damageInterval = 1f;
         float damageTimer = damageInterval;
 
         while (elapsedTime < shakeDuration)
         {
-            // Shake the player
             Vector3 shakeOffset = new Vector3(
                 Random.Range(-shakeIntensity, shakeIntensity),
                 Random.Range(-shakeIntensity, shakeIntensity),
@@ -119,7 +123,6 @@ public class GhostEnemy : MonoBehaviour
 
             player.position = originalPlayerPosition + shakeOffset;
 
-            // Deal damage over time
             damageTimer -= Time.deltaTime;
             if (damageTimer <= 0f)
             {
@@ -131,7 +134,6 @@ public class GhostEnemy : MonoBehaviour
             yield return null;
         }
 
-        // Reset player position and movement
         player.position = originalPlayerPosition;
         playerMovement.enabled = true;
 
@@ -142,15 +144,10 @@ public class GhostEnemy : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        // Visualize the grab range
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, grabRange);
-
-        // Visualize the wander radius
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, wanderRadius);
-
-        // Visualize the detection range
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
     }
