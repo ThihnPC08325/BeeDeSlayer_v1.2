@@ -18,7 +18,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c933cd77-bcb5-4d27-b4b4-183ec09fa04a" name="Changes" comment="" />
+    <list default="true" id="c933cd77-bcb5-4d27-b4b4-183ec09fa04a" name="Changes" comment="Refactor multiple scripts for consistency and readability.&#10;&#10;Renamed variables to adhere to naming conventions (e.g., added underscores for private fields). Adjusted method access modifiers and simplified conditional statements for clarity. Improved method consistency with function renaming, for example, `SpawRedZone` to `SpawnRedZone`." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -40,15 +40,6 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
   </component>
@@ -135,6 +126,7 @@
       <workItem from="1740466542311" duration="1089000" />
       <workItem from="1740470183041" duration="370000" />
       <workItem from="1740470570948" duration="1375000" />
+      <workItem from="1740496253980" duration="248000" />
     </task>
     <task id="LOCAL-00001" summary="Refactor code for consistency, clarity, and optimization.&#10;&#10;Standardized naming conventions across multiple scripts, improved readability by reducing repetitive control structures, and optimized performance with caching and better condition checks. Added minor enhancements like confusion toggles and maintained adherence to coding best practices.">
       <option name="closed" value="true" />
@@ -160,7 +152,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740472565101</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Refactor multiple scripts for consistency and readability.&#10;&#10;Renamed variables to adhere to naming conventions (e.g., added underscores for private fields). Adjusted method access modifiers and simplified conditional statements for clarity. Improved method consistency with function renaming, for example, `SpawRedZone` to `SpawnRedZone`.">
+      <option name="closed" value="true" />
+      <created>1740497029962</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1740497029962</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -178,7 +178,8 @@
     <MESSAGE value="Refactor code for consistency, clarity, and optimization.&#10;&#10;Standardized naming conventions across multiple scripts, improved readability by reducing repetitive control structures, and optimized performance with caching and better condition checks. Added minor enhancements like confusion toggles and maintained adherence to coding best practices." />
     <MESSAGE value="Add meta files for new Unity packages and IDE configurations&#10;&#10;This commit introduces .meta files for HDRP and URP Unity packages related to SciFi weapons. Additionally, an IntelliJ IDEA project configuration for Git version control is included. These files ensure proper package tracking and versioning." />
     <MESSAGE value="Refactor user authentication and enhance HTTP handling.&#10;&#10;Converted UnityWebRequest to HttpClient for improved performance and maintainability. Refactored input validation logic for reusability and ensured better error handling. Standardized code across RegisterUser, LoginUser, and EncryptionHelper scripts for clarity and consistency." />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor user authentication and enhance HTTP handling.&#10;&#10;Converted UnityWebRequest to HttpClient for improved performance and maintainability. Refactored input validation logic for reusability and ensured better error handling. Standardized code across RegisterUser, LoginUser, and EncryptionHelper scripts for clarity and consistency." />
+    <MESSAGE value="Refactor multiple scripts for consistency and readability.&#10;&#10;Renamed variables to adhere to naming conventions (e.g., added underscores for private fields). Adjusted method access modifiers and simplified conditional statements for clarity. Improved method consistency with function renaming, for example, `SpawRedZone` to `SpawnRedZone`." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor multiple scripts for consistency and readability.&#10;&#10;Renamed variables to adhere to naming conventions (e.g., added underscores for private fields). Adjusted method access modifiers and simplified conditional statements for clarity. Improved method consistency with function renaming, for example, `SpawRedZone` to `SpawnRedZone`." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
