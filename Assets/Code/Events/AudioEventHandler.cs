@@ -1,22 +1,23 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 using static SwitchingWeapon;
 
 [System.Serializable]
 public class AudioEventMapping
 {
-    [SerializeField] private string _soundName;
-    [SerializeField] private AudioSource _source;
-    [SerializeField] private bool _useFade;
-    [SerializeField] private float _fadeTime = 1f;
-    [SerializeField][Range(0f, 1f)] private float _volumeMultiplier = 1f;
-    [SerializeField][Range(-3f, 3f)] private float _pitchVariation = 0f;
+    [SerializeField] private string soundName;
+    [SerializeField] private AudioSource source;
+    [SerializeField] private bool useFade;
+    [SerializeField] private float fadeTime = 1f;
+    [SerializeField][Range(0f, 1f)] private float volumeMultiplier = 1f;
+    [SerializeField][Range(-3f, 3f)] private float pitchVariation = 0f;
 
-    public string SoundName => _soundName;
-    public AudioSource Source => _source;
-    public bool UseFade => _useFade;
-    public float FadeTime => _fadeTime;
-    public float VolumeMultiplier => _volumeMultiplier;
-    public float PitchVariation => _pitchVariation;
+    public string SoundName => soundName;
+    public AudioSource Source => source;
+    public bool UseFade => useFade;
+    public float FadeTime => fadeTime;
+    public float VolumeMultiplier => volumeMultiplier;
+    public float PitchVariation => pitchVariation;
 }
 
 public class AudioEventHandler : MonoBehaviour

@@ -90,11 +90,9 @@ public class PlayerController : MonoBehaviour
     {
         HandleMovement();
         ApplyGravity();
-        if (dashAction.triggered && remainingDashes > 0)
-        {
-            StartCoroutine(Dash());
-            remainingDashes--;
-        }
+        if (!dashAction.triggered || remainingDashes <= 0) return;
+        StartCoroutine(Dash());
+        remainingDashes--;
     }
     public void ApplySlow(float slowPercentage)
     {
@@ -118,7 +116,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                controller.Move(move.normalized * dashSpeed * Time.deltaTime);
+                controller.Move(move.normalized * (dashSpeed * Time.deltaTime));
                 return;
             }
         }
@@ -127,30 +125,23 @@ public class PlayerController : MonoBehaviour
         float targetSpeed = move.magnitude * moveSpeed * currentSpeedModifier;
         float currentSpeed = new Vector3(controller.velocity.x, 0, controller.velocity.z).magnitude;
 
-        if (targetSpeed > currentSpeed)
-        {
-            currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, acceleration * Time.deltaTime);
-        }
-        else
-        {
-            currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, deceleration * Time.deltaTime);
-        }
+        currentSpeed = targetSpeed > currentSpeed ? Mathf.MoveTowards(currentSpeed, targetSpeed, acceleration * Time.deltaTime) : Mathf.MoveTowards(currentSpeed, targetSpeed, deceleration * Time.deltaTime);
 
         currentSpeed = Mathf.Clamp(currentSpeed, 0, maxSpeed);
 
         if (move.magnitude > 0.1f)
         {
-            controller.Move(move.normalized * currentSpeed * Time.deltaTime);
+            controller.Move(move.normalized * (currentSpeed * Time.deltaTime));
         }
 
         if (isGrounded)
         {
-            controller.Move(move * moveSpeed * Time.deltaTime);
+            controller.Move(move * (moveSpeed * Time.deltaTime));
         }
         else
         {
             //---AIR CONTROL---
-            controller.Move(move * moveSpeed * airControl * Time.deltaTime);
+            controller.Move(move * (moveSpeed * airControl * Time.deltaTime));
         }
 
         //---JUMP---

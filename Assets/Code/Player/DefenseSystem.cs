@@ -7,8 +7,8 @@ public class DefenseSystem : MonoBehaviour
     [SerializeField, Range(0.1f, 0.5f)] private float minimumDamagePercent = 0.1f;
 
     // Cache các giá trị thường xuyên sử dụng
-    private const float BASE_DEFENSE_VALUE = 100f;
-    private const float DIMINISHING_FACTOR = 0.5f;
+    private const float BaseDefenseValue = 100f;
+    private const float DiminishingFactor = 0.5f;
 
     // Cache các giá trị tính toán thường xuyên
     private float _cachedDefense;
@@ -18,7 +18,7 @@ public class DefenseSystem : MonoBehaviour
     public float CalculateDamage(float damage, float defense, float penetration)
     {
         // Kiểm tra cache để tối ưu hiệu năng
-        if (_cachedDefense != defense || _cachedPenetration != penetration)
+        if (!Mathf.Approximately(_cachedDefense, defense) || !Mathf.Approximately(_cachedPenetration, penetration))
         {
             UpdateDamageReduction(defense, penetration);
         }
@@ -33,7 +33,7 @@ public class DefenseSystem : MonoBehaviour
 
         float effectiveDefense = CalculateEffectiveDefense(defense, penetration);
         float diminishedDefense = ApplyDiminishingReturns(effectiveDefense);
-        _cachedDamageReduction = BASE_DEFENSE_VALUE / (BASE_DEFENSE_VALUE + diminishedDefense);
+        _cachedDamageReduction = BaseDefenseValue / (BaseDefenseValue + diminishedDefense);
     }
 
     private float CalculateEffectiveDefense(float defense, float penetration)
@@ -46,7 +46,7 @@ public class DefenseSystem : MonoBehaviour
         if (defense <= diminishingReturnThreshold) return defense;
 
         float excess = defense - diminishingReturnThreshold;
-        return diminishingReturnThreshold + (excess * DIMINISHING_FACTOR);
+        return diminishingReturnThreshold + (excess * DiminishingFactor);
     }
 
     private float CalculateFinalDamage(float damage)

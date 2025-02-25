@@ -2,6 +2,8 @@
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.Serialization;
+
 public class PlayerHealth : MonoBehaviour
 {
     [SerializeField] private float health;
@@ -11,7 +13,7 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private float chipSpeed = 2f;
     [SerializeField] private Image frontHealthBar;
     [SerializeField] private Image backHealthBar;
-    [SerializeField] private Image DamagaOverlay;
+    [SerializeField] private Image damageOverlay;
     [SerializeField] private float duration;
     [SerializeField] private float fadeSpeed;
 
@@ -39,9 +41,9 @@ public class PlayerHealth : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        DamagaOverlay.color = new Color(DamagaOverlay.color.r, DamagaOverlay.color.g, DamagaOverlay.color.b, 0);
+        damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, 0);
     }
 
     // Update is called once per frame
@@ -49,20 +51,16 @@ public class PlayerHealth : MonoBehaviour
     {
         health = Mathf.Clamp(health, 0, maxHealth);
         UpdateHealthUI();
-        if (DamagaOverlay.color.a > 0)
+        if (!(damageOverlay.color.a > 0)) return;
+        if (health < 30)
         {
-            if (health < 30)
-            {
-                return;
-            }
-            durationTimer += Time.deltaTime;
-            if (durationTimer > duration)
-            {
-                float tempAlpha = DamagaOverlay.color.a;
-                tempAlpha = Time.deltaTime * fadeSpeed;
-                DamagaOverlay.color = new Color(DamagaOverlay.color.r, DamagaOverlay.color.g, DamagaOverlay.color.b, tempAlpha);
-            }
+            return;
         }
+        durationTimer += Time.deltaTime;
+        if (!(durationTimer > duration)) return;
+        float tempAlpha = damageOverlay.color.a;
+        tempAlpha = Time.deltaTime * fadeSpeed;
+        damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, tempAlpha);
 
     }
 
@@ -107,20 +105,20 @@ public class PlayerHealth : MonoBehaviour
     }
     public void TakeDamage(float damage, float penetration)
     {
-        float HealthBeforeDamage = health;
+        float healthBeforeDamage = health;
         float finalDamage = defenseSystem.CalculateDamage(damage, defense, penetration);
         health = Mathf.Max(health - finalDamage, 0);
-        float healthActuallyDamage = health - HealthBeforeDamage;
+        float healthActuallyDamage = health - healthBeforeDamage;
         lerpTimer = 0f;
         durationTimer = 0f;
-        DamagaOverlay.color = new Color(DamagaOverlay.color.r, DamagaOverlay.color.g, DamagaOverlay.color.b, 1);
+        damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, 1);
     }
 
     public void RestoreHealth(float heal)
     {
-        float HealthBeforePickup = health;
+        float healthBeforePickup = health;
         health = Mathf.Min(health + heal, maxHealth);
-        float healthActuallyHeal = health - HealthBeforePickup;
+        float healthActuallyHeal = health - healthBeforePickup;
         lerpTimer = 0f;
     }
 }

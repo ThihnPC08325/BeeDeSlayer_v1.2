@@ -19,17 +19,17 @@ public class CameraController : MonoBehaviour
     [SerializeField] Transform playerBody;
 
     #region private
-    private Vector2 currentRotation;
-    private PlayerInput playerInput;
-    private InputAction lookAction;
-    private readonly bool isAiming = false;
-    private bool isConfused = false; // New: Confusion status
+    private Vector2 _currentRotation;
+    private PlayerInput _playerInput;
+    private InputAction _lookAction;
+    private const bool IsAiming = false;
+    private bool _isConfused = false; // New: Confusion status
     #endregion
 
     private void Awake()
     {
-        playerInput = new PlayerInput();
-        lookAction = playerInput.Player.Look;
+        _playerInput = new PlayerInput();
+        _lookAction = _playerInput.Player.Look;
     }
 
     private void OnEnable()
@@ -49,14 +49,14 @@ public class CameraController : MonoBehaviour
 
     private void HandleMouseLook()
     {
-        Vector2 lookInput = lookAction.ReadValue<Vector2>();
+        Vector2 lookInput = _lookAction.ReadValue<Vector2>();
         float inputMagnitude = lookInput.magnitude;
 
         // Apply sensitivity curve
         float sensitivityMultiplier = sensitivityCurve.Evaluate(inputMagnitude);
 
         // Apply ADS (Aim Down Sight) sensitivity
-        float adsMultiplier = isAiming ? adsCurve.Evaluate(inputMagnitude) : 1f;
+        float adsMultiplier = IsAiming ? adsCurve.Evaluate(inputMagnitude) : 1f;
 
         // Apply acceleration
         float accelerationMultiplier = useMouseAcceleration ? accelerationCurve.Evaluate(inputMagnitude) : 1f;
@@ -75,33 +75,31 @@ public class CameraController : MonoBehaviour
         if (invertY) processedInput.y = -processedInput.y;
 
         // Apply confusion effect
-        if (isConfused)
+        if (_isConfused)
         {
             // Swap X and Y input
-            float temp = processedInput.x;
-            processedInput.x = processedInput.y;
-            processedInput.y = temp;
+            (processedInput.x, processedInput.y) = (processedInput.y, processedInput.x);
         }
 
         // Update rotation
-        currentRotation.x = Mathf.Clamp(currentRotation.x - processedInput.y, -90f, 90f);
-        currentRotation.y += processedInput.x;
+        _currentRotation.x = Mathf.Clamp(_currentRotation.x - processedInput.y, -90f, 90f);
+        _currentRotation.y += processedInput.x;
 
         // Apply rotation
-        transform.localRotation = Quaternion.Euler(currentRotation.x, 0f, 0f);
-        playerBody.localRotation = Quaternion.Euler(0f, currentRotation.y, 0f);
+        transform.localRotation = Quaternion.Euler(_currentRotation.x, 0f, 0f);
+        playerBody.localRotation = Quaternion.Euler(0f, _currentRotation.y, 0f);
     }
 
     public void SetCameraControlEnabled(bool enabled)
     {
         if (enabled)
         {
-            lookAction.Enable();
+            _lookAction.Enable();
             Cursor.lockState = CursorLockMode.Locked;
         }
         else
         {
-            lookAction.Disable();
+            _lookAction.Disable();
             Cursor.lockState = CursorLockMode.None;
         }
     }
@@ -109,9 +107,9 @@ public class CameraController : MonoBehaviour
     // Apply confusion for a set duration
     public void ApplyConfusion(float duration)
     {
-        if (!isConfused)
+        if (!_isConfused)
         {
-            isConfused = true;
+            _isConfused = true;
             Debug.Log("Camera Confusion Activated! X and Y swapped.");
             Invoke(nameof(RemoveConfusion), duration);
         }
@@ -119,7 +117,7 @@ public class CameraController : MonoBehaviour
 
     private void RemoveConfusion()
     {
-        isConfused = false;
+        _isConfused = false;
         Debug.Log("Camera Confusion Wore Off! Controls restored.");
     }
 }

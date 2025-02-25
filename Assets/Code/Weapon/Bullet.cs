@@ -12,11 +12,11 @@ public class Bullet : MonoBehaviour
     [SerializeField] private float bulletLifetime = 500f; // Thời gian sống tối đa của viên đạn
 
     private bool IsInUse { get; set; } // Trạng thái sử dụng của viên đạn
-    private float currentDistance; // Khoảng cách hiện tại của viên đạn
+    private float _currentDistance; // Khoảng cách hiện tại của viên đạn
 
-    private Vector3 startPosition; // Vị trí bắt đầu của viên đạn
-    private float maxDistanceSqr; // Bình phương khoảng cách tối đa để so sánh
-    private float spawnTime; // Thời gian sinh viên đạn
+    private Vector3 _startPosition; // Vị trí bắt đầu của viên đạn
+    private float _maxDistanceSqr; // Bình phương khoảng cách tối đa để so sánh
+    private float _spawnTime; // Thời gian sinh viên đạn
 
     // Mới thêm: Kích hoạt âm thanh khi viên đạn va chạm
     [SerializeField] private AudioSource collisionSound; // Âm thanh va chạm
@@ -24,13 +24,13 @@ public class Bullet : MonoBehaviour
     private void Awake()
     {
         trailRenderer = GetComponent<TrailRenderer>(); // Lấy TrailRenderer từ đối tượng
-        maxDistanceSqr = maxDistance * maxDistance; // Tính bình phương khoảng cách tối đa
+        _maxDistanceSqr = maxDistance * maxDistance; // Tính bình phương khoảng cách tối đa
     }
 
     private void OnEnable()
     {
-        startPosition = transform.position; // Lưu vị trí bắt đầu khi viên đạn được kích hoạt
-        spawnTime = Time.time; // Ghi lại thời gian sinh viên đạn
+        _startPosition = transform.position; // Lưu vị trí bắt đầu khi viên đạn được kích hoạt
+        _spawnTime = Time.time; // Ghi lại thời gian sinh viên đạn
         IsInUse = true; // Đánh dấu viên đạn đang được sử dụng
     }
 
@@ -44,15 +44,15 @@ public class Bullet : MonoBehaviour
         if (!IsInUse) return; // Nếu viên đạn không đang sử dụng, bỏ qua
 
         // Kiểm tra khoảng cách
-        Vector3 displacement = transform.position - startPosition; // Tính toán khoảng cách di chuyển
+        Vector3 displacement = transform.position - _startPosition; // Tính toán khoảng cách di chuyển
         float currentDistanceSqr = displacement.sqrMagnitude; // Tính bình phương khoảng cách hiện tại
 
         // Cập nhật để debug
-        currentDistance = Mathf.Sqrt(currentDistanceSqr); // Tính khoảng cách hiện tại
+        _currentDistance = Mathf.Sqrt(currentDistanceSqr); // Tính khoảng cách hiện tại
 
         // Kiểm tra các điều kiện
-        bool isTooFar = currentDistanceSqr >= maxDistanceSqr; // Kiểm tra xem viên đạn có bay quá xa không
-        bool timeoutReached = (Time.time - spawnTime) >= bulletLifetime; // Kiểm tra xem thời gian sống đã hết chưa
+        bool isTooFar = currentDistanceSqr >= _maxDistanceSqr; // Kiểm tra xem viên đạn có bay quá xa không
+        bool timeoutReached = (Time.time - _spawnTime) >= bulletLifetime; // Kiểm tra xem thời gian sống đã hết chưa
 
         if (isTooFar || timeoutReached)
         {
@@ -164,7 +164,7 @@ public class Bullet : MonoBehaviour
 
     private void ReturnToPool()
     {
-        if (BulletPool.Instance == null) return; // Kiểm tra nếu BulletPool không tồn tại
+        if (!BulletPool.Instance) return; // Kiểm tra nếu BulletPool không tồn tại
 
         ResetBullet(); // Đặt lại trạng thái viên đạn
         BulletPool.Instance.ReturnToPool(BulletPool.PoolType.NormalBullet, gameObject); // Trả viên đạn về pool
@@ -173,8 +173,8 @@ public class Bullet : MonoBehaviour
     private void ResetBullet()
     {
         IsInUse = false; // Đánh dấu viên đạn không còn được sử dụng
-        startPosition = transform.position; // Đặt lại vị trí bắt đầu
-        if (trailRenderer != null)
+        _startPosition = transform.position; // Đặt lại vị trí bắt đầu
+        if (trailRenderer)
         {
             trailRenderer.Clear(); // Xóa trail khi reset đạn
         }

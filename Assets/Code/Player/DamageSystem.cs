@@ -22,7 +22,7 @@ public class DamageSystem : MonoBehaviour
         damageConfigDict = ammoConfigs.ToDictionary(config => config.type);
     }
 
-    public float CalculateDamage(AmmoType ammoType, float distance, bool isCritical, float targetArmor)
+    public float CalculateDamage(AmmoType ammoType, float distance, float targetArmor)
     {
         if (!damageConfigDict.TryGetValue(ammoType, out var config))
             return 0f;

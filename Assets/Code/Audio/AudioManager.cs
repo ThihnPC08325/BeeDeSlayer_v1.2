@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 using static SwitchingWeapon;
 
 public enum SoundType
@@ -7,6 +8,7 @@ public enum SoundType
     HealthPickup,
     WeaponFire,
     PlayerHit,
+
     EnemyHit
     // Thêm các sound type khác nếu cần
 }
@@ -16,50 +18,45 @@ public class AudioManager : MonoBehaviour
     [System.Serializable]
     public class SoundEffect
     {
-        [SerializeField] SoundType _soundType;
-        [SerializeField] AudioClip _clip;
+        [SerializeField] private SoundType soundType;
+        [SerializeField] private AudioClip clip;
 
         // Thêm các thuộc tính điều chỉnh âm thanh
-        [Range(0f, 1f)]
-        [SerializeField] float _volume = 1f;
-        [Range(0.5f, 1.5f)]
-        [SerializeField] float _pitch = 1f;
-        [Range(-1f, 1f)]
-        [SerializeField] float _stereoPan = 0f;
-        [SerializeField] bool _loop = false;
+        [Range(0f, 1f)] [SerializeField] private float volume = 1f;
+        [Range(0.5f, 1.5f)] [SerializeField] private float pitch = 1f;
+        [Range(-1f, 1f)] [SerializeField] private float stereoPan = 0f;
+        [SerializeField] private bool loop = false;
 
         // 3D sound settings
-        [SerializeField] bool _is3D;
-        [Range(0f, 360f)]
-        [SerializeField] float _spread = 0f;
-        [Range(0f, 5f)]
-        [SerializeField] float _dopplerLevel = 1f;
-        [Range(0f, 50f)]
-        [SerializeField] float _minDistance = 1f;
-        [Range(1f, 500f)]
-        [SerializeField] float _maxDistance = 100f;
+        [SerializeField] private bool is3D;
+        [Range(0f, 360f)] [SerializeField] private float spread = 0f;
+        [Range(0f, 5f)] [SerializeField] private float dopplerLevel = 1f;
+        [Range(0f, 50f)] [SerializeField] private float minDistance = 1f;
+        [Range(1f, 500f)] [SerializeField] private float maxDistance = 100f;
 
         // Properties
-        public SoundType SoundType => _soundType;
-        public AudioClip Clip => _clip;
-        public float Volume => _volume;
-        public float Pitch => _pitch;
-        public float StereoPan => _stereoPan;
-        public bool Loop => _loop;
-        public bool Is3D => _is3D;
-        public float Spread => _spread;
-        public float DopplerLevel => _dopplerLevel;
-        public float MinDistance => _minDistance;
-        public float MaxDistance => _maxDistance;
+        public SoundType SoundType => soundType;
+        public AudioClip Clip => clip;
+        public float Volume => volume;
+        public float Pitch => pitch;
+        public float StereoPan => stereoPan;
+        public bool Loop => loop;
+        public bool Is3D => is3D;
+        public float Spread => spread;
+        public float DopplerLevel => dopplerLevel;
+        public float MinDistance => minDistance;
+        public float MaxDistance => maxDistance;
     }
 
     [SerializeField] private SoundEffect[] soundEffects;
 
     private AudioSource[] _audioSources;
+    private Camera _camera;
     private static AudioManager _instance;
 
     private void Awake()
     {
+        _camera = Camera.main;
         if (_instance == null)
         {
             _instance = this;
@@ -116,6 +113,7 @@ public class AudioManager : MonoBehaviour
     }
 
     #region SOUND CONTROL
+
     public void SetVolume(SoundType soundType, float volume)
     {
         var source = GetAudioSource(soundType);
@@ -150,11 +148,14 @@ public class AudioManager : MonoBehaviour
             if (soundEffects[i].SoundType == soundType)
                 return _audioSources[i];
         }
+
         return null;
     }
+
     #endregion
 
     #region PLAY SOUND
+
     private void PlaySoundEffect(SoundType soundType, Vector3? position = null)
     {
         for (int i = 0; i < soundEffects.Length; i++)
@@ -169,6 +170,7 @@ public class AudioManager : MonoBehaviour
                 {
                     PlaySound(i);
                 }
+
                 return;
             }
         }
@@ -183,14 +185,16 @@ public class AudioManager : MonoBehaviour
     {
         AudioSource source = _audioSources[soundIndex];
         source.transform.position = position;
-        float distance = Vector3.Distance(Camera.main.transform.position, position);
+        float distance = Vector3.Distance(_camera.transform.position, position);
         float volumeScale = CalculateVolumeByDistance(distance, soundEffects[soundIndex]);
         source.volume = soundEffects[soundIndex].Volume * volumeScale;
         source.Play();
     }
+
     #endregion
 
     #region CALCULATE VOLUME
+
     private static float CalculateVolumeByDistance(float distance, SoundEffect soundEffect)
     {
         if (distance <= soundEffect.MinDistance) return 1f;
@@ -199,9 +203,11 @@ public class AudioManager : MonoBehaviour
         return 1f - ((distance - soundEffect.MinDistance) /
                      (soundEffect.MaxDistance - soundEffect.MinDistance));
     }
+
     #endregion
 
     #region EVENT
+
     private void PlayAmmoPickupSound(AmmoType ammoType, int amount)
     {
         PlaySoundEffect(SoundType.AmmoPickup);
@@ -226,5 +232,6 @@ public class AudioManager : MonoBehaviour
     {
         PlaySoundEffect(SoundType.EnemyHit);
     }
+
     #endregion
 }
