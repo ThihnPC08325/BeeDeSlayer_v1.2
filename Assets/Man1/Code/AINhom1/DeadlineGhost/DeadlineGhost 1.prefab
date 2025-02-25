@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1618759331286062496}
   - component: {fileID: 6897120755128903795}
   m_Layer: 0
-  m_Name: DeadlineGhost
+  m_Name: DeadlineGhost 1
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
