@@ -1,40 +1,108 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Networking;
-using UnityEngine.UI;
 
 public class LoginUser : MonoBehaviour
 {
     [SerializeField] private TMP_InputField usernameInput;
     [SerializeField] private TMP_InputField passwordInput;
     [SerializeField] private TextMeshProUGUI resultText;
-    [SerializeField] private static readonly string link = "https://phamduchuan.name.vn/PHP/Login.php";
 
-    public void Login()
+    [SerializeField] private string link = "https://phamduchuan.name.vn/PHP/Login.php"; // Link đăng nhập
+
+    /// <summary>
+    /// Hàm đăng nhập, sẽ thực thi khi người dùng nhấn nút
+    /// </summary>
+    public async void Login()
     {
+        // Thu thập thông tin người dùng từ giao diện
         string username = usernameInput.text;
         string password = passwordInput.text;
-        string encryptedPassword = EncryptionHelper.EncryptPassword(password.ToString()); // For comparison
-        StartCoroutine(LoginRequest(username, encryptedPassword));
+
+        // Kiểm tra dữ liệu hợp lệ
+        if (!ValidateInput(username, password))
+        {
+            return;
+        }
+
+        // Mã hóa mật khẩu trước khi gửi
+        string encryptedPassword = EncryptionHelper.EncryptPassword(password);
+
+        // Thực hiện gửi yêu cầu đăng nhập
+        await LoginRequest(username, encryptedPassword);
     }
 
-    private IEnumerator LoginRequest(string username, string encryptedPassword)
+    /// <summary>
+    /// Kiểm tra input hợp lệ
+    /// </summary>
+    /// <param name="username">Tên đăng nhập</param>
+    /// <param name="password">Mật khẩu</param>
+    /// <returns>true nếu hợp lệ, false nếu không hợp lệ</returns>
+    private bool ValidateInput(string username, string password)
     {
-        WWWForm form = new WWWForm();
-        form.AddField("username", username);
-        form.AddField("password", encryptedPassword);
-
-        UnityWebRequest www = UnityWebRequest.Post(link, form);
-        yield return www.SendWebRequest();
-
-        if (www.isNetworkError || www.isHttpError)
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
         {
-            resultText.text = "Error: " + www.error;
+            resultText.text = "Tên đăng nhập và mật khẩu không thể để trống!";
+            return false;
         }
-        else
+
+        if (password.Length >= 6) return true;
+        resultText.text = "Mật khẩu phải dài ít nhất 6 ký tự.";
+        return false;
+
+    }
+
+    /// <summary>
+    /// Hàm thực hiện đăng nhập qua HTTP request
+    /// </summary>
+    /// <param name="username">Tên đăng nhập</param>
+    /// <param name="encryptedPassword">Mật khẩu đã mã hóa</param>
+    private async Task LoginRequest(string username, string encryptedPassword)
+    {
+        try
         {
-            resultText.text = www.downloadHandler.text;
+            using HttpClient client = new HttpClient();
+            // Thiết lập body của yêu cầu
+            var values = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("username", username),
+                new KeyValuePair<string, string>("password", encryptedPassword)
+            });
+
+            // Gửi POST request tới máy chủ
+            HttpResponseMessage response = await client.PostAsync(link, values);
+
+            // Xử lý kết quả từ máy chủ
+            if (response.IsSuccessStatusCode)
+            {
+                string serverResponse = await response.Content.ReadAsStringAsync();
+
+                // Xử lý phản hồi tùy theo logic server
+                if (serverResponse.Contains("success"))
+                {
+                    resultText.text = "Đăng nhập thành công!";
+                    Debug.Log("Server Response: " + serverResponse);
+                }
+                else
+                {
+                    resultText.text = $"Đăng nhập thất bại: {serverResponse}";
+                    Debug.LogError("Server Error: " + serverResponse);
+                }
+            }
+            else
+            {
+                resultText.text = $"Lỗi máy chủ: {response.StatusCode}";
+                Debug.LogError($"HTTP Error: {response.StatusCode} - {response.ReasonPhrase}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Xử lý các lỗi kết nối hoặc lỗi không xác định
+            resultText.text = $"Đã xảy ra lỗi: {ex.Message}";
+            Debug.LogError($"Exception: {ex}");
         }
     }
 }
