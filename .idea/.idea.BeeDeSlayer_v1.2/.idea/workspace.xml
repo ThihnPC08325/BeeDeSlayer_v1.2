@@ -18,11 +18,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c933cd77-bcb5-4d27-b4b4-183ec09fa04a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Assets/Map3/Code/RedZone/LightGrow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Map3/Code/RedZone/LightGrow.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Map3/Code/RedZone/SpawRedzone.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Map3/Code/RedZone/SpawRedzone.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Map3/Code/RedZone/ZoneDame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Map3/Code/RedZone/ZoneDame.cs" afterDir="false" />
-    </list>
+    <list default="true" id="c933cd77-bcb5-4d27-b4b4-183ec09fa04a" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -131,6 +127,7 @@
       <workItem from="1740470183041" duration="370000" />
       <workItem from="1740470570948" duration="1375000" />
       <workItem from="1740496253980" duration="278000" />
+      <workItem from="1740497379449" duration="40000" />
     </task>
     <task id="LOCAL-00001" summary="Refactor code for consistency, clarity, and optimization.&#10;&#10;Standardized naming conventions across multiple scripts, improved readability by reducing repetitive control structures, and optimized performance with caching and better condition checks. Added minor enhancements like confusion toggles and maintained adherence to coding best practices.">
       <option name="closed" value="true" />
@@ -164,7 +161,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740497029962</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Refactor RedZone scripts for consistency and clarity.&#10;&#10;Updated method access modifiers and standardized variable naming (e.g., `Playercolliders` to `playerColliders`). Improved readability, adhered to coding conventions, and ensured better maintainability across RedZone-related scripts.">
+      <option name="closed" value="true" />
+      <created>1740497400518</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1740497400518</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -183,7 +188,8 @@
     <MESSAGE value="Add meta files for new Unity packages and IDE configurations&#10;&#10;This commit introduces .meta files for HDRP and URP Unity packages related to SciFi weapons. Additionally, an IntelliJ IDEA project configuration for Git version control is included. These files ensure proper package tracking and versioning." />
     <MESSAGE value="Refactor user authentication and enhance HTTP handling.&#10;&#10;Converted UnityWebRequest to HttpClient for improved performance and maintainability. Refactored input validation logic for reusability and ensured better error handling. Standardized code across RegisterUser, LoginUser, and EncryptionHelper scripts for clarity and consistency." />
     <MESSAGE value="Refactor multiple scripts for consistency and readability.&#10;&#10;Renamed variables to adhere to naming conventions (e.g., added underscores for private fields). Adjusted method access modifiers and simplified conditional statements for clarity. Improved method consistency with function renaming, for example, `SpawRedZone` to `SpawnRedZone`." />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor multiple scripts for consistency and readability.&#10;&#10;Renamed variables to adhere to naming conventions (e.g., added underscores for private fields). Adjusted method access modifiers and simplified conditional statements for clarity. Improved method consistency with function renaming, for example, `SpawRedZone` to `SpawnRedZone`." />
+    <MESSAGE value="Refactor RedZone scripts for consistency and clarity.&#10;&#10;Updated method access modifiers and standardized variable naming (e.g., `Playercolliders` to `playerColliders`). Improved readability, adhered to coding conventions, and ensured better maintainability across RedZone-related scripts." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor RedZone scripts for consistency and clarity.&#10;&#10;Updated method access modifiers and standardized variable naming (e.g., `Playercolliders` to `playerColliders`). Improved readability, adhered to coding conventions, and ensured better maintainability across RedZone-related scripts." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
