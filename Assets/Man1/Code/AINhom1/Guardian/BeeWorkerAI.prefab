@@ -233,10 +233,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -2630524480750688891, guid: 34a512b4c1557d1448e72480c50bef66, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 920dab03d141ad04986d4a953f1b7cef, type: 2}
     - target: {fileID: 919132149155446097, guid: 34a512b4c1557d1448e72480c50bef66, type: 3}
       propertyPath: m_Name
       value: GoldSandworm
       objectReference: {fileID: 0}
+    - target: {fileID: 2927704806128529814, guid: 34a512b4c1557d1448e72480c50bef66, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a3da3048bd2c9d54f9f17eb6c7595d36, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
