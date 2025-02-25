@@ -10,7 +10,7 @@ public class HealthBoss : MonoBehaviour, IPooledObject
     [SerializeField] private GameObject smokePrefab; // Reference to the smoke prefab
     [SerializeField] private BoxCollider boxCollider;
     [SerializeField] private Boss bossController;
-    [SerializeField] HealthBarBoss healthBar;
+    [SerializeField] private HealthBarBoss healthBar;
 
     public static event System.Action OnBossDefeated;
     private void Awake()
@@ -23,15 +23,13 @@ public class HealthBoss : MonoBehaviour, IPooledObject
     {
         currentHealth -= damage;
         healthBar.HealthEnemy(damage);
-        if (currentHealth <= 0f)
-        {
-            currentHealth = 0f;
-            boxCollider.enabled = false;
+        if (!(currentHealth <= 0f)) return;
+        currentHealth = 0f;
+        boxCollider.enabled = false;
 
-            // Gọi sự kiện thông báo boss đã chết
-            OnBossDefeated?.Invoke();
-            Die();
-        }
+        // Gọi sự kiện thông báo boss đã chết
+        OnBossDefeated?.Invoke();
+        Die();
     }
 
     private void Die()

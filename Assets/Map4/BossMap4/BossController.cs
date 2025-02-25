@@ -18,38 +18,38 @@ public class BossController : MonoBehaviour
     [SerializeField] private int bombDamage = 10;      // Sát thương bom
     [SerializeField] private GameObject explosionEffectPrefab; // Particle Effect khi bom nổ
 
-    private Transform player; // Vị trí người chơi
-    private bool isShooting = false;  // Kiểm tra xem Boss có đang bắn không
-    private float lastShootTime; // Thời gian bắn cuối cùng
+    private Transform _player; // Vị trí người chơi
+    private bool _isShooting = false;  // Kiểm tra xem Boss có đang bắn không
+    private float _lastShootTime; // Thời gian bắn cuối cùng
     [SerializeField] private Transform projectileSpawnPoint; // Điểm xuất phát viên đạn (cần đặt trong Unity)
 
-    void Start()
+    private void Start()
     {
         // Tìm đối tượng người chơi
-        player = GameObject.FindWithTag("Player")?.transform;
+        _player = GameObject.FindWithTag("Player")?.transform;
 
         // Kiểm tra nếu Player không được tìm thấy
-        if (player == null)
+        if (_player == null)
         {
             Debug.LogWarning("Player not found! Make sure the player has the correct tag.");
         }
         else
         {
             // Kích hoạt hành vi bắn định kỳ
-            InvokeRepeating("ShootProjectiles", 2f, shootCooldown);
+            InvokeRepeating(nameof(ShootProjectiles), 2f, shootCooldown);
 
             // Kích hoạt spawn bom ngẫu nhiên
-            InvokeRepeating("SpawnBombs", 2f, 5f); // Spawn bom mỗi 5 giây sau 2 giây delay
+            InvokeRepeating(nameof(SpawnBombs), 2f, 5f); // Spawn bom mỗi 5 giây sau 2 giây delay
         }
     }
 
-    void Update()
+    private void Update()
     {
         // Kiểm tra nếu Boss đang hoạt động trước khi thực thi bất kỳ hành động nào
         if (!gameObject.activeInHierarchy) return;
 
         // Kiểm tra nếu player tồn tại và boss có thể bắn
-        if (player != null && Time.time >= lastShootTime + shootCooldown && !isShooting)
+        if (_player && Time.time >= _lastShootTime + shootCooldown && !_isShooting)
         {
             ShootProjectiles();
         }
@@ -58,7 +58,7 @@ public class BossController : MonoBehaviour
     void ShootProjectiles()
     {
         // Kiểm tra nếu không có đợt bắn nào đang diễn ra và Boss còn hoạt động
-        if (player != null && !isShooting && gameObject.activeInHierarchy)
+        if (_player && !_isShooting && gameObject.activeInHierarchy)
         {
             // Bắt đầu Coroutine để bắn liên tiếp từng viên
             StartCoroutine(ShootSequence());
@@ -68,7 +68,7 @@ public class BossController : MonoBehaviour
     private IEnumerator ShootSequence()
     {
         // Đánh dấu Boss đang bắn
-        isShooting = true;
+        _isShooting = true;
 
         for (int i = 0; i < numberOfProjectiles; i++)
         {
@@ -76,7 +76,7 @@ public class BossController : MonoBehaviour
             if (!gameObject.activeInHierarchy) yield break;
 
             // Lấy vị trí hiện tại của người chơi
-            Vector3 targetPosition = player.position;
+            Vector3 targetPosition = _player.position;
 
             // Tạo viên đạn tại vị trí spawnPoint thay vì transform.position của Boss
             Vector3 spawnPosition = projectileSpawnPoint.position;
@@ -84,13 +84,13 @@ public class BossController : MonoBehaviour
 
             // Gán sát thương cho viên đạn
             ProjectileController pc = projectile.GetComponent<ProjectileController>();
-            if (pc != null)
+            if (pc)
             {
                 pc.SetDamage(projectileDamage);  // Gọi phương thức SetDamage để thay đổi damage
 
                 // Gán hướng di chuyển và tốc độ cho viên đạn
                 Rigidbody rb = projectile.GetComponent<Rigidbody>();
-                if (rb != null)
+                if (rb)
                 {
                     // Tính toán hướng di chuyển từ điểm spawn đến người chơi
                     Vector3 direction = (targetPosition - spawnPosition).normalized;
@@ -103,10 +103,10 @@ public class BossController : MonoBehaviour
         }
 
         // Cập nhật thời gian bắn cuối cùng
-        lastShootTime = Time.time;
+        _lastShootTime = Time.time;
 
         // Đánh dấu Boss đã bắn xong
-        isShooting = false;
+        _isShooting = false;
     }
 
     void SpawnBombs()
@@ -114,27 +114,25 @@ public class BossController : MonoBehaviour
         // Kiểm tra nếu Boss còn hoạt động
         if (!gameObject.activeInHierarchy) return;
 
-        if (player != null)
+        if (_player == null) return;
+        // Spawn 3 quả bom
+        for (int i = 0; i < 3; i++)
         {
-            // Spawn 3 quả bom
-            for (int i = 0; i < 3; i++)
-            {
-                // Tạo ra vị trí spawn ngẫu nhiên gần người chơi
-                Vector3 randomPosition = player.position + new Vector3(
-                    Random.Range(-spawnRadius, spawnRadius), // Random x
-                    0f, // Y giữ nguyên
-                    Random.Range(-spawnRadius, spawnRadius)  // Random z
-                );
+            // Tạo ra vị trí spawn ngẫu nhiên gần người chơi
+            Vector3 randomPosition = _player.position + new Vector3(
+                Random.Range(-spawnRadius, spawnRadius), // Random x
+                0f, // Y giữ nguyên
+                Random.Range(-spawnRadius, spawnRadius)  // Random z
+            );
 
-                // Spawn bom tại vị trí ngẫu nhiên
-                GameObject bomb = Instantiate(bombPrefab, randomPosition, Quaternion.identity);
+            // Spawn bom tại vị trí ngẫu nhiên
+            GameObject bomb = Instantiate(bombPrefab, randomPosition, Quaternion.identity);
 
-                // Tăng kích thước của bom
-                bomb.transform.localScale = new Vector3(5f, 5f, 5f);
+            // Tăng kích thước của bom
+            bomb.transform.localScale = new Vector3(5f, 5f, 5f);
 
-                // Gọi hàm Explode sau khi bom có thời gian trì hoãn
-                StartCoroutine(ExplodeBomb(bomb));
-            }
+            // Gọi hàm Explode sau khi bom có thời gian trì hoãn
+            StartCoroutine(ExplodeBomb(bomb));
         }
     }
 
@@ -168,8 +166,8 @@ public class BossController : MonoBehaviour
     void OnBossDeath()
     {
         // Ngừng các hành động như bắn và spawn bom khi Boss chết
-        CancelInvoke("ShootProjectiles");
-        CancelInvoke("SpawnBombs");
+        CancelInvoke(nameof(ShootProjectiles));
+        CancelInvoke(nameof(SpawnBombs));
         StopAllCoroutines(); // Ngừng tất cả các Coroutine đang chạy
     }
 

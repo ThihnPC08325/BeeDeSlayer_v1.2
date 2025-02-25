@@ -9,13 +9,13 @@ public class ZoneDame : MonoBehaviour
     [SerializeField] private float expansionTime = 2f;     // Thời gian để tăng kích thước từ ban đầu đến tối đa
     [SerializeField] private float redZoneDamage = 50f;    // Sát thương của vùng đỏ
     [SerializeField] private SphereCollider zoneCollider;
-    private PlayerHealth playerHealth;
+    private PlayerHealth _playerHealth;
 
     private void Start()
     {
         zoneCollider.radius = initialRadius; // Bắt đầu với bán kính ban đầu (0 hoặc giá trị nhỏ)
         StartCoroutine(ExpandCollider());
-        playerHealth = FindObjectOfType<PlayerHealth>(); // Tìm script PlayerHealth trong scene
+        _playerHealth = FindObjectOfType<PlayerHealth>(); // Tìm script PlayerHealth trong scene
     }
 
     private void OnTriggerEnter(Collider other)
@@ -31,15 +31,11 @@ public class ZoneDame : MonoBehaviour
         foreach (Collider nearby in Playercolliders)
         {
             // Nếu đối tượng có tag "Player", áp dụng sát thương
-            if (nearby.CompareTag("Player"))
-            {
-                // Kiểm tra và lấy script PlayerHealth của player
-                if (playerHealth != null)
-                {
-                    playerHealth.TakeDamage(redZoneDamage, 0); // Truyền giá trị sát thương và có thể thay đổi giá trị penetration nếu cần
-                    Destroy(gameObject); // Xóa vùng đỏ sau khi
-                }
-            }
+            if (!nearby.CompareTag("Player")) continue;
+            // Kiểm tra và lấy script PlayerHealth của player
+            if (_playerHealth == null) continue;
+            _playerHealth.TakeDamage(redZoneDamage, 0); // Truyền giá trị sát thương và có thể thay đổi giá trị penetration nếu cần
+            Destroy(gameObject); // Xóa vùng đỏ sau khi
         }
     }
 

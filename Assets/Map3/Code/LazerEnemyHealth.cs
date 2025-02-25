@@ -8,13 +8,13 @@ public class LazerEnemyHealth : MonoBehaviour, IPooledObject
     [SerializeField] private float maxHealth;
     [SerializeField] public float currentHealth;
     [SerializeField] private ItemDropManager itemDropManager;
-    [SerializeField] EnemyController enemyController;
-    [SerializeField] HealthBarLazer healthBar; //Map 3
-    private BoxCollider BoxCollider;
+    [SerializeField] private EnemyController enemyController;
+    [SerializeField] private HealthBarLazer healthBar; //Map 3
+    private BoxCollider _boxCollider;
 
     private void Awake()
     {
-        BoxCollider = GetComponent<BoxCollider>();
+        _boxCollider = GetComponent<BoxCollider>();
         itemDropManager = GetComponent<ItemDropManager>();
         enemyController = GetComponent<EnemyController>();
         currentHealth = maxHealth;
@@ -27,7 +27,7 @@ public class LazerEnemyHealth : MonoBehaviour, IPooledObject
         if (currentHealth <= 0f)
         {
             currentHealth = 0f;
-            BoxCollider.enabled = false;
+            _boxCollider.enabled = false;
             enemyController.enabled = false;
             Die();
         }
@@ -43,7 +43,7 @@ public class LazerEnemyHealth : MonoBehaviour, IPooledObject
         gameObject.SetActive(false);
     }
 
-    private IEnumerator TimeToDie(float duration)
+    private static IEnumerator TimeToDie(float duration)
     {
         yield return new WaitForSeconds(duration);
     }
@@ -56,7 +56,7 @@ public class LazerEnemyHealth : MonoBehaviour, IPooledObject
     protected virtual void ResetEnemy()
     {
         currentHealth = maxHealth;
-        BoxCollider.enabled = true;
+        _boxCollider.enabled = true;
         enemyController.enabled = true;
     }
 }

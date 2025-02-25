@@ -14,8 +14,8 @@ public class SpawEnemy : MonoBehaviour
     [Header("Boss Health Reference")]
     [SerializeField] private HealthBoss bossHealth; // Tham chiếu đến mã máu của boss
 
-    private int totalPrefabsCreated = 0; // Tổng số prefabs đã tạo ra
-    private int spawnIndex = 0; // Chỉ số theo dõi vị trí tiếp theo trong spawnPositions
+    private int _totalPrefabsCreated = 0; // Tổng số prefabs đã tạo ra
+    private int _spawnIndex = 0; // Chỉ số theo dõi vị trí tiếp theo trong spawnPositions
 
     private void Start()
     {
@@ -35,7 +35,7 @@ public class SpawEnemy : MonoBehaviour
         while (true)
         {
             // Kiểm tra điều kiện để sử dụng chiêu
-            if (bossHealth != null && bossHealth.currentHealth > bossHealth.maxHealth / 2 && totalPrefabsCreated < maxPrefabs)
+            if (bossHealth && bossHealth.currentHealth > bossHealth.maxHealth / 2 && _totalPrefabsCreated < maxPrefabs)
             {
                 Debug.Log("Using skill!");
                 SpawnPrefabsByCounts(); // Tạo số lượng prefab tùy chỉnh
@@ -53,30 +53,30 @@ public class SpawEnemy : MonoBehaviour
             int count = spawnCounts[i];
 
             // Kiểm tra tổng số prefabs đã tạo ra
-            if (totalPrefabsCreated + count > maxPrefabs)
+            if (_totalPrefabsCreated + count > maxPrefabs)
             {
-                count = maxPrefabs - totalPrefabsCreated; // Giới hạn số lượng spawn không vượt quá maxPrefabs
+                count = maxPrefabs - _totalPrefabsCreated; // Giới hạn số lượng spawn không vượt quá maxPrefabs
             }
 
             // Tạo từng prefab
             for (int j = 0; j < count; j++)
             {
-                if (spawnIndex >= spawnPositions.Length)
+                if (_spawnIndex >= spawnPositions.Length)
                 {
-                    spawnIndex = 0; // Nếu hết vị trí, vòng lại từ đầu
+                    _spawnIndex = 0; // Nếu hết vị trí, vòng lại từ đầu
                 }
 
                 // Lấy vị trí spawn từ mảng spawnPositions
-                Transform spawnPosition = spawnPositions[spawnIndex];
+                Transform spawnPosition = spawnPositions[_spawnIndex];
 
                 // Tạo prefab tại vị trí spawn
                 Instantiate(spawnPrefabs[i], spawnPosition.position, spawnPosition.rotation);
 
-                spawnIndex++; // Cập nhật spawnIndex
-                totalPrefabsCreated++; // Cập nhật tổng số prefabs đã tạo
+                _spawnIndex++; // Cập nhật spawnIndex
+                _totalPrefabsCreated++; // Cập nhật tổng số prefabs đã tạo
 
                 // Dừng nếu đạt giới hạn
-                if (totalPrefabsCreated >= maxPrefabs)
+                if (_totalPrefabsCreated >= maxPrefabs)
                 {
                     return;
                 }

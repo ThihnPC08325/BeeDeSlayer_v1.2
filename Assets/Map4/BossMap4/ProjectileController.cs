@@ -8,27 +8,27 @@ public class ProjectileController : MonoBehaviour
     [SerializeField] private GameObject explosionEffectPrefab;  // Particle Effect khi viên đạn phát nổ
     [SerializeField] private LayerMask playerLayer;  // Layer của Player để nhận diện khi va chạm
 
-    private Rigidbody rb;  // Rigidbody của viên đạn
-    private Transform target;  // Vị trí người chơi
+    private Rigidbody _rb;  // Rigidbody của viên đạn
+    private Transform _target;  // Vị trí người chơi
 
-    void Start()
+    private void Start()
     {
         // Lấy vị trí của người chơi
-        target = GameObject.FindWithTag("Player")?.transform;
+        _target = GameObject.FindWithTag("Player")?.transform;
 
         // Lấy Rigidbody của viên đạn
-        rb = GetComponent<Rigidbody>();
+        _rb = GetComponent<Rigidbody>();
 
         // Tắt trọng lực để viên đạn không rơi xuống đất
-        rb.useGravity = false;
+        _rb.useGravity = false;
 
         // Nếu tìm thấy người chơi, tính toán hướng bay của viên đạn
-        if (target != null)
+        if (_target != null)
         {
-            Vector3 direction = (target.position - transform.position).normalized;
+            Vector3 direction = (_target.position - transform.position).normalized;
 
             // Di chuyển viên đạn theo hướng đến người chơi
-            rb.velocity = direction * speed;
+            _rb.velocity = direction * speed;
         }
 
         // Tự hủy viên đạn sau thời gian sống
@@ -55,7 +55,7 @@ public class ProjectileController : MonoBehaviour
     }
 
     // Tạo hiệu ứng nổ
-    void Explode()
+    private void Explode()
     {
         // Tạo hiệu ứng nổ tại vị trí viên đạn
         Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);

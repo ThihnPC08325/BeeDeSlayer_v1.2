@@ -10,7 +10,8 @@ public class HealthBarBumbleBee : MonoBehaviour
     private float lerpSpeed = 0.03f;
 
     [SerializeField] EnemyMeleeHealth enemyHealth;
-    void Start()
+
+    private void Start()
     {
         healthBar.maxValue = enemyHealth.currentHealth;
         easeHealthBar.maxValue = enemyHealth.currentHealth;
@@ -27,12 +28,12 @@ public class HealthBarBumbleBee : MonoBehaviour
     }
     private void UpdateSlider()
     {
-        if (healthBar.value != enemyHealth.currentHealth)
+        if (!Mathf.Approximately(healthBar.value, enemyHealth.currentHealth))
         {
             healthBar.value = enemyHealth.currentHealth;
         }
 
-        if (healthBar.value != easeHealthBar.value)
+        if (!Mathf.Approximately(healthBar.value, easeHealthBar.value))
         {
             easeHealthBar.value = Mathf.Lerp(easeHealthBar.value, enemyHealth.currentHealth, lerpSpeed);
         }

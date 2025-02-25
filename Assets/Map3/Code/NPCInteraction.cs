@@ -11,9 +11,9 @@ public class NPCInteraction : MonoBehaviour
     [SerializeField] private ItemDropManager itemDropManager;
     [SerializeField] private Transform dropPosition;
 
-    private bool isPlayerNear = false;
-    private bool bossDefeated = false; // Biến kiểm tra boss đã chết
-    private bool isDialogueActive = false; // Biến kiểm tra nếu UI đang hiển thị
+    private bool _isPlayerNear = false;
+    private bool _bossDefeated = false; // Biến kiểm tra boss đã chết
+    private bool _isDialogueActive = false; // Biến kiểm tra nếu UI đang hiển thị
 
     private void Start()
     {
@@ -31,24 +31,22 @@ public class NPCInteraction : MonoBehaviour
 
     private void Update()
     {
-        if (isPlayerNear && Input.GetKeyDown(interactionKey))
+        if (!_isPlayerNear || !Input.GetKeyDown(interactionKey)) return;
+        if (!_isDialogueActive)
         {
-            if (!isDialogueActive)
+            if (!_bossDefeated)
             {
-                if (!bossDefeated)
-                {
-                    ShowDialogue("Hãy đánh bại boss trước khi quay lại nói chuyện với tôi!");
-                }
-                else
-                {
-                    ShowDialogue("Bạn đã đánh bại boss! Đây là phần thưởng của bạn!");
-                    GiveReward();
-                }
+                ShowDialogue("Hãy đánh bại boss trước khi quay lại nói chuyện với tôi!");
             }
             else
             {
-                HideDialogue(); // Tắt UI khi người chơi nhấn phím lần nữa
+                ShowDialogue("Bạn đã đánh bại boss! Đây là phần thưởng của bạn!");
+                GiveReward();
             }
+        }
+        else
+        {
+            HideDialogue(); // Tắt UI khi người chơi nhấn phím lần nữa
         }
     }
 
@@ -56,41 +54,35 @@ public class NPCInteraction : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            isPlayerNear = true;
+            _isPlayerNear = true;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            isPlayerNear = false;
-            HideDialogue(); // Tắt UI khi người chơi rời xa
-        }
+        if (!other.CompareTag("Player")) return;
+        _isPlayerNear = false;
+        HideDialogue(); // Tắt UI khi người chơi rời xa
     }
 
     private void ShowDialogue(string message)
     {
-        if (dialogueUI != null && dialogueText != null)
-        {
-            dialogueText.text = message; // Gán thông báo vào Text
-            dialogueUI.SetActive(true); // Hiển thị UI
-            isDialogueActive = true;
-        }
+        if (!dialogueUI || !dialogueText) return;
+        dialogueText.text = message; // Gán thông báo vào Text
+        dialogueUI.SetActive(true); // Hiển thị UI
+        _isDialogueActive = true;
     }
 
     private void HideDialogue()
     {
-        if (dialogueUI != null)
-        {
-            dialogueUI.SetActive(false); // Ẩn UI
-            isDialogueActive = false;
-        }
+        if (!dialogueUI) return;
+        dialogueUI.SetActive(false); // Ẩn UI
+        _isDialogueActive = false;
     }
 
     private void GiveReward()
     {
-        if (itemDropManager != null && dropPosition != null)
+        if (itemDropManager && dropPosition)
         {
             itemDropManager.TryDropLoot(dropPosition.position);
         }
@@ -98,6 +90,6 @@ public class NPCInteraction : MonoBehaviour
 
     private void MarkBossAsDefeated()
     {
-        bossDefeated = true;
+        _bossDefeated = true;
     }
 }

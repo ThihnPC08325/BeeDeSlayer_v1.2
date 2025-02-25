@@ -27,7 +27,7 @@ public class AudioEventHandler : MonoBehaviour
     {
         public AudioEventMapping ammoPickup;
         public AudioEventMapping healthPickup;
-        public AudioEventMapping PlayerFire;
+        public AudioEventMapping playerFire;
         public AudioEventMapping playerHit;
         public AudioEventMapping enemyHit;
     }
@@ -66,7 +66,7 @@ public class AudioEventHandler : MonoBehaviour
 
     void HandleWeaponFire(Vector3 firePosition, Vector3 direction, float muzzleVelocity)
     {
-        PlaySoundWithVariation(_soundMappings.PlayerFire);
+        PlaySoundWithVariation(_soundMappings.playerFire);
     }
 
     private void HandlePlayerHit(float damage, float penetration)

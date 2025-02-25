@@ -5,8 +5,12 @@ using UnityEngine.AI;
 
 public class Boss : MonoBehaviour
 {
+    private static readonly int IsMoving = Animator.StringToHash("isMoving");
+    private static readonly int TriggerSpecialAttack = Animator.StringToHash("TriggerSpecialAttack");
+    private static readonly int TriggerAttack = Animator.StringToHash("TriggerAttack");
+
     private enum State { Chase, Attack, SpecialAttack }
-    private State currentState;
+    private State _currentState;
 
     [Header("Target & Ranges")]
     [SerializeField] private float detectionRange = 10f;
@@ -45,7 +49,7 @@ public class Boss : MonoBehaviour
         normalAttackCooldownTimer -= Time.deltaTime;
         specialAttackCooldownTimer -= Time.deltaTime;
 
-        switch (currentState)
+        switch (_currentState)
         {
             case State.Chase:
                 ChaseState();
@@ -59,7 +63,7 @@ public class Boss : MonoBehaviour
         }
 
         // Update animation
-        animator.SetBool("isMoving", agent.velocity.magnitude > 0.1f);
+        animator.SetBool(IsMoving, agent.velocity.magnitude > 0.1f);
     }
 
     private void ChaseState()
@@ -76,21 +80,21 @@ public class Boss : MonoBehaviour
         if (distanceToPlayer <= attackRange)
         {
             agent.ResetPath();
-            animator.SetBool("isMoving", false);
+            animator.SetBool(IsMoving, false);
 
             if (distanceToPlayer <= specialAttackRange && specialAttackCooldownTimer <= 0f)
             {
-                currentState = State.SpecialAttack;
+                _currentState = State.SpecialAttack;
             }
             else if (normalAttackCooldownTimer <= 0f)
             {
-                currentState = State.Attack;
+                _currentState = State.Attack;
             }
         }
         else
         {
             agent.SetDestination(player.position);
-            animator.SetBool("isMoving", true);
+            animator.SetBool(IsMoving, true);
         }
     }
 
@@ -99,8 +103,8 @@ public class Boss : MonoBehaviour
         isAttacking = true;
         canMove = false;
         agent.ResetPath();
-        animator.SetBool("isMoving", false);
-        animator.SetTrigger("TriggerAttack");
+        animator.SetBool(IsMoving, false);
+        animator.SetTrigger(TriggerAttack);
 
         // Lấy độ dài của animation hiện tại
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
@@ -117,7 +121,7 @@ public class Boss : MonoBehaviour
         normalAttackCooldownTimer = normalAttackCooldown;
         isAttacking = false;
         canMove = true;
-        currentState = State.Chase;
+        _currentState = State.Chase;
     }
 
     private IEnumerator SpecialAttackState()
@@ -125,8 +129,8 @@ public class Boss : MonoBehaviour
         isAttacking = true;
         canMove = false;
         agent.ResetPath();
-        animator.SetBool("isMoving", false);
-        animator.SetTrigger("TriggerSpecialAttack");
+        animator.SetBool(IsMoving, false);
+        animator.SetTrigger(TriggerSpecialAttack);
 
         // Lấy độ dài của animation hiện tại
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
@@ -136,7 +140,7 @@ public class Boss : MonoBehaviour
 
         // Gây sát thương
         PlayerHealth playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
-        if (playerHealth != null)
+        if (playerHealth)
         {
             playerHealth.TakeDamage(specialAttackDamage, specialPen);
         }
@@ -148,7 +152,7 @@ public class Boss : MonoBehaviour
         normalAttackCooldownTimer = normalAttackCooldown;
         isAttacking = false;
         canMove = true;
-        currentState = State.Chase;
+        _currentState = State.Chase;
     }
 
     // Debug helpers

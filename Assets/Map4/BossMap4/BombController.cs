@@ -7,7 +7,7 @@ public class BombController : MonoBehaviour
     [SerializeField] private int damage = 20;                 // Sát thương
     [SerializeField] private LayerMask playerLayer;           // Layer của Player
 
-    void Explode()
+    private void Explode()
     {
         // Tạo hiệu ứng nổ tại vị trí bom
         Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);

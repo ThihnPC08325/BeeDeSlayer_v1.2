@@ -11,10 +11,10 @@ public class SpawRedzone : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(SpawRedZone());
+        StartCoroutine(SpawnRedZone());
     }
 
-    private IEnumerator SpawRedZone()
+    private IEnumerator SpawnRedZone()
     {
         while (true)
         {
@@ -24,7 +24,8 @@ public class SpawRedzone : MonoBehaviour
             yield return new WaitForSeconds(5f);
         }
     }
-    void SpawnObjectsInRadius()
+
+    private void SpawnObjectsInRadius()
     {
         // Tạo vị trí ngẫu nhiên trong phạm vi xung quanh vị trí của object này
         Vector3 randomPosition = transform.position + Random.insideUnitSphere * spawnRadius;

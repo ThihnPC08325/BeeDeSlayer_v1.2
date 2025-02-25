@@ -5,13 +5,13 @@ using System.Collections;
 public class LaserFlyingEnemyAI : MonoBehaviour
 {
     private enum AIState { Patrolling, Chasing, Attacking, Idle }
-    private AIState currentState;
+    private AIState _currentState;
 
     // Components
-    private NavMeshAgent agent;
-    private Transform playerTransform;
-    private EnemyLaserShooter laserShooter;
-    private EnemyHealth enemyHealth;
+    private NavMeshAgent _agent;
+    private Transform _playerTransform;
+    private EnemyLaserShooter _laserShooter;
+    private EnemyHealth _enemyHealth;
 
     // AI Stats
     [Header("AI Stats")]
@@ -29,14 +29,14 @@ public class LaserFlyingEnemyAI : MonoBehaviour
 
     private void Start()
     {
-        currentState = AIState.Patrolling;
+        _currentState = AIState.Patrolling;
         InitializeComponents();
         SetRandomPatrolDestination();
     }
 
     private void Update()
     {
-        if (enemyHealth.currentHealth <= 0) return;
+        if (_enemyHealth.currentHealth <= 0) return;
 
         HandleAIState();
         HandleStateTransitions();
@@ -44,20 +44,20 @@ public class LaserFlyingEnemyAI : MonoBehaviour
 
     private void InitializeComponents()
     {
-        enemyHealth = GetComponent<EnemyHealth>();
-        agent = GetComponent<NavMeshAgent>();
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-        laserShooter = GetComponent<EnemyLaserShooter>();
+        _enemyHealth = GetComponent<EnemyHealth>();
+        _agent = GetComponent<NavMeshAgent>();
+        _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        _laserShooter = GetComponent<EnemyLaserShooter>();
 
-        agent.enabled = true;
-        agent.updatePosition = true;
-        agent.updateRotation = true;
-        agent.updateUpAxis = false;
+        _agent.enabled = true;
+        _agent.updatePosition = true;
+        _agent.updateRotation = true;
+        _agent.updateUpAxis = false;
     }
 
     private void HandleAIState()
     {
-        switch (currentState)
+        switch (_currentState)
         {
             case AIState.Patrolling:
                 Patrol();
@@ -81,7 +81,7 @@ public class LaserFlyingEnemyAI : MonoBehaviour
 
     private void Patrol()
     {
-        if (agent.remainingDistance < 1f)
+        if (_agent.remainingDistance < 1f)
         {
             SetRandomPatrolDestination();
         }
@@ -89,46 +89,44 @@ public class LaserFlyingEnemyAI : MonoBehaviour
 
     private void ChasePlayer()
     {
-        float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
+        float distanceToPlayer = Vector3.Distance(transform.position, _playerTransform.position);
 
         if (distanceToPlayer > attackRange)
         {
-            agent.SetDestination(playerTransform.position);
+            _agent.SetDestination(_playerTransform.position);
         }
         else
         {
-            currentState = AIState.Attacking;
+            _currentState = AIState.Attacking;
         }
     }
 
     private void AttackPlayer()
     {
-        agent.isStopped = true;
-        transform.LookAt(playerTransform);
+        _agent.isStopped = true;
+        transform.LookAt(_playerTransform);
 
-        if (IsLookingAtPlayer() && !isAttacking)
-        {
-            isAttacking = true;
-            StartCoroutine(ExecuteAttackWithDelay(attackDelay));
-        }
+        if (!IsLookingAtPlayer() || isAttacking) return;
+        isAttacking = true;
+        StartCoroutine(ExecuteAttackWithDelay(attackDelay));
     }
 
     private void HandleStateTransitions()
     {
-        float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
+        float distanceToPlayer = Vector3.Distance(transform.position, _playerTransform.position);
 
         if (distanceToPlayer <= attackRange)
         {
-            currentState = AIState.Attacking;
+            _currentState = AIState.Attacking;
         }
         else if (distanceToPlayer <= detectionRange)
         {
-            currentState = AIState.Chasing;
-            agent.speed = chaseSpeed;
+            _currentState = AIState.Chasing;
+            _agent.speed = chaseSpeed;
         }
-        else if (currentState != AIState.Patrolling)
+        else if (_currentState != AIState.Patrolling)
         {
-            currentState = AIState.Patrolling;
+            _currentState = AIState.Patrolling;
             SetRandomPatrolDestination();
         }
     }
@@ -136,7 +134,7 @@ public class LaserFlyingEnemyAI : MonoBehaviour
     private bool IsLookingAtPlayer()
     {
         Vector3 forward = transform.forward;
-        Vector3 directionToPlayer = (playerTransform.position - transform.position).normalized;
+        Vector3 directionToPlayer = (_playerTransform.position - transform.position).normalized;
 
         float dotProduct = Vector3.Dot(forward, directionToPlayer);
         float angleToPlayer = Mathf.Acos(dotProduct) * Mathf.Rad2Deg;
@@ -146,7 +144,7 @@ public class LaserFlyingEnemyAI : MonoBehaviour
 
     private void SetRandomPatrolDestination()
     {
-        agent.speed = patrolSpeed;
+        _agent.speed = patrolSpeed;
 
         Vector3 randomDirection = Random.insideUnitSphere * patrolRadius;
         randomDirection += transform.position;
@@ -154,7 +152,7 @@ public class LaserFlyingEnemyAI : MonoBehaviour
 
         if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, patrolRadius, NavMesh.AllAreas))
         {
-            agent.SetDestination(hit.position);
+            _agent.SetDestination(hit.position);
         }
     }
 
@@ -162,20 +160,20 @@ public class LaserFlyingEnemyAI : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
-        if (currentState == AIState.Attacking)
+        if (_currentState == AIState.Attacking)
         {
             int GachaValue = Random.Range(0, 100);
             if (GachaValue < 25)
             {
-                laserShooter.GetBombtoPlayer();
+                _laserShooter.GetBombtoPlayer();
             }
             else
             {
-                laserShooter.GetFireLaserAtPlayer();
+                _laserShooter.GetFireLaserAtPlayer();
             }
         }
 
-        if (Vector3.Distance(transform.position, playerTransform.position) > attackRange)
+        if (Vector3.Distance(transform.position, _playerTransform.position) > attackRange)
         {
             StartCoroutine(SwitchStateWithDelay(AIState.Chasing, 1f));
         }
@@ -186,8 +184,8 @@ public class LaserFlyingEnemyAI : MonoBehaviour
     private IEnumerator SwitchStateWithDelay(AIState newState, float delay)
     {
         yield return new WaitForSeconds(delay);
-        currentState = newState;
-        agent.isStopped = false;
+        _currentState = newState;
+        _agent.isStopped = false;
     }
 
     private void OnDrawGizmosSelected()

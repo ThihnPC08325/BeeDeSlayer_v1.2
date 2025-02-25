@@ -10,7 +10,8 @@ public class HealthBarBoss : MonoBehaviour
     private float lerpSpeed = 0.3f;
 
     [SerializeField] HealthBoss bossHealth;
-    void Start()
+
+    private void Start()
     {
         healthBar.maxValue = bossHealth.currentHealth;
         easeHealthBar.maxValue = bossHealth.currentHealth;
@@ -27,12 +28,12 @@ public class HealthBarBoss : MonoBehaviour
     }
     private void UpdateSlider()
     {
-        if (healthBar.value != bossHealth.currentHealth)
+        if (!Mathf.Approximately(healthBar.value, bossHealth.currentHealth))
         {
             healthBar.value = bossHealth.currentHealth;
         }
 
-        if (healthBar.value != easeHealthBar.value)
+        if (!Mathf.Approximately(healthBar.value, easeHealthBar.value))
         {
             easeHealthBar.value = Mathf.Lerp(easeHealthBar.value, bossHealth.currentHealth, lerpSpeed);
         }

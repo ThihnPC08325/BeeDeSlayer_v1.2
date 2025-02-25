@@ -6,7 +6,7 @@ public class TimeOnDame : MonoBehaviour
 {
     [SerializeField] private GameObject zoneDame;
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         StartCoroutine(OnDame());
     }

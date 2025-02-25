@@ -13,22 +13,21 @@ public class Boss4Health : MonoBehaviour
     [SerializeField] private AudioClip backgroundMusic; // Nhạc nền khi đang chiến đấu 🎵
 
 
-    private AudioSource audioSource; // Component phát nhạc cho hiệu ứng
-    private AudioSource backgroundAudioSource; // Component phát nhạc nền
-    private BoxCollider boxCollider;
-    private bool isVictoryMusicPlaying = false; // Kiểm tra đã phát nhạc chiến thắng chưa
+    private AudioSource _audioSource; // Component phát nhạc cho hiệu ứng
+    private AudioSource _backgroundAudioSource; // Component phát nhạc nền
+    private BoxCollider _boxCollider;
 
     private void Awake()
     {
-        boxCollider = GetComponent<BoxCollider>();
+        _boxCollider = GetComponent<BoxCollider>();
 
         // Tạo 2 AudioSource riêng biệt
-        audioSource = gameObject.AddComponent<AudioSource>();
-        backgroundAudioSource = gameObject.AddComponent<AudioSource>();
+        _audioSource = gameObject.AddComponent<AudioSource>();
+        _backgroundAudioSource = gameObject.AddComponent<AudioSource>();
 
         // Cài đặt cho nhạc nền
-        backgroundAudioSource.loop = true; // Lặp lại
-        backgroundAudioSource.volume = 0.5f; // Âm lượng nhỏ hơn
+        _backgroundAudioSource.loop = true; // Lặp lại
+        _backgroundAudioSource.volume = 0.5f; // Âm lượng nhỏ hơn
 
         currentHealth = maxHealth;
     }
@@ -44,11 +43,9 @@ public class Boss4Health : MonoBehaviour
         }
 
         // Phát nhạc nền khi bắt đầu
-        if (backgroundMusic != null)
-        {
-            backgroundAudioSource.clip = backgroundMusic;
-            backgroundAudioSource.Play();
-        }
+        if (backgroundMusic == null) return;
+        _backgroundAudioSource.clip = backgroundMusic;
+        _backgroundAudioSource.Play();
     }
 
     public void TakeDamage(float damage)
@@ -57,7 +54,7 @@ public class Boss4Health : MonoBehaviour
         if (currentHealth <= 0f)
         {
             currentHealth = 0f;
-            boxCollider.enabled = false;
+            _boxCollider.enabled = false;
             Die();
         }
         if (bossHealthBar != null)
@@ -69,16 +66,16 @@ public class Boss4Health : MonoBehaviour
     private void Die()
     {
         // Dừng nhạc nền
-        if (backgroundAudioSource.isPlaying)
+        if (_backgroundAudioSource.isPlaying)
         {
-            backgroundAudioSource.Stop();
+            _backgroundAudioSource.Stop();
         }
 
 
         // Phát âm thanh chết
         if (deathSound != null)
         {
-            audioSource.PlayOneShot(deathSound);
+            _audioSource.PlayOneShot(deathSound);
         }
 
         // Hiệu ứng khói
@@ -94,6 +91,5 @@ public class Boss4Health : MonoBehaviour
     {
         yield return new WaitForSeconds(duration);
         gameObject.SetActive(false);
-        //Test
     }
 }
