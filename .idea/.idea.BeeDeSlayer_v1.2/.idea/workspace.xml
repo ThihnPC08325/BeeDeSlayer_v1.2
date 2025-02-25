@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AIAssistantCustomInstructionsStorage">
+    <option name="instructions">
+      <map>
+        <entry key="AIAssistant.General.ProjectPrompt">
+          <value>
+            <AIAssistantStoredInstruction>
+              <option name="actionId" value="AIAssistant.General.ProjectPrompt" />
+              <option name="content" value="Use Serializefield.&#10;Use FixUpdate for physics-related calculations.&#10;Use LateUpdate for post-processing adjustments.&#10;Use Inheritance for a hierarchy of related classes with shared behaviors or properties.&#10;Use InputSystem.&#10;Use ScriptableObject for data not directly tied to any `GameObject` in the Scene.&#10;Use CharacterController for Player." />
+            </AIAssistantStoredInstruction>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c933cd77-bcb5-4d27-b4b4-183ec09fa04a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.BeeDeSlayer_v1.2/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BeeDeSlayer_v1.2/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="c933cd77-bcb5-4d27-b4b4-183ec09fa04a" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,6 +39,19 @@
     &quot;accountId&quot;: &quot;ee2c10fe-3504-46e4-b2b8-68c8c8ccac0e&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+  </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -37,21 +62,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "ml.llm.AIAssistantPromptsLibrary",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.AIAssistantPromptsLibrary&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\2022.3.27f1\Editor\Unity.exe" />
@@ -109,6 +134,7 @@
       <workItem from="1740456991828" duration="160000" />
       <workItem from="1740466542311" duration="1089000" />
       <workItem from="1740470183041" duration="370000" />
+      <workItem from="1740470570948" duration="1375000" />
     </task>
     <task id="LOCAL-00001" summary="Refactor code for consistency, clarity, and optimization.&#10;&#10;Standardized naming conventions across multiple scripts, improved readability by reducing repetitive control structures, and optimized performance with caching and better condition checks. Added minor enhancements like confusion toggles and maintained adherence to coding best practices.">
       <option name="closed" value="true" />
@@ -126,7 +152,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740469194090</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Refactor user authentication and enhance HTTP handling.&#10;&#10;Converted UnityWebRequest to HttpClient for improved performance and maintainability. Refactored input validation logic for reusability and ensured better error handling. Standardized code across RegisterUser, LoginUser, and EncryptionHelper scripts for clarity and consistency.">
+      <option name="closed" value="true" />
+      <created>1740472565101</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1740472565101</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -143,7 +177,8 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Refactor code for consistency, clarity, and optimization.&#10;&#10;Standardized naming conventions across multiple scripts, improved readability by reducing repetitive control structures, and optimized performance with caching and better condition checks. Added minor enhancements like confusion toggles and maintained adherence to coding best practices." />
     <MESSAGE value="Add meta files for new Unity packages and IDE configurations&#10;&#10;This commit introduces .meta files for HDRP and URP Unity packages related to SciFi weapons. Additionally, an IntelliJ IDEA project configuration for Git version control is included. These files ensure proper package tracking and versioning." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add meta files for new Unity packages and IDE configurations&#10;&#10;This commit introduces .meta files for HDRP and URP Unity packages related to SciFi weapons. Additionally, an IntelliJ IDEA project configuration for Git version control is included. These files ensure proper package tracking and versioning." />
+    <MESSAGE value="Refactor user authentication and enhance HTTP handling.&#10;&#10;Converted UnityWebRequest to HttpClient for improved performance and maintainability. Refactored input validation logic for reusability and ensured better error handling. Standardized code across RegisterUser, LoginUser, and EncryptionHelper scripts for clarity and consistency." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor user authentication and enhance HTTP handling.&#10;&#10;Converted UnityWebRequest to HttpClient for improved performance and maintainability. Refactored input validation logic for reusability and ensured better error handling. Standardized code across RegisterUser, LoginUser, and EncryptionHelper scripts for clarity and consistency." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
