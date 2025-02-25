@@ -27,8 +27,8 @@ public class ZoneDame : MonoBehaviour
     private void TakeZonedame()
     {
         // Lấy tất cả các collider trong phạm vi vùng đỏ
-        Collider[] Playercolliders = Physics.OverlapSphere(transform.position, zoneCollider.radius);
-        foreach (Collider nearby in Playercolliders)
+        Collider[] playerColliders = Physics.OverlapSphere(transform.position, zoneCollider.radius);
+        foreach (Collider nearby in playerColliders)
         {
             // Nếu đối tượng có tag "Player", áp dụng sát thương
             if (!nearby.CompareTag("Player")) continue;

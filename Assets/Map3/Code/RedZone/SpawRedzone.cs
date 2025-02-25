@@ -9,7 +9,7 @@ public class SpawRedzone : MonoBehaviour
     [SerializeField] private float spawnRadius = 10f;      // Bán kính phạm vi xung quanh điểm spawn
     [SerializeField] private float spawnHeight = 0f;       // Chiều cao, bạn có thể điều chỉnh nếu cần
 
-    void Start()
+    private void Start()
     {
         StartCoroutine(SpawnRedZone());
     }

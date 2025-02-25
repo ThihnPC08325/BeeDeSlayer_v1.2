@@ -22,7 +22,7 @@ public class LightGrow : MonoBehaviour
         _elapsedTime = 0f;
     }
 
-    void Update()
+    private void Update()
     {
         // Nếu thời gian trôi qua chưa đủ duration, tăng dần intensity
         if (!(_elapsedTime < duration)) return;
