@@ -20,11 +20,11 @@ public class ZoneDame : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        TakeZonedame(); // Khi player va chạm với vùng đỏ, gọi hàm TakeZonedame
+        TakeZoneDamage(); // Khi player va chạm với vùng đỏ, gọi hàm TakeZonedame
     }
 
 
-    private void TakeZonedame()
+    private void TakeZoneDamage()
     {
         // Lấy tất cả các collider trong phạm vi vùng đỏ
         Collider[] playerColliders = Physics.OverlapSphere(transform.position, zoneCollider.radius);
