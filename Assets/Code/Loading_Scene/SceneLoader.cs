@@ -11,7 +11,7 @@ public class SceneLoader : MonoBehaviour
         }
     }
 
-    private int GetNextSceneIndex()
+    private static int GetNextSceneIndex()
     {
         return SceneManager.GetActiveScene().buildIndex + 1;
     }

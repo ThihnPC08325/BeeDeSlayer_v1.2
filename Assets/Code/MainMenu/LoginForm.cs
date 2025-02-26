@@ -23,7 +23,7 @@ public class LoginForm : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         _document = GetComponent<UIDocument>();
         if (_document == null)
@@ -63,17 +63,15 @@ public class LoginForm : MonoBehaviour
 
     private IEnumerator SendLoginRequest(string jsonBody)
     {
-        using (var request = new UnityWebRequest(LoginUrl, "POST"))
-        {
-            byte[] body = System.Text.Encoding.UTF8.GetBytes(jsonBody);
-            request.uploadHandler = new UploadHandlerRaw(body);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            request.SetRequestHeader("Content-Type", "application/json");
+        using var request = new UnityWebRequest(LoginUrl, "POST");
+        byte[] body = System.Text.Encoding.UTF8.GetBytes(jsonBody);
+        request.uploadHandler = new UploadHandlerRaw(body);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
 
-            yield return request.SendWebRequest();
+        yield return request.SendWebRequest();
 
-            HandleResponse(request);
-        }
+        HandleResponse(request);
     }
 
     private void HandleResponse(UnityWebRequest request)
@@ -87,7 +85,7 @@ public class LoginForm : MonoBehaviour
         }
 
         var responseJson = request.downloadHandler.text;
-        var loginResponse = JsonUtility.FromJson<LoginDTO>(responseJson);
+        var loginResponse = JsonUtility.FromJson<LoginDto>(responseJson);
 
         if (loginResponse != null && loginResponse.token != null)
         {
@@ -116,7 +114,7 @@ public class LoginForm : MonoBehaviour
         LevelLoader.Instance.LoadLevel(GetNextSceneIndex());
     }
 
-    private int GetNextSceneIndex()
+    private static int GetNextSceneIndex()
     {
         return SceneManager.GetActiveScene().buildIndex + 1;
     }
@@ -139,7 +137,7 @@ public class LoginForm : MonoBehaviour
     }
 
     [System.Serializable]
-    public class LoginDTO
+    public class LoginDto
     {
         public string token;
         public Account account;

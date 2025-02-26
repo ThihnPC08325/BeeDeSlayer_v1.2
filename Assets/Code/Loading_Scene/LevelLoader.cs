@@ -13,16 +13,16 @@ public class LevelLoader : MonoBehaviour
     [SerializeField] private float minimumLoadingTime = 0.5f;
     [SerializeField] private float smoothSpeed = 5f;
 
-    private static LevelLoader instance;
-    public static LevelLoader Instance => instance;
-    private bool isLoading;
+    public static LevelLoader Instance { get; private set; }
+
+    private bool _isLoading;
 
     #region Singleton Pattern
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
             ValidateReferences();
         }
         else
@@ -40,7 +40,7 @@ public class LevelLoader : MonoBehaviour
 
     public void LoadLevel(int sceneIndex)
     {
-        if (isLoading) return;
+        if (_isLoading) return;
         if (sceneIndex < 0 || sceneIndex >= SceneManager.sceneCountInBuildSettings)
         {
             Debug.LogError($"🔴 Invalid scene index: {sceneIndex}");
@@ -52,7 +52,7 @@ public class LevelLoader : MonoBehaviour
 
     private IEnumerator LoadSceneRoutine(int sceneIndex)
     {
-        isLoading = true;
+        _isLoading = true;
         loadingScreen.SetActive(true);
 
         // Set initial UI state
@@ -60,30 +60,33 @@ public class LevelLoader : MonoBehaviour
 
         float startTime = Time.time;
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneIndex);
-        operation.allowSceneActivation = false;
-
-        float currentProgress = 0;
-
-        // Loading loop
-        while (currentProgress < 1 || Time.time - startTime < minimumLoadingTime)
+        if (operation != null)
         {
-            float targetProgress = Mathf.Clamp01(operation.progress / 0.9f);
-            currentProgress = Mathf.Lerp(currentProgress, targetProgress, Time.deltaTime * smoothSpeed);
+            operation.allowSceneActivation = false;
 
-            // Update UI
-            progressSlider.value = currentProgress;
+            float currentProgress = 0;
 
-            if (currentProgress >= 0.99f && operation.progress >= 0.9f)
+            // Loading loop
+            while (currentProgress < 1 || Time.time - startTime < minimumLoadingTime)
             {
-                progressSlider.value = 1;
-                operation.allowSceneActivation = true;
-            }
+                float targetProgress = Mathf.Clamp01(operation.progress / 0.9f);
+                currentProgress = Mathf.Lerp(currentProgress, targetProgress, Time.deltaTime * smoothSpeed);
 
-            yield return null;
+                // Update UI
+                progressSlider.value = currentProgress;
+
+                if (currentProgress >= 0.99f && operation.progress >= 0.9f)
+                {
+                    progressSlider.value = 1;
+                    operation.allowSceneActivation = true;
+                }
+
+                yield return null;
+            }
         }
 
         // Cleanup
-        isLoading = false;
+        _isLoading = false;
         loadingScreen.SetActive(false);
     }
 

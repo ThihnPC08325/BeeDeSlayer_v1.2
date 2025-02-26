@@ -18,21 +18,28 @@ public class RegisterUser : MonoBehaviour
     /// </summary>
     public async void Register()
     {
-        string username = usernameInput.text;
-        string password = passwordInput.text;
-        string confirmPassword = confirmPasswordInput.text;
-
-        // Kiểm tra input hợp lệ trước khi gửi
-        if (!ValidateInput(username, password, confirmPassword))
+        try
         {
-            return;
+            string username = usernameInput.text;
+            string password = passwordInput.text;
+            string confirmPassword = confirmPasswordInput.text;
+
+            // Kiểm tra input hợp lệ trước khi gửi
+            if (!ValidateInput(username, password, confirmPassword))
+            {
+                return;
+            }
+
+            // Mã hóa mật khẩu trước khi gửi lên máy chủ
+            string encryptedPassword = EncryptionHelper.EncryptPassword(password);
+
+            // Gọi hàm đăng ký qua HTTP
+            await RegisterRequest(username, encryptedPassword);
         }
-
-        // Mã hóa mật khẩu trước khi gửi lên máy chủ
-        string encryptedPassword = EncryptionHelper.EncryptPassword(password);
-
-        // Gọi hàm đăng ký qua HTTP
-        await RegisterRequest(username, encryptedPassword);
+        catch (Exception e)
+        {
+            Debug.LogError($"Exception: {e}");
+        }
     }
 
     /// <summary>
@@ -56,13 +63,10 @@ public class RegisterUser : MonoBehaviour
             return false;
         }
 
-        if (password.Length < 6)
-        {
-            resultText.text = "Mật khẩu phải dài ít nhất 6 ký tự.";
-            return false;
-        }
+        if (password.Length >= 6) return true;
+        resultText.text = "Mật khẩu phải dài ít nhất 6 ký tự.";
+        return false;
 
-        return true;
     }
 
     /// <summary>

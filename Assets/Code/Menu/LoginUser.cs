@@ -18,21 +18,28 @@ public class LoginUser : MonoBehaviour
     /// </summary>
     public async void Login()
     {
-        // Thu thập thông tin người dùng từ giao diện
-        string username = usernameInput.text;
-        string password = passwordInput.text;
-
-        // Kiểm tra dữ liệu hợp lệ
-        if (!ValidateInput(username, password))
+        try
         {
-            return;
+            // Thu thập thông tin người dùng từ giao diện
+            string username = usernameInput.text;
+            string password = passwordInput.text;
+
+            // Kiểm tra dữ liệu hợp lệ
+            if (!ValidateInput(username, password))
+            {
+                return;
+            }
+
+            // Mã hóa mật khẩu trước khi gửi
+            string encryptedPassword = EncryptionHelper.EncryptPassword(password);
+
+            // Thực hiện gửi yêu cầu đăng nhập
+            await LoginRequest(username, encryptedPassword);
         }
-
-        // Mã hóa mật khẩu trước khi gửi
-        string encryptedPassword = EncryptionHelper.EncryptPassword(password);
-
-        // Thực hiện gửi yêu cầu đăng nhập
-        await LoginRequest(username, encryptedPassword);
+        catch (Exception e)
+        {
+            Debug.LogError($"Exception: {e}");
+        }
     }
 
     /// <summary>
@@ -52,7 +59,6 @@ public class LoginUser : MonoBehaviour
         if (password.Length >= 6) return true;
         resultText.text = "Mật khẩu phải dài ít nhất 6 ký tự.";
         return false;
-
     }
 
     /// <summary>
