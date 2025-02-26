@@ -4,13 +4,13 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private NoteCounter noteCounter;
 
-    private static bool hasGameStarted = false;
+    private static bool _hasGameStarted = false;
 
     private void Awake()
     {
-        if (!hasGameStarted)
+        if (!_hasGameStarted)
         {
-            hasGameStarted = true;
+            _hasGameStarted = true;
             noteCounter.ResetNoteCount(); // Reset khi trò chơi bắt đầu mới
             Debug.Log("Reset NoteCounter khi bắt đầu trò chơi.");
         }
@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
 
     public static void RestartGame()
     {
-        hasGameStarted = false; // Đặt lại trạng thái
+        _hasGameStarted = false; // Đặt lại trạng thái
         Debug.Log("Restarting game...");
     }
 }

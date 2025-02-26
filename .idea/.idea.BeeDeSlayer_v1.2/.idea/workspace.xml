@@ -128,6 +128,7 @@
       <workItem from="1740470570948" duration="1375000" />
       <workItem from="1740496253980" duration="278000" />
       <workItem from="1740497379449" duration="40000" />
+      <workItem from="1740530383626" duration="227000" />
     </task>
     <task id="LOCAL-00001" summary="Refactor code for consistency, clarity, and optimization.&#10;&#10;Standardized naming conventions across multiple scripts, improved readability by reducing repetitive control structures, and optimized performance with caching and better condition checks. Added minor enhancements like confusion toggles and maintained adherence to coding best practices.">
       <option name="closed" value="true" />
@@ -169,7 +170,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740497400518</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Refactor logic and enhance error handling in UI flows&#10;&#10;Updated scene and user authentication scripts to improve readability, consistency, and maintainability. Introduced try-catch for better exception handling, standardized naming conventions, refined asynchronous logic, and removed unused or redundant code.">
+      <option name="closed" value="true" />
+      <created>1740530898532</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1740530898532</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -189,7 +198,8 @@
     <MESSAGE value="Refactor user authentication and enhance HTTP handling.&#10;&#10;Converted UnityWebRequest to HttpClient for improved performance and maintainability. Refactored input validation logic for reusability and ensured better error handling. Standardized code across RegisterUser, LoginUser, and EncryptionHelper scripts for clarity and consistency." />
     <MESSAGE value="Refactor multiple scripts for consistency and readability.&#10;&#10;Renamed variables to adhere to naming conventions (e.g., added underscores for private fields). Adjusted method access modifiers and simplified conditional statements for clarity. Improved method consistency with function renaming, for example, `SpawRedZone` to `SpawnRedZone`." />
     <MESSAGE value="Refactor RedZone scripts for consistency and clarity.&#10;&#10;Updated method access modifiers and standardized variable naming (e.g., `Playercolliders` to `playerColliders`). Improved readability, adhered to coding conventions, and ensured better maintainability across RedZone-related scripts." />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor RedZone scripts for consistency and clarity.&#10;&#10;Updated method access modifiers and standardized variable naming (e.g., `Playercolliders` to `playerColliders`). Improved readability, adhered to coding conventions, and ensured better maintainability across RedZone-related scripts." />
+    <MESSAGE value="Refactor logic and enhance error handling in UI flows&#10;&#10;Updated scene and user authentication scripts to improve readability, consistency, and maintainability. Introduced try-catch for better exception handling, standardized naming conventions, refined asynchronous logic, and removed unused or redundant code." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor logic and enhance error handling in UI flows&#10;&#10;Updated scene and user authentication scripts to improve readability, consistency, and maintainability. Introduced try-catch for better exception handling, standardized naming conventions, refined asynchronous logic, and removed unused or redundant code." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

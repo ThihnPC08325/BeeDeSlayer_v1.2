@@ -6,19 +6,20 @@ public class BossVoiceController : MonoBehaviour
 {
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private List<AudioClip> allVoiceLines;
-    private List<AudioClip> remainingVoiceLines;
-    private bool isPlaying = false;
+    
+    private List<AudioClip> _remainingVoiceLines;
+    private bool _isPlaying = false;
 
     [Header("Voice Frequency Settings")]
     [SerializeField] private float minTimeBetweenLines = 8f;  // Thời gian tối thiểu giữa các lines
     [SerializeField] private float maxTimeBetweenLines = 15f; // Thời gian tối đa giữa các lines
     [SerializeField] private bool autoPlayVoiceLines = true;  // Tự động phát theo thời gian
 
-    private float nextVoiceTime;
+    private float _nextVoiceTime;
 
     private void Start()
     {
-        remainingVoiceLines = new List<AudioClip>(allVoiceLines);
+        _remainingVoiceLines = new List<AudioClip>(allVoiceLines);
         SetNextVoiceTime();
 
         if (autoPlayVoiceLines)
@@ -29,14 +30,14 @@ public class BossVoiceController : MonoBehaviour
 
     private void SetNextVoiceTime()
     {
-        nextVoiceTime = Time.time + Random.Range(minTimeBetweenLines, maxTimeBetweenLines);
+        _nextVoiceTime = Time.time + Random.Range(minTimeBetweenLines, maxTimeBetweenLines);
     }
 
     private IEnumerator AutoPlayVoiceLines()
     {
         while (true)
         {
-            if (Time.time >= nextVoiceTime)
+            if (Time.time >= _nextVoiceTime)
             {
                 PlayRandomVoiceLine();
                 SetNextVoiceTime();
@@ -47,23 +48,23 @@ public class BossVoiceController : MonoBehaviour
 
     public void PlayRandomVoiceLine()
     {
-        if (remainingVoiceLines.Count == 0 || isPlaying) return;
+        if (_remainingVoiceLines.Count == 0 || _isPlaying) return;
 
-        int randomIndex = Random.Range(0, remainingVoiceLines.Count);
-        AudioClip selectedClip = remainingVoiceLines[randomIndex];
+        int randomIndex = Random.Range(0, _remainingVoiceLines.Count);
+        AudioClip selectedClip = _remainingVoiceLines[randomIndex];
 
         audioSource.clip = selectedClip;
         audioSource.Play();
-        isPlaying = true;
+        _isPlaying = true;
 
-        remainingVoiceLines.RemoveAt(randomIndex);
+        _remainingVoiceLines.RemoveAt(randomIndex);
         StartCoroutine(ResetPlayingFlag(selectedClip.length));
     }
 
     private IEnumerator ResetPlayingFlag(float delay)
     {
         yield return new WaitForSeconds(delay);
-        isPlaying = false;
+        _isPlaying = false;
     }
 
     // Thêm function để dừng auto play nếu cần

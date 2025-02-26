@@ -16,10 +16,10 @@ public class BomBomcontroller : MonoBehaviour
     [SerializeField] private Color flashColor = Color.red; // Màu nhấp nháy
     [SerializeField] private float flashFrequency = 0.2f; // Tần số nhấp nháy (giây)
 
-    private Transform player;
-    private bool isExploding = false;
-    private Color originalColor; // Màu ban đầu của BomBom
-    private Coroutine flashCoroutine;
+    private Transform _player;
+    private bool _isExploding = false;
+    private Color _originalColor; // Màu ban đầu của BomBom
+    private Coroutine _flashCoroutine;
 
     private void Start()
     {
@@ -27,54 +27,52 @@ public class BomBomcontroller : MonoBehaviour
         GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
         if (playerObject != null)
         {
-            player = playerObject.transform;
+            _player = playerObject.transform;
         }
 
         // Lưu màu ban đầu của BomBom
         if (bomRenderer != null)
         {
-            originalColor = bomRenderer.material.color;
+            _originalColor = bomRenderer.material.color;
         }
     }
 
     private void Update()
     {
-        if (player == null || isExploding) return;
+        if (!_player || _isExploding) return;
 
         // Tính khoảng cách đến người chơi
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        float distanceToPlayer = Vector3.Distance(transform.position, _player.position);
 
-        if (distanceToPlayer <= detectionRange)
+        if (!(distanceToPlayer <= detectionRange)) return;
+        MoveTowardsPlayer();
+        if (distanceToPlayer <= explosionRange)
         {
-            MoveTowardsPlayer();
-            if (distanceToPlayer <= explosionRange)
-            {
-                StartExplosion();
-            }
+            StartExplosion();
         }
     }
 
     private void MoveTowardsPlayer()
     {
         // Di chuyển về phía người chơi
-        Vector3 direction = (player.position - transform.position).normalized;
-        transform.position += direction * moveSpeed * Time.deltaTime;
+        Vector3 direction = (_player.position - transform.position).normalized;
+        transform.position += direction * (moveSpeed * Time.deltaTime);
 
         // Quay mặt về phía người chơi
-        transform.LookAt(player);
+        transform.LookAt(_player);
     }
 
     private void StartExplosion()
     {
-        if (!isExploding)
+        if (!_isExploding)
         {
-            isExploding = true;
+            _isExploding = true;
             Debug.Log("BomBom bắt đầu phát nổ!");
 
             // Bắt đầu hiệu ứng nhấp nháy
-            if (bomRenderer != null)
+            if (bomRenderer)
             {
-                flashCoroutine = StartCoroutine(FlashEffect());
+                _flashCoroutine = StartCoroutine(FlashEffect());
             }
 
             Invoke(nameof(Explode), explosionDelay);
@@ -84,12 +82,12 @@ public class BomBomcontroller : MonoBehaviour
     private void Explode()
     {
         // Dừng nhấp nháy và khôi phục màu ban đầu
-        if (flashCoroutine != null)
+        if (_flashCoroutine != null)
         {
-            StopCoroutine(flashCoroutine);
+            StopCoroutine(_flashCoroutine);
             if (bomRenderer != null)
             {
-                bomRenderer.material.color = originalColor;
+                bomRenderer.material.color = _originalColor;
             }
         }
 
@@ -109,13 +107,11 @@ public class BomBomcontroller : MonoBehaviour
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, explosionRange);
         foreach (Collider hit in hitColliders)
         {
-            if (hit.CompareTag("Player"))
+            if (!hit.CompareTag("Player")) continue;
+            PlayerHealth playerHealth = hit.GetComponent<PlayerHealth>();
+            if (playerHealth != null)
             {
-                PlayerHealth playerHealth = hit.GetComponent<PlayerHealth>();
-                if (playerHealth != null)
-                {
-                    playerHealth.TakeDamage(explosionDamage, 0f);
-                }
+                playerHealth.TakeDamage(explosionDamage, 0f);
             }
         }
 
@@ -133,7 +129,7 @@ public class BomBomcontroller : MonoBehaviour
             yield return new WaitForSeconds(flashFrequency);
 
             // Khôi phục màu ban đầu
-            bomRenderer.material.color = originalColor;
+            bomRenderer.material.color = _originalColor;
             yield return new WaitForSeconds(flashFrequency);
         }
     }

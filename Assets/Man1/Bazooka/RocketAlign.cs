@@ -4,12 +4,12 @@ public class RocketAlign : MonoBehaviour
 {
     private Rigidbody rb;
 
-    void Start()
+    private void Start()
     {
         rb = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    private void Update()
     {
         // Nếu vận tốc đủ lớn để tính toán hướng, cập nhật rotation của rocket
         if (rb.velocity.sqrMagnitude > 0.1f)

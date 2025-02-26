@@ -4,8 +4,10 @@ using System.Collections;
 
 public class BatAI : MonoBehaviour
 {
+    private static readonly int Attack = Animator.StringToHash("bat_attack");
+
     private enum State { Wander, Chase }
-    private State currentState;
+    private State _currentState;
 
     [SerializeField] private float wanderRadius = 10f;
     [SerializeField] private float detectionRange = 15f;
@@ -16,92 +18,90 @@ public class BatAI : MonoBehaviour
     [SerializeField] private float coneAngle = 15f;
     [SerializeField] private float delayBetweenShots = 0.2f;
     [SerializeField] private float attackStartDelay = 0.5f;
-    private float originalSpeed;
+    private float _originalSpeed;
 
-    private NavMeshAgent agent;
-    private Transform player;
-    private float nextAttackTime;
-    private float attackTimer;
-    private Animator animator;
+    private NavMeshAgent _agent;
+    private Transform _player;
+    private float _nextAttackTime;
+    private float _attackTimer;
+    private Animator _animator;
 
     private void Start()
     {
-        animator = GetComponent<Animator>();
-        agent = GetComponent<NavMeshAgent>();
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        currentState = State.Wander;
+        _animator = GetComponent<Animator>();
+        _agent = GetComponent<NavMeshAgent>();
+        _player = GameObject.FindGameObjectWithTag("Player").transform;
+        _currentState = State.Wander;
         ResetAttackTimer();
 
-        originalSpeed = agent.speed;
+        _originalSpeed = _agent.speed;
     }
 
     private void Update()
     {
-        switch (currentState)
+        switch (_currentState)
         {
             case State.Wander:
                 Wander();
-                if (Vector3.Distance(transform.position, player.position) <= detectionRange)
-                    currentState = State.Chase;
+                if (Vector3.Distance(transform.position, _player.position) <= detectionRange)
+                    _currentState = State.Chase;
                 break;
 
             case State.Chase:
                 ChasePlayer();
-                attackTimer -= Time.deltaTime;
+                _attackTimer -= Time.deltaTime;
 
                 // Kiểm tra khoảng cách và thời gian để tấn công
-                if (attackTimer <= 0f && Time.time >= nextAttackTime && Vector3.Distance(transform.position, player.position) <= attackRange)
+                if (_attackTimer <= 0f && Time.time >= _nextAttackTime && Vector3.Distance(transform.position, _player.position) <= attackRange)
                 {
                     StartCoroutine(ShootProjectileCone());
                     ResetAttackTimer();
                 }
 
                 // Quay lại trạng thái Wander nếu người chơi ra khỏi tầm phát hiện
-                if (Vector3.Distance(transform.position, player.position) > detectionRange)
-                    currentState = State.Wander;
+                if (Vector3.Distance(transform.position, _player.position) > detectionRange)
+                    _currentState = State.Wander;
                 break;
         }
     }
 
     private void Wander()
     {
-        if (!agent.hasPath)
+        if (_agent.hasPath) return;
+        Vector3 wanderTarget = transform.position + Random.insideUnitSphere * wanderRadius;
+        if (NavMesh.SamplePosition(wanderTarget, out NavMeshHit hit, wanderRadius, NavMesh.AllAreas))
         {
-            Vector3 wanderTarget = transform.position + Random.insideUnitSphere * wanderRadius;
-            if (NavMesh.SamplePosition(wanderTarget, out NavMeshHit hit, wanderRadius, NavMesh.AllAreas))
-            {
-                agent.SetDestination(hit.position);
-            }
+            _agent.SetDestination(hit.position);
         }
     }
 
     private void ChasePlayer()
     {
         // Đặt điểm đích của agent là vị trí của người chơi
-        agent.SetDestination(player.position);
+        _agent.SetDestination(_player.position);
     }
 
     private IEnumerator ShootProjectileCone()
     {
-        if (animator == null || player == null) yield break;
-        agent.speed = 0;
+        if (!_animator || !_player) yield break;
+        _agent.speed = 0;
         yield return StartCoroutine(RotateTowardsPlayer(attackStartDelay));
 
-        animator.SetBool("bat_attack", true);
+        _animator.SetBool(Attack, true);
         yield return new WaitForSeconds(attackStartDelay);
 
         for (int i = -1; i <= 1; i++)
         {
             float angleOffset = i * coneAngle;
             Quaternion rotation = Quaternion.Euler(0, angleOffset, 0);
-            Vector3 direction = rotation * (player.position - transform.position).normalized;
+            Vector3 direction = rotation * (_player.position - transform.position).normalized;
 
-            if (projectilePrefab != null)
+            if (projectilePrefab)
             {
                 GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
                 Rigidbody rb = projectile.GetComponent<Rigidbody>();
 
-                if (rb != null)
+                if (rb)
                 {
                     rb.velocity = direction * projectileSpeed;
                 }
@@ -111,16 +111,16 @@ public class BatAI : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.1f);
-        animator.SetBool("bat_attack", false);
-        agent.speed = originalSpeed;
-        nextAttackTime = Time.time + attackCooldown;
+        _animator.SetBool(Attack, false);
+        _agent.speed = _originalSpeed;
+        _nextAttackTime = Time.time + attackCooldown;
     }
 
     private IEnumerator RotateTowardsPlayer(float duration)
     {
         float timeElapsed = 0f;
         Quaternion startRotation = transform.rotation;
-        Vector3 directionToPlayer = (player.position - transform.position).normalized;
+        Vector3 directionToPlayer = (_player.position - transform.position).normalized;
         Quaternion targetRotation = Quaternion.LookRotation(new Vector3(directionToPlayer.x, 0, directionToPlayer.z));
 
         while (timeElapsed < duration)
@@ -135,7 +135,7 @@ public class BatAI : MonoBehaviour
 
     private void ResetAttackTimer()
     {
-        attackTimer = Random.Range(3f, 6f);
+        _attackTimer = Random.Range(3f, 6f);
     }
     private void OnDrawGizmosSelected()
     {

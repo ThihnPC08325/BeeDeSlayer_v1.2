@@ -4,53 +4,66 @@ using UnityEngine.AI;
 
 public class TankerAI : MonoBehaviour
 {
-    private enum State { Chase, Attack, SpecialAttack }
-    private State currentState;
+    private enum State
+    {
+        Chase,
+        Attack,
+        SpecialAttack
+    }
 
-    [Header("Target & Ranges")]
-    [SerializeField] private float detectionRange = 10f;
+    private State _currentState;
+
+    [Header("Target & Ranges")] [SerializeField]
+    private float detectionRange = 10f;
+
     [SerializeField] private float attackRange = 2f;
     [SerializeField] private float specialAttackRange = 1.5f;
 
-    [Header("Attack Settings")]
-    [SerializeField] private float normalAttackCooldown = 2f;
+    [Header("Attack Settings")] [SerializeField]
+    private float normalAttackCooldown = 2f;
+
     [SerializeField] private float specialAttackCooldown = 5f;
     [SerializeField] private float attackDelay = 0.5f;
     [SerializeField] private float postSpecialAttackDelay = 1f;
 
-    [Header("Damage Settings")]
-    [SerializeField] private float normalAttackDamage = 10f;
+    [Header("Damage Settings")] [SerializeField]
+    private float normalAttackDamage = 10f;
+
     [SerializeField] private float normalPen = 0f;
     [SerializeField] private float specialAttackDamage = 25f;
     [SerializeField] private float specialPen = 5f;
 
-    private NavMeshAgent agent;
-    private Animator animator;
-    private float normalAttackCooldownTimer;
-    private float specialAttackCooldownTimer;
-    private bool isAttacking;
-    private bool canMove = true;
-    private Transform player;
+    private NavMeshAgent _agent;
+    private Animator _animator;
+    private float _normalAttackCooldownTimer;
+    private float _specialAttackCooldownTimer;
+    private bool _isAttacking;
+    private bool _canMove = true;
+    private Transform _player;
+
+    private static readonly int IsMoving = Animator.StringToHash("isMoving");
+    private static readonly int TriggerAttack = Animator.StringToHash("TriggerAttack");
+    private static readonly int TriggerSpecialAttack = Animator.StringToHash("TriggerSpecialAttack");
 
     private void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
-        animator = GetComponent<Animator>();
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        normalAttackCooldownTimer = 0f;
-        specialAttackCooldownTimer = 0f;
-        isAttacking = false;
-        canMove = true;
+        _agent = GetComponent<NavMeshAgent>();
+        _animator = GetComponent<Animator>();
+        _player = GameObject.FindGameObjectWithTag("Player").transform;
+        _normalAttackCooldownTimer = 0f;
+        _specialAttackCooldownTimer = 0f;
+        _isAttacking = false;
+        _canMove = true;
     }
 
     private void Update()
     {
-        if (isAttacking || !canMove) return;
+        if (_isAttacking || !_canMove) return;
 
-        normalAttackCooldownTimer -= Time.deltaTime;
-        specialAttackCooldownTimer -= Time.deltaTime;
+        _normalAttackCooldownTimer -= Time.deltaTime;
+        _specialAttackCooldownTimer -= Time.deltaTime;
 
-        switch (currentState)
+        switch (_currentState)
         {
             case State.Chase:
                 ChaseState();
@@ -64,51 +77,51 @@ public class TankerAI : MonoBehaviour
         }
 
         // Update animation
-        animator.SetBool("isMoving", agent.velocity.magnitude > 0.1f);
+        _animator.SetBool(IsMoving, _agent.velocity.magnitude > 0.1f);
     }
 
     private void ChaseState()
     {
-        if (!canMove) return;
+        if (!_canMove) return;
 
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        float distanceToPlayer = Vector3.Distance(transform.position, _player.position);
 
         // Look at player
-        Vector3 direction = (player.position - transform.position).normalized;
+        Vector3 direction = (_player.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
 
         if (distanceToPlayer <= attackRange)
         {
-            agent.ResetPath();
-            animator.SetBool("isMoving", false);
+            _agent.ResetPath();
+            _animator.SetBool(IsMoving, false);
 
-            if (distanceToPlayer <= specialAttackRange && specialAttackCooldownTimer <= 0f)
+            if (distanceToPlayer <= specialAttackRange && _specialAttackCooldownTimer <= 0f)
             {
-                currentState = State.SpecialAttack;
+                _currentState = State.SpecialAttack;
             }
-            else if (normalAttackCooldownTimer <= 0f)
+            else if (_normalAttackCooldownTimer <= 0f)
             {
-                currentState = State.Attack;
+                _currentState = State.Attack;
             }
         }
         else
         {
-            agent.SetDestination(player.position);
-            animator.SetBool("isMoving", true);
+            _agent.SetDestination(_player.position);
+            _animator.SetBool(IsMoving, true);
         }
     }
 
     private IEnumerator AttackState()
     {
-        isAttacking = true;
-        canMove = false;
-        agent.ResetPath();
-        animator.SetBool("isMoving", false);
-        animator.SetTrigger("TriggerAttack");
+        _isAttacking = true;
+        _canMove = false;
+        _agent.ResetPath();
+        _animator.SetBool(IsMoving, false);
+        _animator.SetTrigger(TriggerAttack);
 
         // Lấy độ dài của animation hiện tại
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
         float animationLength = stateInfo.length;
 
         yield return new WaitForSeconds(attackDelay);
@@ -119,29 +132,29 @@ public class TankerAI : MonoBehaviour
         // Chờ animation kết thúc
         yield return new WaitForSeconds(animationLength - attackDelay);
 
-        normalAttackCooldownTimer = normalAttackCooldown;
-        isAttacking = false;
-        canMove = true;
-        currentState = State.Chase;
+        _normalAttackCooldownTimer = normalAttackCooldown;
+        _isAttacking = false;
+        _canMove = true;
+        _currentState = State.Chase;
     }
 
     private IEnumerator SpecialAttackState()
     {
-        isAttacking = true;
-        canMove = false;
-        agent.ResetPath();
-        animator.SetBool("isMoving", false);
-        animator.SetTrigger("TriggerSpecialAttack");
+        _isAttacking = true;
+        _canMove = false;
+        _agent.ResetPath();
+        _animator.SetBool(IsMoving, false);
+        _animator.SetTrigger(TriggerSpecialAttack);
 
         // Lấy độ dài của animation hiện tại
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
         float animationLength = stateInfo.length;
 
         yield return new WaitForSeconds(attackDelay);
 
         // Gây sát thương
         PlayerHealth playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
-        if (playerHealth != null)
+        if (playerHealth)
         {
             playerHealth.TakeDamage(specialAttackDamage, specialPen);
         }
@@ -149,11 +162,11 @@ public class TankerAI : MonoBehaviour
         // Chờ animation kết thúc + thời gian delay sau special attack
         yield return new WaitForSeconds((animationLength - attackDelay) + postSpecialAttackDelay);
 
-        specialAttackCooldownTimer = specialAttackCooldown;
-        normalAttackCooldownTimer = normalAttackCooldown;
-        isAttacking = false;
-        canMove = true;
-        currentState = State.Chase;
+        _specialAttackCooldownTimer = specialAttackCooldown;
+        _normalAttackCooldownTimer = normalAttackCooldown;
+        _isAttacking = false;
+        _canMove = true;
+        _currentState = State.Chase;
     }
 
     // Debug helpers

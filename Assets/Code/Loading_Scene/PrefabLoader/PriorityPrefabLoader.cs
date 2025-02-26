@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PriorityPrefabLoader : MonoBehaviour
@@ -26,8 +27,8 @@ public class PriorityPrefabLoader : MonoBehaviour
     [Tooltip("Thời gian chờ giữa các lần tải prefab")]
     [SerializeField] private float delayBetweenLoads = 0.1f; // Thời gian chờ giữa các lần tải
 
-    private bool isLoading = false;
-    private Dictionary<GameObject, Transform> prefabInstances = new Dictionary<GameObject, Transform>();
+    private bool _isLoading = false;
+    private readonly Dictionary<GameObject, Transform> _prefabInstances = new Dictionary<GameObject, Transform>();
 
     private void Awake()
     {
@@ -35,13 +36,13 @@ public class PriorityPrefabLoader : MonoBehaviour
     }
     public IEnumerator LoadPrefabsAsync()
     {
-        if (isLoading)
+        if (_isLoading)
         {
             Debug.LogWarning("Prefab loading is already in progress!");
             yield break;
         }
 
-        isLoading = true;
+        _isLoading = true;
 
         // Sắp xếp prefab theo thứ tự ưu tiên
         prefabsToLoad.Sort((a, b) => a.Priority.CompareTo(b.Priority));
@@ -49,7 +50,7 @@ public class PriorityPrefabLoader : MonoBehaviour
         foreach (PrefabItem item in prefabsToLoad)
         {
             // Kiểm tra prefab hợp lệ
-            if (item.Prefab == null)
+            if (!item.Prefab)
             {
                 Debug.LogWarning("Prefab is missing, skipping...");
                 continue;
@@ -61,7 +62,7 @@ public class PriorityPrefabLoader : MonoBehaviour
             // Instantiate prefab và thêm vào dictionary
             GameObject instance = Instantiate(item.Prefab, parent);
             instance.SetActive(false); // Tắt đối tượng để không gây tải thêm
-            prefabInstances.Add(instance, parent);
+            _prefabInstances.Add(instance, parent);
 
             // Đợi trước khi tải prefab tiếp theo
             yield return new WaitForSeconds(delayBetweenLoads);
@@ -69,13 +70,13 @@ public class PriorityPrefabLoader : MonoBehaviour
 
         Debug.Log("All prefabs loaded!");
         ActivateAllPrefabs();
-        isLoading = false;
+        _isLoading = false;
     }
 
     // Gọi để kích hoạt tất cả prefab
     public void ActivateAllPrefabs()
     {
-        foreach (var instance in prefabInstances.Keys)
+        foreach (var instance in _prefabInstances.Keys)
         {
             instance.SetActive(true);
         }
@@ -84,31 +85,20 @@ public class PriorityPrefabLoader : MonoBehaviour
     // Gọi để kích hoạt các prefab thuộc một parent cụ thể
     public void ActivatePrefabsUnderParent(Transform parent)
     {
-        foreach (var kvp in prefabInstances)
+        foreach (var kvp in _prefabInstances.Where(kvp => kvp.Value == parent))
         {
-            if (kvp.Value == parent)
-            {
-                kvp.Key.SetActive(true);
-            }
+            kvp.Key.SetActive(true);
         }
     }
 
     // Gọi để xóa tất cả prefab thuộc một parent cụ thể
     public void DestroyPrefabsUnderParent(Transform parent)
     {
-        List<GameObject> toDestroy = new();
-
-        foreach (var kvp in prefabInstances)
-        {
-            if (kvp.Value == parent)
-            {
-                toDestroy.Add(kvp.Key);
-            }
-        }
+        List<GameObject> toDestroy = (from kvp in _prefabInstances where kvp.Value == parent select kvp.Key).ToList();
 
         foreach (var obj in toDestroy)
         {
-            prefabInstances.Remove(obj);
+            _prefabInstances.Remove(obj);
             Destroy(obj);
         }
     }

@@ -8,48 +8,46 @@ public class ElectricTrap : MonoBehaviour
     public float activeTime = 3f;        // Bẫy hoạt động trong 3 giây
     public float rechargeTime = 5f;      // Bẫy sạc lại trong 5 giây
 
-    private bool isActive = true;
-    private ParticleSystem electricEffect;
+    private bool _isActive = true;
+    private ParticleSystem _electricEffect;
 
     private void Start()
     {
-        electricEffect = GetComponentInChildren<ParticleSystem>();
+        _electricEffect = GetComponentInChildren<ParticleSystem>();
         ActivateTrap();
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (!isActive) return;
+        if (!_isActive) return;
 
-        if (other.CompareTag("Player")) // Chỉ ảnh hưởng đến Bee
+        if (!other.CompareTag("Player")) return; // Chỉ ảnh hưởng đến Bee
+        PlayerHealth player = other.GetComponent<PlayerHealth>();
+        PlayerController movement = other.GetComponent<PlayerController>();
+
+        if (player != null)
         {
-            PlayerHealth player = other.GetComponent<PlayerHealth>();
-            PlayerController movement = other.GetComponent<PlayerController>();
+            player.TakeDamage(damagePerSecond * Time.deltaTime, 0f);
+        }
 
-            if (player != null)
-            {
-                player.TakeDamage(damagePerSecond * Time.deltaTime, 0f);
-            }
-
-            if (movement != null)
-            {
-                movement.ModifySpeed(slowMultiplier, slowDuration);
-            }
+        if (movement != null)
+        {
+            movement.ModifySpeed(slowMultiplier, slowDuration);
         }
     }
 
     private void ActivateTrap()
     {
-        isActive = true;
-        if (electricEffect != null) electricEffect.Play();
-        Invoke("DeactivateTrap", activeTime);
+        _isActive = true;
+        if (_electricEffect != null) _electricEffect.Play();
+        Invoke(nameof(DeactivateTrap), activeTime);
     }
 
     private void DeactivateTrap()
     {
-        isActive = false;
-        if (electricEffect != null) electricEffect.Stop();
-        Invoke("ReactivateTrap", rechargeTime);
+        _isActive = false;
+        if (_electricEffect != null) _electricEffect.Stop();
+        Invoke(nameof(ReactivateTrap), rechargeTime);
     }
 
     private void ReactivateTrap()

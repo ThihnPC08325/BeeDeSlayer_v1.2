@@ -2,11 +2,11 @@
 
 public class PlayerNote : MonoBehaviour
 {
-    private NoteScript activeNote;
+    private NoteScript _activeNote;
     [SerializeField] private GameObject interactMessage;
     [SerializeField] private NoteData noteData;
 
-    void Start()
+    private void Start()
     {
         if (interactMessage == null)
         {
@@ -18,50 +18,46 @@ public class PlayerNote : MonoBehaviour
         }
     }
 
-    void Update()
+    private void Update()
     {
-        if (activeNote && Input.GetKeyDown(KeyCode.E))
+        if (_activeNote && Input.GetKeyDown(KeyCode.E))
         {
             Debug.Log("Nhấn E, mở note");
-            activeNote.ToggleNote();
-            noteData.CollectNote(activeNote.GetNoteID());
-            activeNote.gameObject.SetActive(false);
+            _activeNote.ToggleNote();
+            noteData.CollectNote(_activeNote.GetNoteID());
+            _activeNote.gameObject.SetActive(false);
             interactMessage.SetActive(false); // Ẩn message sau khi nhặt note
         }
     }
 
     private void OnTriggerEnter(Collider col)
     {
-        if (col.gameObject.CompareTag("Note") && col.gameObject.TryGetComponent(out NoteScript note))
+        if (!col.gameObject.CompareTag("Note") || !col.gameObject.TryGetComponent(out NoteScript note)) return;
+        _activeNote = note;
+
+        // Nếu note đã được nhặt, không hiển thị message
+        if (noteData.IsNoteCollected(_activeNote.GetNoteID()))
         {
-            activeNote = note;
-
-            // Nếu note đã được nhặt, không hiển thị message
-            if (noteData.IsNoteCollected(activeNote.GetNoteID()))
-            {
-                activeNote.gameObject.SetActive(false);
-                return;
-            }
-
-            Debug.Log("Gần giấy note");
-            interactMessage.SetActive(true);
+            _activeNote.gameObject.SetActive(false);
+            return;
         }
+
+        Debug.Log("Gần giấy note");
+        interactMessage.SetActive(true);
     }
 
     private void OnTriggerExit(Collider col)
     {
-        if (col.gameObject.CompareTag("Note"))
+        if (!col.gameObject.CompareTag("Note")) return;
+        // Đảm bảo tắt note nếu đang mở
+        if (_activeNote != null && _activeNote.GetNoteStatus())
         {
-            // Đảm bảo tắt note nếu đang mở
-            if (activeNote != null && activeNote.GetNoteStatus())
-            {
-                Debug.Log("Đóng note khi rời khỏi");
-                activeNote.ToggleNote();
-            }
-
-            activeNote = null;
-            interactMessage.SetActive(false); // Luôn ẩn message khi rời khỏi
-            Debug.Log("Rời khỏi vùng va chạm, tắt message.");
+            Debug.Log("Đóng note khi rời khỏi");
+            _activeNote.ToggleNote();
         }
+
+        _activeNote = null;
+        interactMessage.SetActive(false); // Luôn ẩn message khi rời khỏi
+        Debug.Log("Rời khỏi vùng va chạm, tắt message.");
     }
 }

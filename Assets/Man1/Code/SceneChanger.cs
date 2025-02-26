@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 public class SceneChanger : MonoBehaviour
 {
-    private static System.Random random = new System.Random();
-    private List<string> scenes = new List<string> { "Man1.1", "Man1.2", "Man1.3", "Man1.4"};
-    private const string targetScene = "Man1.5";
+    private static readonly System.Random _random = new System.Random();
+    private readonly List<string> _scenes = new List<string> { "Man1.1", "Man1.2", "Man1.3", "Man1.4"};
+    private const string TargetScene = "Man1.5";
 
     [SerializeField] private NoteCounter noteCounter; // Reference to NoteCounter
 
@@ -23,9 +23,9 @@ public class SceneChanger : MonoBehaviour
     private void LoadRandomScene()
     {
         string currentSceneName = SceneManager.GetActiveScene().name;
-        List<string> availableScenes = new List<string>(scenes);
+        List<string> availableScenes = new List<string>(_scenes);
         availableScenes.Remove(currentSceneName);
-        string nextScene = availableScenes[random.Next(availableScenes.Count)];
+        string nextScene = availableScenes[_random.Next(availableScenes.Count)];
         Debug.Log($"Loading random scene: {nextScene}");
         SceneManager.LoadScene(nextScene);
     }
@@ -37,8 +37,8 @@ public class SceneChanger : MonoBehaviour
             Debug.Log($"Player triggered scene change. Notes collected: {noteCounter?.CollectedNoteCount}");
             if (noteCounter != null && noteCounter.CollectedNoteCount >= 4)
             {
-                Debug.Log($"Loading target scene: {targetScene}");
-                SceneManager.LoadScene(targetScene);
+                Debug.Log($"Loading target scene: {TargetScene}");
+                SceneManager.LoadScene(TargetScene);
             }
             else
             {
@@ -47,7 +47,7 @@ public class SceneChanger : MonoBehaviour
         }
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         Debug.Log($"Scene loaded: {scene.name}");
         DynamicGI.UpdateEnvironment();

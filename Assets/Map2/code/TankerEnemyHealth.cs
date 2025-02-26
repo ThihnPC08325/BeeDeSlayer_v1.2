@@ -8,17 +8,17 @@ public class TankerEnemyHealth : MonoBehaviour, IPooledObject
     [SerializeField] private float currentHealth;
     [SerializeField] private ItemDropManager itemDropManager;
     [SerializeField] private GameObject smokePrefab; // Reference to the smoke prefab
-    private BoxCollider boxCollider;
-    private Animator animator;
-    private TankerAI batController;
+    private BoxCollider _boxCollider;
+    private Animator _animator;
+    private TankerAI _batController;
 
     private void Awake()
     {
-        boxCollider = GetComponent<BoxCollider>();
-        animator = GetComponent<Animator>();
+        _boxCollider = GetComponent<BoxCollider>();
+        _animator = GetComponent<Animator>();
         itemDropManager = GetComponent<ItemDropManager>();
         currentHealth = maxHealth;
-        batController = GetComponent<TankerAI>();
+        _batController = GetComponent<TankerAI>();
     }
 
     public void TakeDamage(float damage)
@@ -28,7 +28,7 @@ public class TankerEnemyHealth : MonoBehaviour, IPooledObject
         if (currentHealth <= 0f)
         {
             currentHealth = 0f;
-            boxCollider.enabled = false;
+            _boxCollider.enabled = false;
             Die();
         }
     }
@@ -47,7 +47,7 @@ public class TankerEnemyHealth : MonoBehaviour, IPooledObject
         }
 
         // Set the bat_die animation trigger
-        batController.GetComponent<BatAI>();
+        _batController.GetComponent<BatAI>();
         // Start coroutine to handle delay and deactivation
         StartCoroutine(TimeToDie(0.3f));
     }
@@ -69,7 +69,7 @@ public class TankerEnemyHealth : MonoBehaviour, IPooledObject
     protected virtual void ResetEnemy()
     {
         currentHealth = maxHealth;
-        boxCollider.enabled = true;
+        _boxCollider.enabled = true;
 
         // Reset the bat_die animation parameter
     }

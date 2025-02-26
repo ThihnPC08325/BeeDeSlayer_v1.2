@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class NoteScript : MonoBehaviour
 {
-    private bool noteStatus = false;
+    private bool _noteStatus = false;
     public GameObject note;
 
     [SerializeField] private string noteID;
@@ -26,12 +26,12 @@ public class NoteScript : MonoBehaviour
 
     public void ToggleNote()
     {
-        noteStatus = !noteStatus;
-        note.SetActive(noteStatus);
-        Debug.Log("Trạng thái note: " + noteStatus);
+        _noteStatus = !_noteStatus;
+        note.SetActive(_noteStatus);
+        Debug.Log("Trạng thái note: " + _noteStatus);
 
         // Khi bật ghi chú, kiểm tra nếu nó chưa được thu thập thì thu thập nó
-        if (noteStatus && !noteData.IsNoteCollected(noteID))
+        if (_noteStatus && !noteData.IsNoteCollected(noteID))
         {
             CollectNote();
         }
@@ -39,7 +39,7 @@ public class NoteScript : MonoBehaviour
 
     public bool GetNoteStatus()
     {
-        return noteStatus;
+        return _noteStatus;
     }
 
     public string GetNoteID()
@@ -58,11 +58,9 @@ public class NoteScript : MonoBehaviour
 
             // Kích hoạt lại collider để chuẩn bị cho việc nhặt ghi chú
             Collider noteCollider = GetComponent<Collider>();
-            if (noteCollider != null)
-            {
-                noteCollider.enabled = false;
-                noteCollider.enabled = true;
-            }
+            if (noteCollider == null) return;
+            noteCollider.enabled = false;
+            noteCollider.enabled = true;
         }
         else
         {
@@ -76,7 +74,7 @@ public class NoteScript : MonoBehaviour
         noteData.CollectNote(noteID);
 
         // Tăng số lượng ghi chú đã nhặt trong NoteCounter
-        if (noteCounter != null)
+        if (noteCounter)
         {
             noteCounter.IncrementNoteCount();
             Debug.Log("Note được nhặt: " + noteID + ". Tổng số ghi chú đã nhặt: " + noteCounter.CollectedNoteCount);
