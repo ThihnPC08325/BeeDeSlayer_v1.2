@@ -3,7 +3,7 @@
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
-    private GameObject passwordPanel; // Panel nhập mật khẩu
+    [SerializeField] private GameObject passwordPanel; // Panel nhập mật khẩu
     private bool isPanelOpen = false;
     [SerializeField] private NoteManager noteManager;
     void Awake()

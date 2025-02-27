@@ -8,11 +8,11 @@ public class PasswordUI : MonoBehaviour
 {
     public static PasswordUI Instance { get; private set; }
 
-    private GameObject passwordPanel; // Panel nhập mật khẩu
-    private Transform noteContainer; // Vùng hiển thị note
-    private GameObject notePrefab; // Prefab giấy note
-    private TMP_InputField inputField;
-    private Button confirmButton; // 🔹 Nút xác nhận mật khẩu
+    [SerializeField] private GameObject passwordPanel; // Panel nhập mật khẩu
+    [SerializeField] private Transform noteContainer; // Vùng hiển thị note
+    [SerializeField] private GameObject notePrefab; // Prefab giấy note
+    [SerializeField] private TMP_InputField inputField;
+    [SerializeField] private Button confirmButton; // 🔹 Nút xác nhận mật khẩu
     [SerializeField] private NoteManager noteManager;
     private string correctPassword = "GA19301";
 
