@@ -15,6 +15,13 @@ public class Boss4Health : MonoBehaviour
     [SerializeField] private Renderer bossRenderer;
     [SerializeField] private Light bossLight;
 
+<<<<<<< Updated upstream
+
+    private AudioSource audioSource; // Component phát nhạc cho hiệu ứng
+    private AudioSource backgroundAudioSource; // Component phát nhạc nền
+    private BoxCollider boxCollider;
+    private bool isVictoryMusicPlaying = false; // Kiểm tra đã phát nhạc chiến thắng chưa
+=======
     private AudioSource audioSource;
     private AudioSource backgroundAudioSource;
     private BoxCollider boxCollider;
@@ -22,10 +29,21 @@ public class Boss4Health : MonoBehaviour
     private bool isPhase2 = false;
     private Vector3 originalPosition;
     private Quaternion originalRotation;
+>>>>>>> Stashed changes
 
     private void Awake()
     {
         boxCollider = GetComponent<BoxCollider>();
+<<<<<<< Updated upstream
+
+        // Tạo 2 AudioSource riêng biệt
+        audioSource = gameObject.AddComponent<AudioSource>();
+        backgroundAudioSource = gameObject.AddComponent<AudioSource>();
+
+        // Cài đặt cho nhạc nền
+        backgroundAudioSource.loop = true; // Lặp lại
+        backgroundAudioSource.volume = 0.5f; // Âm lượng nhỏ hơn
+=======
         audioSource = gameObject.AddComponent<AudioSource>();
         backgroundAudioSource = gameObject.AddComponent<AudioSource>();
 
@@ -37,6 +55,7 @@ public class Boss4Health : MonoBehaviour
 
         if (bossLight != null)
             bossLight.enabled = false;
+>>>>>>> Stashed changes
 
         currentHealth = maxHealth;
         originalPosition = transform.position;
@@ -52,6 +71,10 @@ public class Boss4Health : MonoBehaviour
             bossHealthBar.value = currentHealth;
         }
 
+<<<<<<< Updated upstream
+        // Phát nhạc nền khi bắt đầu
+=======
+>>>>>>> Stashed changes
         if (backgroundMusic != null)
         {
             backgroundAudioSource.clip = backgroundMusic;
@@ -68,7 +91,10 @@ public class Boss4Health : MonoBehaviour
         {
             currentHealth = 0f;
             boxCollider.enabled = false;
+<<<<<<< Updated upstream
+=======
             if (bossHealthBar != null) bossHealthBar.gameObject.SetActive(false);
+>>>>>>> Stashed changes
             Die();
         }
         else
@@ -80,11 +106,25 @@ public class Boss4Health : MonoBehaviour
 
     private void Die()
     {
+<<<<<<< Updated upstream
+        // Dừng nhạc nền
+        if (backgroundAudioSource.isPlaying)
+        {
+            backgroundAudioSource.Stop();
+        }
+=======
         if (backgroundAudioSource.isPlaying)
             backgroundAudioSource.Stop();
+>>>>>>> Stashed changes
 
         if (deathSound != null)
+<<<<<<< Updated upstream
+        {
             audioSource.PlayOneShot(deathSound);
+        }
+=======
+            audioSource.PlayOneShot(deathSound);
+>>>>>>> Stashed changes
 
         if (smokePrefab != null)
             Instantiate(smokePrefab, transform.position, Quaternion.identity);
@@ -103,6 +143,11 @@ public class Boss4Health : MonoBehaviour
 
     private IEnumerator IncreaseLightIntensity()
     {
+<<<<<<< Updated upstream
+        yield return new WaitForSeconds(duration);
+        gameObject.SetActive(false);
+        //Test
+=======
         bossLight.enabled = true;
         float duration = 5f;
         float elapsed = 0f;
@@ -114,6 +159,7 @@ public class Boss4Health : MonoBehaviour
             bossLight.intensity = Mathf.Lerp(0f, 100000f, elapsed / duration);
             yield return null;
         }
+>>>>>>> Stashed changes
     }
 
     private IEnumerator DeathSequence()
