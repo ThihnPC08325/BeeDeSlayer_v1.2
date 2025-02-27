@@ -11,7 +11,7 @@ public class RegisterUser : MonoBehaviour
     [SerializeField] private TMP_InputField usernameInput;
     [SerializeField] private TMP_InputField passwordInput;
     [SerializeField] private TMP_InputField confirmPasswordInput;
-    [SerializeField] private static readonly string link = "https://phamduchuan.name.vn/PHP/Register.php";
+    [SerializeField] private const string Link = "https://phamduchuan.name.vn/PHP/Register.php";
     [SerializeField] private TextMeshProUGUI resultText;
 
     /// <summary>
@@ -55,13 +55,10 @@ public class RegisterUser : MonoBehaviour
             return false;
         }
 
-        if (password != confirmPassword)
-        {
-            resultText.text = "Mật khẩu không khớp!";
-            return false;
-        }
+        if (password == confirmPassword) return true;
+        resultText.text = "Mật khẩu không khớp!";
+        return false;
 
-        return true;
     }
 
     /// <summary>
@@ -80,7 +77,7 @@ public class RegisterUser : MonoBehaviour
             };
 
             var content = new FormUrlEncodedContent(data);
-            HttpResponseMessage response = await client.PostAsync(link, content);
+            HttpResponseMessage response = await client.PostAsync(Link, content);
 
             string responseText = await response.Content.ReadAsStringAsync();
             Debug.Log($"Server Response: {responseText}");
@@ -89,14 +86,7 @@ public class RegisterUser : MonoBehaviour
             {
                 var jsonResponse = JsonUtility.FromJson<ServerResponse>(responseText);
 
-                if (jsonResponse.status == "success")
-                {
-                    resultText.text = "Đăng ký thành công! Đăng nhập để vào game.";
-                }
-                else
-                {
-                    resultText.text = $"Lỗi: {jsonResponse.message}";
-                }
+                resultText.text = jsonResponse.status == "success" ? "Đăng ký thành công! Đăng nhập để vào game." : $"Lỗi: {jsonResponse.message}";
             }
             else
             {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class SceneChanger : MonoBehaviour
 {
-    private static readonly System.Random _random = new System.Random();
+    private static readonly System.Random Random = new System.Random();
     private readonly List<string> _scenes = new List<string> { "Man1.1", "Man1.2", "Man1.3", "Man1.4"};
     private const string TargetScene = "Man1.5";
 
@@ -25,25 +25,23 @@ public class SceneChanger : MonoBehaviour
         string currentSceneName = SceneManager.GetActiveScene().name;
         List<string> availableScenes = new List<string>(_scenes);
         availableScenes.Remove(currentSceneName);
-        string nextScene = availableScenes[_random.Next(availableScenes.Count)];
+        string nextScene = availableScenes[Random.Next(availableScenes.Count)];
         Debug.Log($"Loading random scene: {nextScene}");
         SceneManager.LoadScene(nextScene);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (!other.CompareTag("Player")) return;
+        Debug.Log($"Player triggered scene change. Notes collected: {noteCounter?.CollectedNoteCount}");
+        if (noteCounter != null && noteCounter.CollectedNoteCount >= 4)
         {
-            Debug.Log($"Player triggered scene change. Notes collected: {noteCounter?.CollectedNoteCount}");
-            if (noteCounter != null && noteCounter.CollectedNoteCount >= 4)
-            {
-                Debug.Log($"Loading target scene: {TargetScene}");
-                SceneManager.LoadScene(TargetScene);
-            }
-            else
-            {
-                LoadRandomScene();
-            }
+            Debug.Log($"Loading target scene: {TargetScene}");
+            SceneManager.LoadScene(TargetScene);
+        }
+        else
+        {
+            LoadRandomScene();
         }
     }
 
