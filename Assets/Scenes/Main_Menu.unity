@@ -1214,6 +1214,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1488578890457651660, guid: 6227fa4f79927fd41809b03de23e8c65, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 79
+      objectReference: {fileID: 0}
+    - target: {fileID: 2644724923173080558, guid: 6227fa4f79927fd41809b03de23e8c65, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1628914860}
+    - target: {fileID: 2644724923173080558, guid: 6227fa4f79927fd41809b03de23e8c65, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlayGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 2644724923173080558, guid: 6227fa4f79927fd41809b03de23e8c65, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Menu, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 2945590193873938265, guid: 6227fa4f79927fd41809b03de23e8c65, type: 3}
       propertyPath: m_Name
       value: CanvasLogin
@@ -1341,6 +1357,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 8741099127748694381, guid: 6227fa4f79927fd41809b03de23e8c65, type: 3}
+    - {fileID: 2061784938469243994, guid: 6227fa4f79927fd41809b03de23e8c65, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6227fa4f79927fd41809b03de23e8c65, type: 3}
@@ -1355,6 +1372,7 @@ GameObject:
   - component: {fileID: 1628914859}
   - component: {fileID: 1628914858}
   - component: {fileID: 1628914857}
+  - component: {fileID: 1628914860}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1409,6 +1427,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1628914860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1628914856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63ab50319155a894d975f152a22e29e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loginData: {fileID: 11400000, guid: ab9b6fcb31f729740843efe43b8ff178, type: 2}
 --- !u!114 &1713104863 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 447297841443166826, guid: 6227fa4f79927fd41809b03de23e8c65, type: 3}

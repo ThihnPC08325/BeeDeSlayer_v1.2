@@ -76,7 +76,7 @@ public class LoginUser : MonoBehaviour
                 if (status == "success")
                 {
                     int playerID = jsonResponse["Player_ID"]?.Value<int>() ?? -1;
-                    resultText.text = $"Đăng nhập thành công!;
+                    resultText.text = $"Đăng nhập thành công!";
 
                     // Lưu trạng thái vào ScriptableObject
                     loginData.SetLoginState(playerID);
