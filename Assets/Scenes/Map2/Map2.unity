@@ -5121,6 +5121,7 @@ GameObject:
   - component: {fileID: 1684592478}
   - component: {fileID: 1684592481}
   - component: {fileID: 1684592482}
+  - component: {fileID: 1684592483}
   m_Layer: 0
   m_Name: BlackHole
   m_TagString: Untagged
@@ -5236,6 +5237,20 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1684592483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1684592476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17117375a9045ad41929bc6334e14a6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 2005209170}
+  delayTime: 2
 --- !u!4 &1739218639 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8fc8243a5f21b7549ad42ee2429e8316, type: 3}
@@ -5873,6 +5888,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 86293d84f0f9c8a41a6f9cf804e33816, type: 3}
   m_PrefabInstance: {fileID: 1988381430}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2005209170 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2640757252670460526, guid: a571edc7306067741aa926d9ce2c8184, type: 3}
+  m_PrefabInstance: {fileID: 129319192}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &2039598413 stripped
 Transform:
