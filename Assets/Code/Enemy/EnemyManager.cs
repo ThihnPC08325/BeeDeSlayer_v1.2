@@ -16,7 +16,8 @@ public class EnemyManager : MonoBehaviour
         Skeleton,
         Spider,
         BrokenFly,
-        Worm
+        Worm,
+        BlueDragon
     }
 
     [System.Serializable]
