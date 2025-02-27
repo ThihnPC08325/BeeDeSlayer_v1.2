@@ -525,7 +525,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c3599dee6976154e854b15bec7242dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 50
+  maxHealth: 40
   currentHealth: 0
   itemDropManager: {fileID: 2958322994350540506}
   smokePrefab: {fileID: 3601312742425871408, guid: b77c39d05c1d1ce44b091891a344370f, type: 3}
