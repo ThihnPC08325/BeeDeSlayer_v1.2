@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http; // Để thay thế UnityWebRequest
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -9,8 +10,8 @@ public class RegisterUser : MonoBehaviour
 {
     [SerializeField] private TMP_InputField usernameInput;
     [SerializeField] private TMP_InputField passwordInput;
-    [SerializeField] private TMP_InputField confirmPasswordInput; // Input để xác nhận mật khẩu
-    [SerializeField] private string link = "https://phamduchuan.name.vn/PHP/Register.php"; // URL đăng ký
+    [SerializeField] private TMP_InputField confirmPasswordInput;
+    [SerializeField] private static readonly string link = "https://phamduchuan.name.vn/PHP/Register.php";
     [SerializeField] private TextMeshProUGUI resultText;
 
     /// <summary>
@@ -20,35 +21,26 @@ public class RegisterUser : MonoBehaviour
     {
         try
         {
-            string username = usernameInput.text;
+            string username = usernameInput.text.Trim();
             string password = passwordInput.text;
             string confirmPassword = confirmPasswordInput.text;
 
-            // Kiểm tra input hợp lệ trước khi gửi
+            // Kiểm tra input hợp lệ
             if (!ValidateInput(username, password, confirmPassword))
-            {
                 return;
-            }
 
-            // Mã hóa mật khẩu trước khi gửi lên máy chủ
-            string encryptedPassword = EncryptionHelper.EncryptPassword(password);
-
-            // Gọi hàm đăng ký qua HTTP
-            await RegisterRequest(username, encryptedPassword);
+            // Gửi request đăng ký
+            await RegisterRequest(username, password);
         }
         catch (Exception e)
         {
-            Debug.LogError($"Exception: {e}");
+            Debug.LogError($"Lỗi ngoại lệ: {e}");
         }
     }
 
     /// <summary>
     /// Kiểm tra input hợp lệ
     /// </summary>
-    /// <param name="username"></param>
-    /// <param name="password"></param>
-    /// <param name="confirmPassword"></param>
-    /// <returns></returns>
     private bool ValidateInput(string username, string password, string confirmPassword)
     {
         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
@@ -57,42 +49,54 @@ public class RegisterUser : MonoBehaviour
             return false;
         }
 
-        if (password != confirmPassword)
+        if (password.Length < 6)
         {
-            resultText.text = "Mật khẩu không khớp! Vui lòng kiểm tra lại.";
+            resultText.text = "Mật khẩu phải dài ít nhất 6 ký tự!";
             return false;
         }
 
-        if (password.Length >= 6) return true;
-        resultText.text = "Mật khẩu phải dài ít nhất 6 ký tự.";
-        return false;
+        if (password != confirmPassword)
+        {
+            resultText.text = "Mật khẩu không khớp!";
+            return false;
+        }
 
+        return true;
     }
 
     /// <summary>
-    /// Hàm gửi yêu cầu đăng ký tới máy chủ qua HTTP
+    /// Gửi yêu cầu đăng ký tới máy chủ
     /// </summary>
-    /// <param name="username"></param>
-    /// <param name="encryptedPassword"></param>
-    private async Task RegisterRequest(string username, string encryptedPassword)
+    private async Task RegisterRequest(string username, string password)
     {
         try
         {
             using HttpClient client = new HttpClient();
-            // Dữ liệu gửi lên máy chủ dưới dạng form
-            var values = new FormUrlEncodedContent(new[]
-            {
-                new KeyValuePair<string, string>("username", username),
-                new KeyValuePair<string, string>("password", encryptedPassword)
-            });
 
-            // Gửi POST request tới API
-            HttpResponseMessage response = await client.PostAsync(link, values);
+            var data = new Dictionary<string, string>
+            {
+                { "username", username },
+                { "password", password }
+            };
+
+            var content = new FormUrlEncodedContent(data);
+            HttpResponseMessage response = await client.PostAsync(link, content);
+
+            string responseText = await response.Content.ReadAsStringAsync();
+            Debug.Log($"Server Response: {responseText}");
 
             if (response.IsSuccessStatusCode)
             {
-                string responseText = await response.Content.ReadAsStringAsync();
-                resultText.text = responseText.Contains("success") ? "Đăng ký thành công!" : $"Đăng ký thất bại: {responseText}";
+                var jsonResponse = JsonUtility.FromJson<ServerResponse>(responseText);
+
+                if (jsonResponse.status == "success")
+                {
+                    resultText.text = "Đăng ký thành công! Đăng nhập để vào game.";
+                }
+                else
+                {
+                    resultText.text = $"Lỗi: {jsonResponse.message}";
+                }
             }
             else
             {
@@ -101,8 +105,17 @@ public class RegisterUser : MonoBehaviour
         }
         catch (Exception e)
         {
-            // Bắt lỗi nếu xảy ra lỗi kết nối hoặc lỗi ngoại lệ
-            resultText.text = $"Lỗi không xác định: {e.Message}";
+            resultText.text = $"Lỗi kết nối: {e.Message}";
         }
+    }
+
+    /// <summary>
+    /// Lớp hỗ trợ parse JSON từ máy chủ
+    /// </summary>
+    [Serializable]
+    private class ServerResponse
+    {
+        public string status;
+        public string message;
     }
 }

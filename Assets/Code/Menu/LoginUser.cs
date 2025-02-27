@@ -4,14 +4,15 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using Newtonsoft.Json.Linq; // Dùng để parse JSON
 
 public class LoginUser : MonoBehaviour
 {
     [SerializeField] private TMP_InputField usernameInput;
     [SerializeField] private TMP_InputField passwordInput;
     [SerializeField] private TextMeshProUGUI resultText;
-
-    [SerializeField] private string link = "https://phamduchuan.name.vn/PHP/Login.php"; // Link đăng nhập
+    [SerializeField] private LoginData loginData;
+    private static readonly string link = "https://phamduchuan.name.vn/PHP/Login.php";
 
     /// <summary>
     /// Hàm đăng nhập, sẽ thực thi khi người dùng nhấn nút
@@ -20,21 +21,16 @@ public class LoginUser : MonoBehaviour
     {
         try
         {
-            // Thu thập thông tin người dùng từ giao diện
             string username = usernameInput.text;
             string password = passwordInput.text;
 
-            // Kiểm tra dữ liệu hợp lệ
             if (!ValidateInput(username, password))
             {
                 return;
             }
 
-            // Mã hóa mật khẩu trước khi gửi
-            string encryptedPassword = EncryptionHelper.EncryptPassword(password);
-
-            // Thực hiện gửi yêu cầu đăng nhập
-            await LoginRequest(username, encryptedPassword);
+            //string encryptedPassword = EncryptionHelper.EncryptPassword(password);
+            await LoginRequest(username, password);
         }
         catch (Exception e)
         {
@@ -42,12 +38,6 @@ public class LoginUser : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Kiểm tra input hợp lệ
-    /// </summary>
-    /// <param name="username">Tên đăng nhập</param>
-    /// <param name="password">Mật khẩu</param>
-    /// <returns>true nếu hợp lệ, false nếu không hợp lệ</returns>
     private bool ValidateInput(string username, string password)
     {
         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
@@ -61,54 +51,56 @@ public class LoginUser : MonoBehaviour
         return false;
     }
 
-    /// <summary>
-    /// Hàm thực hiện đăng nhập qua HTTP request
-    /// </summary>
-    /// <param name="username">Tên đăng nhập</param>
-    /// <param name="encryptedPassword">Mật khẩu đã mã hóa</param>
     private async Task LoginRequest(string username, string encryptedPassword)
     {
         try
         {
             using HttpClient client = new HttpClient();
-            // Thiết lập body của yêu cầu
             var values = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("username", username),
                 new KeyValuePair<string, string>("password", encryptedPassword)
             });
 
-            // Gửi POST request tới máy chủ
             HttpResponseMessage response = await client.PostAsync(link, values);
+            string serverResponse = await response.Content.ReadAsStringAsync();
 
-            // Xử lý kết quả từ máy chủ
             if (response.IsSuccessStatusCode)
             {
-                string serverResponse = await response.Content.ReadAsStringAsync();
+                Debug.Log("Server Response: " + serverResponse);
 
-                // Xử lý phản hồi tùy theo logic server
-                if (serverResponse.Contains("success"))
+                // Parse JSON từ phản hồi của server
+                JObject jsonResponse = JObject.Parse(serverResponse);
+                string status = jsonResponse["status"]?.ToString();
+
+                if (status == "success")
                 {
-                    resultText.text = "Đăng nhập thành công!";
-                    Debug.Log("Server Response: " + serverResponse);
+                    int playerID = jsonResponse["Player_ID"]?.Value<int>() ?? -1;
+                    resultText.text = $"Đăng nhập thành công!;
+
+                    // Lưu trạng thái vào ScriptableObject
+                    loginData.SetLoginState(playerID);
                 }
                 else
                 {
-                    resultText.text = $"Đăng nhập thất bại: {serverResponse}";
-                    Debug.LogError("Server Error: " + serverResponse);
+                    resultText.text = $"Đăng nhập thất bại: {jsonResponse["message"]}";
                 }
             }
             else
             {
                 resultText.text = $"Lỗi máy chủ: {response.StatusCode}";
-                Debug.LogError($"HTTP Error: {response.StatusCode} - {response.ReasonPhrase}");
             }
         }
         catch (Exception ex)
         {
-            // Xử lý các lỗi kết nối hoặc lỗi không xác định
             resultText.text = $"Đã xảy ra lỗi: {ex.Message}";
             Debug.LogError($"Exception: {ex}");
         }
+    }
+
+    public void Logout()
+    {
+        loginData.Logout();
+        resultText.text = "Đăng xuất thành công!";
     }
 }

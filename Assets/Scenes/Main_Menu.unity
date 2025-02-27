@@ -1310,6 +1310,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5350139797475313312, guid: 6227fa4f79927fd41809b03de23e8c65, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 1628914858}
+    - target: {fileID: 5350139797475313312, guid: 6227fa4f79927fd41809b03de23e8c65, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: Logout
+      objectReference: {fileID: 0}
+    - target: {fileID: 5350139797475313312, guid: 6227fa4f79927fd41809b03de23e8c65, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
+      value: LoginUser, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 5867449533061158334, guid: 6227fa4f79927fd41809b03de23e8c65, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -1381,6 +1393,7 @@ MonoBehaviour:
   usernameInput: {fileID: 1255269115}
   passwordInput: {fileID: 34834057}
   resultText: {fileID: 1713104863}
+  loginData: {fileID: 11400000, guid: ab9b6fcb31f729740843efe43b8ff178, type: 2}
 --- !u!4 &1628914859
 Transform:
   m_ObjectHideFlags: 0
