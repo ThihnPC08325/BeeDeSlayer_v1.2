@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7194652699779113865}
   - component: {fileID: 1617309664780838276}
   - component: {fileID: 1925979604383441675}
-  - component: {fileID: 8796157429610405802}
+  - component: {fileID: 7724164440483617541}
   m_Layer: 0
   m_Name: Note
   m_TagString: Note
@@ -106,7 +106,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.1647682, y: 818.86145, z: 2.1740112}
   m_Center: {x: -0.08702278, y: 408.93076, z: 0.11947632}
---- !u!114 &8796157429610405802
+--- !u!114 &7724164440483617541
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,8 +115,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 6569778450312532265}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0621a689a481b2742a4f2ecd760cab1e, type: 3}
+  m_Script: {fileID: 11500000, guid: 4f49a366a8853204a970cea1b1cde624, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteValue: 
-  passwordData: {fileID: 11400000, guid: 0ce742fc0227c4c47b03cb8447c6088a, type: 2}
+  note: {fileID: 0}
+  noteID: Man1.1
+  noteData: {fileID: 11400000, guid: 74946d73bddaa074e940f5268cbaf189, type: 2}
+  possiblePositions:
+  - {fileID: 3560794057642801842}
+  - {fileID: 0}
+  noteCounter: {fileID: 11400000, guid: c6f59552882ab4d4aafde055d08f157b, type: 2}
