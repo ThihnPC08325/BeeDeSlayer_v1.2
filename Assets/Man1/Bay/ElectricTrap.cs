@@ -7,13 +7,22 @@ public class ElectricTrap : MonoBehaviour
     public float slowDuration = 2f;      // Bee bị chậm trong 2 giây
     public float activeTime = 3f;        // Bẫy hoạt động trong 3 giây
     public float rechargeTime = 5f;      // Bẫy sạc lại trong 5 giây
+    public AudioClip electricTrapSound;  // Âm thanh khi bẫy kích hoạt
 
     private bool _isActive = true;
     private ParticleSystem _electricEffect;
+    private AudioSource _audioSource;
 
     private void Start()
     {
         _electricEffect = GetComponentInChildren<ParticleSystem>();
+        _audioSource = GetComponent<AudioSource>();
+
+        if (_audioSource == null)
+        {
+            _audioSource = gameObject.AddComponent<AudioSource>();
+        }
+
         ActivateTrap();
     }
 
@@ -40,6 +49,13 @@ public class ElectricTrap : MonoBehaviour
     {
         _isActive = true;
         if (_electricEffect != null) _electricEffect.Play();
+
+        // Phát âm thanh nếu có
+        if (_audioSource != null && electricTrapSound != null)
+        {
+            _audioSource.PlayOneShot(electricTrapSound);
+        }
+
         Invoke(nameof(DeactivateTrap), activeTime);
     }
 

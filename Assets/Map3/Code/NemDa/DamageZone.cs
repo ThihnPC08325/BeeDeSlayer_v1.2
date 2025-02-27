@@ -2,9 +2,9 @@
 
 public class DamageZone : MonoBehaviour
 {
-    public float damage = 10f;
-    public float penetration = 5f;
-    public float radius = 5f;
+    [SerializeField] private float damage = 10f;
+    [SerializeField] private float penetration = 5f;
+    [SerializeField] private float radius = 5f;
 
     void Start()
     {
