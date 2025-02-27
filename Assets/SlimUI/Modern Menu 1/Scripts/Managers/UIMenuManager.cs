@@ -3,10 +3,13 @@ using System.Collections;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
+using UnityEngine.AddressableAssets;
 
 namespace SlimUI.ModernMenu{
 	public class UIMenuManager : MonoBehaviour {
 		private Animator CameraObject;
+
 
 		// campaign button sub menu
         [Header("MENUS")]
@@ -20,6 +23,8 @@ namespace SlimUI.ModernMenu{
         public GameObject exitMenu;
         [Tooltip("Optional 4th Menu")]
         public GameObject extrasMenu;
+
+		[SerializeField] public GameObject loadgame;
 
         public enum Theme {custom1, custom2, custom3};
         [Header("THEME SETTINGS")]
@@ -90,7 +95,8 @@ namespace SlimUI.ModernMenu{
 			mainMenu.SetActive(true);
 
 			SetThemeColors();
-		}
+
+        }
 
 		void SetThemeColors()
 		{
@@ -116,6 +122,12 @@ namespace SlimUI.ModernMenu{
 					break;
 			}
 		}
+
+		public void LoadGame()
+		{
+			loadgame.SetActive(true);
+            if (extrasMenu) extrasMenu.SetActive(false);
+        }
 
 		public void PlayCampaign(){
 			exitMenu.SetActive(false);
@@ -268,23 +280,41 @@ namespace SlimUI.ModernMenu{
 			mainCanvas.SetActive(false);
 			loadingMenu.SetActive(true);
 
-			while (!operation.isDone){
-				float progress = Mathf.Clamp01(operation.progress / .95f);
-				loadingBar.value = progress;
+            //while (!operation.isDone){
+            //	float progress = Mathf.Clamp01(operation.progress / .95f);
+            //	loadingBar.value = progress;
 
-				if (operation.progress >= 0.9f && waitForInput){
-					loadPromptText.text = "Press " + userPromptKey.ToString().ToUpper() + " to continue";
-					loadingBar.value = 1;
+            //	if (operation.progress >= 0.9f && waitForInput){
+            //		loadPromptText.text = "Press " + userPromptKey.ToString().ToUpper() + " to continue";
+            //		loadingBar.value = 1;
 
-					if (Input.GetKeyDown(userPromptKey)){
-						operation.allowSceneActivation = true;
-					}
-                }else if(operation.progress >= 0.9f && !waitForInput){
-					operation.allowSceneActivation = true;
-				}
+            //		if (Input.GetKeyDown(userPromptKey)){
+            //			operation.allowSceneActivation = true;
+            //		}
+            //             }else if(operation.progress >= 0.9f && !waitForInput){
+            //		operation.allowSceneActivation = true;
+            //	}
+            while (!operation.isDone)
+            {
+                float progress = Mathf.Clamp01(operation.progress / .95f);
+                loadingBar.value = progress;
 
-				yield return null;
-			}
-		}
+                if (operation.progress >= 0.9f)
+                {
+                    Debug.Log("Loading gần xong! Đợi 4s để Map2 load tài nguyên...");
+
+                    // Chờ 2 giây để Map2 có thời gian preload tài nguyên
+                    yield return new WaitForSeconds(4f);
+
+                   
+                    operation.allowSceneActivation = true; // Giờ mới vào scene mới
+                }
+
+                yield return null;
+            }
+
+            //	yield return null;
+            //}
+        }
 	}
 }

@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: My asset
+  m_EditorClassIdentifier: 
+  m_GroupName: My asset
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 84bb64f6b27aed14180e1862dcd91dd6
+  m_SerializeEntries:
+  - m_GUID: ac208e1e267ba89499a5129087b1d06c
+    m_Address: Assets/SlimUI/Modern Menu 1/Prefabs/Main_Menu_Copy.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7afd5df205062b24eb38522ca3e389ad
+    m_Address: Assets/SlimUI/Modern Menu 1/Scenes/Demos/MainCopy.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 0979b2db0e206304e9a054cc10e1acf4, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 22b011556de80d6479695d5a32f6f401, type: 2}
+    - {fileID: 11400000, guid: 574869e8723d69846b6054478057c505, type: 2}

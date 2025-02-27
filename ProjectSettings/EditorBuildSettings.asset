@@ -6,8 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Main_Menu.unity
-    guid: 4fad3dea31c3bbd408bc7dbfae368cea
+    path: Assets/SlimUI/Modern Menu 1/Scenes/Demos/Main_Mene.unity
+    guid: 829a86ba161cdd840842063447f41aab
+  - enabled: 0
+    path: Assets/SlimUI/Modern Menu 1/Scenes/Demos/MainCopy.unity
+    guid: 7afd5df205062b24eb38522ca3e389ad
   - enabled: 1
     path: Assets/Scenes/Man1/Man1.1.unity
     guid: 6e6faad14ebc6834bada49c0cbcda195
@@ -24,10 +27,17 @@ EditorBuildSettings:
     path: Assets/Scenes/Man1/Man1.5.unity
     guid: ea42aea61d34ce341b5a9be94a571a2e
   - enabled: 1
+    path: Assets/Scenes/Map2/Map2.unity
+    guid: 99fc6d2a4c51b6f4ca98eb7ebe7cd3c9
+  - enabled: 1
     path: Assets/Scenes/Map2/BossMap2.unity
     guid: 21828e30f68b5aa44924cc591e06f623
   - enabled: 1
-    path: Assets/Scenes/Map2/Map2.unity
-    guid: 99fc6d2a4c51b6f4ca98eb7ebe7cd3c9
+    path: Assets/Scenes/Map3/Map3.unity
+    guid: 16a2000882df9e642bcb4f4854e71267
+  - enabled: 1
+    path: Assets/Scenes/Map4/MAP4.unity
+    guid: a495c86155652e349b05814bb76396cc
   m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: c8855ab417fe1da4f8df3d29e505d9b7, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: eb2e7601e6b75c443bf77ec4406120ee, type: 2}
