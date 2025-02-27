@@ -4,10 +4,10 @@ using UnityEngine.UIElements;
 
 public class TrapSpawner : MonoBehaviour
 {
-    public GameObject trapPrefab; // Prefab bẫy (hiệu ứng rơi + Collider)
-    public float spawnInterval = 5f; // Thời gian bẫy xuất hiện lại
-    public Vector3 spawnAreaSize = new Vector3(10, 0, 10); // Khu vực spawn bẫy
-    public int damage = 10; // Sát thương khi va chạm
+    [SerializeField] private GameObject trapPrefab; // Prefab bẫy (hiệu ứng rơi + Collider)
+    [SerializeField] private float spawnInterval = 5f; // Thời gian bẫy xuất hiện lại
+    [SerializeField] Vector3 spawnAreaSize = new Vector3(10, 0, 10); // Khu vực spawn bẫy
+    [SerializeField] private int damage = 10; // Sát thương khi va chạm
 
     private void Start()
     {

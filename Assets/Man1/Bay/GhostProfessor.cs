@@ -3,13 +3,13 @@ using TMPro;
 
 public class GhostProfessor : MonoBehaviour
 {
-    public string[] hints; // Danh sách câu gợi ý
-    public GameObject hintUI; // UI hiển thị hội thoại
-    public float npcLifetime = 30f; // Thời gian tồn tại của NPC
-    private TextMeshProUGUI _hintText;
-    private bool _isBeeNearby = false;
-    private Transform _player;
-    private float _timer;
+    [SerializeField] string[] hints; // Danh sách câu gợi ý
+    [SerializeField] GameObject hintUI; // UI hiển thị hội thoại
+    [SerializeField] float npcLifetime = 30f; // Thời gian tồn tại của NPC
+    [SerializeField] private TextMeshProUGUI _hintText;
+    [SerializeField] private bool _isBeeNearby = false;
+    [SerializeField] private Transform _player;
+    [SerializeField] private float _timer;
 
     private void Start()
     {

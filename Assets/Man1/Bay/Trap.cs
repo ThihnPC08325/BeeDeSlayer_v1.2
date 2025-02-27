@@ -4,11 +4,11 @@ using System.Collections;
 public class Trap : MonoBehaviour
 {
     public float damagePerSecond = 5f;  // Sát thương mỗi giây
-    public float activeTime = 3f;       // Bẫy hoạt động trong 3 giây
-    public float rechargeTime = 5f;     // Thời gian sạc lại bẫy
+    [SerializeField] float activeTime = 3f;       // Bẫy hoạt động trong 3 giây
+    [SerializeField] float rechargeTime = 5f;     // Thời gian sạc lại bẫy
 
-    private bool _isActive = true;      // Kiểm tra bẫy có đang hoạt động không
-    private Coroutine damageCoroutine;  // Biến lưu Coroutine trừ máu
+    [SerializeField] private bool _isActive = true;      // Kiểm tra bẫy có đang hoạt động không
+    [SerializeField] private Coroutine damageCoroutine;  // Biến lưu Coroutine trừ máu
 
     private void Start()
     {
