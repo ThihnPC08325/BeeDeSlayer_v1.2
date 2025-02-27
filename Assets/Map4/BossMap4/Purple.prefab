@@ -3023,7 +3023,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5289794298401797191}
-  - component: {fileID: 6434237370666814725}
+  - component: {fileID: 1069094720761588304}
   m_Layer: 0
   m_Name: Spine01
   m_TagString: Untagged
@@ -3047,8 +3047,8 @@ Transform:
   - {fileID: 2715876990736941485}
   m_Father: {fileID: 4062206979632331553}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &6434237370666814725
-CapsuleCollider:
+--- !u!65 &1069094720761588304
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3062,14 +3062,12 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 43.1
-  m_Height: 365.9
-  m_Direction: 0
-  m_Center: {x: -60.3, y: -24.6, z: -2.2}
+  serializedVersion: 3
+  m_Size: {x: 1026.2585, y: 416.31436, z: 318.69492}
+  m_Center: {x: -57.327225, y: 14.632272, z: 0.00000038223067}
 --- !u!1 &6230939714407669591
 GameObject:
   m_ObjectHideFlags: 0
@@ -3992,9 +3990,11 @@ GameObject:
   - component: {fileID: 5002056412233632134}
   - component: {fileID: 1662106220803154377}
   - component: {fileID: 2807814144917773303}
+  - component: {fileID: 6963715463841474342}
+  - component: {fileID: 4786268917683240692}
   m_Layer: 0
   m_Name: Purple
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4059,6 +4059,47 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &6963715463841474342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8479680133109614011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 193c61f1b6fa62f40be55bc024617544, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HP: 100
+  animator: {fileID: 1662106220803154377}
+--- !u!54 &4786268917683240692
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8479680133109614011}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &8535484171559261116
 GameObject:
   m_ObjectHideFlags: 0

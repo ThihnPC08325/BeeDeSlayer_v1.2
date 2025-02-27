@@ -264,6 +264,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 10
   trailRenderer: {fileID: 0}
-  maxDistance: 2000
+  maxDistance: 10000
   bulletLifetime: 200
   collisionSound: {fileID: 0}
