@@ -20,6 +20,13 @@ public class BossSkill : MonoBehaviour
         if (playerObject == null) return;
         _player = playerObject.transform;
         StartCoroutine(WaitAndThrowRock());
+
+        RuntimeAnimatorController controller = animator.runtimeAnimatorController;
+        AnimationClip[] clips = controller.animationClips;
+        foreach (AnimationClip clip in clips)
+        {
+            _timeReloadThrow = clip.length;
+        }
     }
 
     // Coroutine trì hoãn việc ném đá
@@ -46,12 +53,6 @@ public class BossSkill : MonoBehaviour
 
         animator.Play("ThrowRock");
 
-        RuntimeAnimatorController controller = animator.runtimeAnimatorController;
-        AnimationClip[] clips = controller.animationClips;
-        foreach (AnimationClip clip in clips)
-        {
-            _timeReloadThrow = clip.length;
-        }
         yield return new WaitForSeconds(_timeReloadThrow -= 1.85f);
         // Tạo viên đá
         GameObject rock = Instantiate(selectedRockPrefab, throwPoint.position, throwPoint.rotation);

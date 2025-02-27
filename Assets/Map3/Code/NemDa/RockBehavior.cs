@@ -10,6 +10,7 @@ public class RockBehavior : MonoBehaviour
     [SerializeField] private Vector3 throwDirection; // Hướng ném viên đá
     [SerializeField] private float damage = 10f; // Sát thương khi viên đá va chạm với người chơi
     [SerializeField] private GameObject smokerFrefab;
+    [SerializeField] private float destroyTime = 5f;
 
     private void Start()
     {
@@ -28,7 +29,7 @@ public class RockBehavior : MonoBehaviour
 
     private IEnumerator DestroyRock()
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(destroyTime);
         Destroy(gameObject);
         Instantiate(smokerFrefab, transform.position, Quaternion.identity);
     }
