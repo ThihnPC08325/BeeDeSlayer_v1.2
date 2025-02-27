@@ -12,6 +12,7 @@ TagManager:
   - Ground
   - Note
   - Landmine
+  - NPC
   layers:
   - Default
   - TransparentFX
