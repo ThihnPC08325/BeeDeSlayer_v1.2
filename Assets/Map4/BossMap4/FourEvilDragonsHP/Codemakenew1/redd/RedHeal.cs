@@ -1,36 +1,68 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RedHeal : MonoBehaviour
 {
     public int HP = 100; // Điểm sức khỏe của rồng
     public Animator animator; // Animator để điều khiển hoạt ảnh
+    public GameObject[] effects; // Hiệu ứng liên quan đến rồng
 
     private void OnTriggerEnter(Collider other)
     {
-        // Kiểm tra xem đối tượng va chạm có phải là "Bullet" không
         if (other.CompareTag("Bullet"))
         {
-            // Gọi phương thức TakeDamage với giá trị sát thương cố định là 10
             TakeDamage(10);
-
-            // Hủy bullet sau khi va chạm
             Destroy(other.gameObject);
+        }
+
+        if (other.CompareTag("BigExplosion"))
+        {
+            TakeDamage(30);
         }
     }
 
     public void TakeDamage(int damageAmount)
     {
-        HP -= damageAmount; // Giảm HP với sát thương nhận được
+        HP -= damageAmount;
         if (HP <= 0)
         {
-            animator.SetTrigger("die"); // Kích hoạt hoạt ảnh chết
-            GetComponent<Collider>().enabled = false; // Vô hiệu hóa collider của rồng
+            StartCoroutine(DestroyDragon());
         }
         else
         {
-            animator.SetTrigger("damage"); // Kích hoạt hoạt ảnh bị thương
+            animator.SetTrigger("damage");
         }
+    }
+
+    private IEnumerator DestroyDragon()
+    {
+        animator.SetTrigger("die"); // Chạy animation chết
+        GetComponent<Collider>().enabled = false; // Vô hiệu hóa va chạm
+        foreach (GameObject effect in effects)
+        {
+            if (effect != null)
+                Destroy(effect); // Xóa hiệu ứng liên quan
+        }
+
+        // Đợi animation chết hoàn tất (dùng AnimatorStateInfo)
+        float deathAnimLength = animator.GetCurrentAnimatorStateInfo(0).length;
+        yield return new WaitForSeconds(deathAnimLength);
+
+        // Kiểm tra lại nếu rồng chưa bị xóa
+        if (gameObject != null)
+        {
+            yield return new WaitForSeconds(3f); // Đợi 2 giây sau animation chết
+            Destroy(gameObject); // Xóa rồng
+        }
+
+        Debug.Log("Bắt đầu xóa rồng..."); // Debug kiểm tra
+
+        animator.SetTrigger("die");
+        GetComponent<Collider>().enabled = false;
+
+        yield return new WaitForSeconds(2f);
+
+        Debug.Log("Đang xóa rồng...");
+        Destroy(gameObject);
     }
 }

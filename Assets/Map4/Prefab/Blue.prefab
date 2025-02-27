@@ -339,6 +339,7 @@ GameObject:
   - component: {fileID: 1818186813732860809}
   - component: {fileID: 808241193129037348}
   - component: {fileID: 8883569085549799199}
+  - component: {fileID: 7750394904417125044}
   m_Layer: 0
   m_Name: Blue
   m_TagString: Enemy
@@ -429,7 +430,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -440,7 +441,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1215459792275535184}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: df905ea89086aac4f9a939ccb2714365, type: 3}
   m_Name: 
@@ -449,6 +450,20 @@ MonoBehaviour:
   detectionDistance: 30
   rotationSpeed: 40
   moveSpeed: 10
+--- !u!114 &7750394904417125044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1215459792275535184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 193c61f1b6fa62f40be55bc024617544, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HP: 100
+  animator: {fileID: 9114512549144644277}
 --- !u!1 &1245553071943074184
 GameObject:
   m_ObjectHideFlags: 0
@@ -676,6 +691,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6097546340538598247}
+  - component: {fileID: 7071650526747444337}
   m_Layer: 0
   m_Name: Spine01
   m_TagString: Untagged
@@ -699,6 +715,27 @@ Transform:
   - {fileID: 2125729808208179539}
   m_Father: {fileID: 8197829242444628862}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &7071650526747444337
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1374920234790759587}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 737.2603, y: 421.0562, z: 500}
+  m_Center: {x: -118.63355, y: -39.472443, z: 0.000028284434}
 --- !u!1 &1474111425492602240
 GameObject:
   m_ObjectHideFlags: 0

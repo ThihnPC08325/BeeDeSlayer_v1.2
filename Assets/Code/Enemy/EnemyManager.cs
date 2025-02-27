@@ -17,7 +17,9 @@ public class EnemyManager : MonoBehaviour
         Spider,
         BrokenFly,
         Worm,
-        BlueDragon
+        BlueDragon,
+        Redd,
+        Purple
     }
 
     [System.Serializable]
