@@ -21583,7 +21583,7 @@ MonoBehaviour:
   tableCooldown: 10
   tableSpeed: 10
   tableDuration: 20
-  tablePrefab: {fileID: 2028850328427056126, guid: 6673afa385314dd40a5e07a56b50f122, type: 3}
+  tablePrefab: {fileID: 6590115829299006324, guid: 9fcd4dfa6dd583144a09d4c6c4045cfd, type: 3}
   tableFirePoints:
   - {fileID: 1929452800}
 --- !u!1 &1801085122
