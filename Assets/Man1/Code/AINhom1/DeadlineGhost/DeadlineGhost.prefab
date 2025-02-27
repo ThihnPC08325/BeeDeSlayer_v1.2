@@ -71,7 +71,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f32ff57571ab32b41873cce5cbac700f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionRange: 50
+  detectionRange: 66.5
   grabRange: 3
   shakeIntensity: 1
   shakeDuration: 2
