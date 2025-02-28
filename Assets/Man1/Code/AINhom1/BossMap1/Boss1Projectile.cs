@@ -39,17 +39,16 @@ public class Boss1Projectile : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
+            PlayerDebuffEffect playerDebuff = other.GetComponent<PlayerDebuffEffect>();
             if (playerHealth != null)
             {
                 playerHealth.TakeDamage(damage, penetration);
                 playerHealth.ApplyDOT(dotDamage, dotTicks, dotInterval);
-            }
-
-            PlayerDebuffEffect playerDebuff = other.GetComponent<PlayerDebuffEffect>();
-            if (playerDebuff != null)
-            {
                 playerDebuff.ApplyDebuff(duration);
             }
+
+            
+            
             Destroy(gameObject);
         }
     }
