@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Boss4Health : MonoBehaviour
@@ -144,6 +145,7 @@ public class Boss4Health : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            LoadNextSceneByBuildIndex();
         }
     }
 
@@ -194,5 +196,11 @@ public class Boss4Health : MonoBehaviour
 
         boxCollider.enabled = true;
         isReviving = false;
+    }
+    
+    private static void LoadNextSceneByBuildIndex()
+    {
+        int currentIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(0);
     }
 }
