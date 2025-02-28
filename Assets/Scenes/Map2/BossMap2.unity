@@ -16112,7 +16112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6103fe2e326108e439ef5ad4ad5cbddc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextSceneName: Map3
+  nextSceneName: LoadMap3
   delay: 2
 --- !u!1 &724052491
 GameObject:

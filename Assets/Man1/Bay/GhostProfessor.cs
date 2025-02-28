@@ -4,14 +4,7 @@ using UnityEngine.UI;
 
 public class GhostProfessor : MonoBehaviour
 {
-    [Header("Gợi ý theo số giấy thu thập")]
-    public string[] hints0; // Chưa nhặt tờ nào
-    public string[] hints1; // Nhặt 1 tờ
-    public string[] hints2; // Nhặt 2 tờ
-    public string[] hints3; // Nhặt 3 tờ
-    public string[] hints4; // Đủ 4 tờ
-
-    [Header("UI Elements")]
+    public string[] hints;
     public GameObject hintUI;
     public GameObject passwordPanel;
     public TMP_InputField passwordInput;
@@ -64,8 +57,8 @@ public class GhostProfessor : MonoBehaviour
     {
         if (!_isBeeNearby) return;
 
-        string hint = GetRandomHint();
-        _hintText.text = $"{hint}";
+        string hint = hints[Random.Range(0, hints.Length)];
+        _hintText.text = $"👻 Ghost: {hint}";
 
         hintUI.SetActive(true);
 
@@ -74,7 +67,7 @@ public class GhostProfessor : MonoBehaviour
             Time.timeScale = 0f;
             passwordPanel.SetActive(true);
             hintUI.SetActive(false);
-            EnableCursor();
+            EnableCursor(); // Hiển thị con trỏ chuột khi nhập mật khẩu
         }
     }
 
@@ -82,7 +75,7 @@ public class GhostProfessor : MonoBehaviour
     {
         hintUI.SetActive(false);
         passwordPanel.SetActive(false);
-        DisableCursor();
+        DisableCursor(); // Ẩn con trỏ chuột khi thoát
         Time.timeScale = 1f;
     }
 
@@ -92,17 +85,6 @@ public class GhostProfessor : MonoBehaviour
         Vector3 direction = (_player.position - transform.position).normalized;
         direction.y = 0;
         transform.forward = direction;
-    }
-
-    private string GetRandomHint()
-    {
-        int collected = noteCounter.CollectedNoteCount;
-
-        if (collected >= 4) return hints4[Random.Range(0, hints4.Length)];
-        if (collected == 3) return hints3[Random.Range(0, hints3.Length)];
-        if (collected == 2) return hints2[Random.Range(0, hints2.Length)];
-        if (collected == 1) return hints1[Random.Range(0, hints1.Length)];
-        return hints0[Random.Range(0, hints0.Length)];
     }
 
     public void CheckPassword()
@@ -120,15 +102,15 @@ public class GhostProfessor : MonoBehaviour
 
     private void EnableCursor()
     {
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None; // Cho phép di chuyển chuột
+        Cursor.visible = true; // Hiện con trỏ chuột
         Time.timeScale = 0f;
     }
 
     private void DisableCursor()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked; // Khóa con trỏ vào màn hình
+        Cursor.visible = false; // Ẩn con trỏ chuột
         Time.timeScale = 1f;
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Boss4Health : MonoBehaviour
@@ -123,7 +124,8 @@ public class Boss4Health : MonoBehaviour
         float changeAppearanceDelay = 4f;
         float riseDuration = 5f;
 
-        Quaternion tiltedRotation = Quaternion.Euler(90f, originalRotation.eulerAngles.y, originalRotation.eulerAngles.z);
+        Quaternion tiltedRotation =
+            Quaternion.Euler(90f, originalRotation.eulerAngles.y, originalRotation.eulerAngles.z);
         yield return StartCoroutine(RotateOverTime(tiltedRotation, tiltDuration));
         yield return new WaitForSeconds(0.5f);
 
@@ -144,6 +146,7 @@ public class Boss4Health : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            SceneManager.LoadScene(0);
         }
     }
 
