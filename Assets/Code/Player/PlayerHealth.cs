@@ -47,21 +47,35 @@ public class PlayerHealth : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
+        UpdateHealth(); // Quản lý mức máu
+        UpdateDamageEffect(); // Hiệu ứng fade của damage overlay
+    }
+
+    private void UpdateHealth()
+    {
+        // Đảm bảo giá trị health luôn nằm trong phạm vi hợp lệ:
         health = Mathf.Clamp(health, 0, maxHealth);
-        UpdateHealthUI();
-        if (!(damageOverlay.color.a > 0)) return;
-        if (health < 30)
-        {
-            return;
-        }
+        UpdateHealthUI(); // Cập nhật giao diện
+    }
+
+    private void UpdateDamageEffect()
+    {
+        // Nếu alpha <= 0 hoặc sức khỏe nhỏ hơn 30 -> không cần xử lý:
+        if (damageOverlay.color.a <= 0 || health < 30) return;
+
+        // Tăng thời gian effect timer:
         durationTimer += Time.deltaTime;
+
+        // Nếu quá thời gian hiệu ứng -> giảm dần tempAlpha (hiệu ứng fade):
         if (!(durationTimer > duration)) return;
         float tempAlpha = damageOverlay.color.a;
-        tempAlpha = Time.deltaTime * fadeSpeed;
-        damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, tempAlpha);
+        tempAlpha -= Time.deltaTime * fadeSpeed;
+        tempAlpha = Mathf.Clamp(tempAlpha, 0, 1);
 
+        damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b,
+            tempAlpha);
     }
 
     public void UpdateHealthUI()
@@ -89,6 +103,7 @@ public class PlayerHealth : MonoBehaviour
             frontHealthBar.fillAmount = Mathf.Lerp(fillFrontHealth, backHealthBar.fillAmount, percent);
         }
     }
+
     public void ApplyDOT(float dotDamage, int dotTicks, float dotInterval)
     {
         StartCoroutine(DOTCoroutine(dotDamage, dotTicks, dotInterval));
@@ -96,13 +111,13 @@ public class PlayerHealth : MonoBehaviour
 
     private IEnumerator DOTCoroutine(float dotDamage, int dotTicks, float dotInterval)
     {
-
         for (int i = 0; i < dotTicks; i++)
         {
             yield return new WaitForSeconds(dotInterval);
             TakeDamage(dotDamage, 0);
         }
     }
+
     public void TakeDamage(float damage, float penetration)
     {
         float healthBeforeDamage = health;

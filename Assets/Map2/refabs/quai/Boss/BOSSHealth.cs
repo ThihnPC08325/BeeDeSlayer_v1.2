@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
-using static EnemyManager;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement; // Thêm thư viện để chuyển Scene
 
 public class BOSSHealth : MonoBehaviour
 {
@@ -9,34 +9,34 @@ public class BOSSHealth : MonoBehaviour
     [SerializeField] private float currentHealth;
     [SerializeField] private GameObject smokePrefab;
     [SerializeField] private Slider bossHealthBar;
-    [SerializeField] private AudioClip deathSound; // Âm thanh khi chết
-    [SerializeField] private AudioClip backgroundMusic; // Nhạc nền khi đang chiến đấu 🎵
+    [SerializeField] private AudioClip deathSound;
+    [SerializeField] private AudioClip backgroundMusic;
+    [SerializeField] private GameObject exitZone; // Vùng chuyển scene
 
-    private BossVoiceController voiceController;
-
-    private AudioSource audioSource; // Component phát nhạc cho hiệu ứng
-    private AudioSource backgroundAudioSource; // Component phát nhạc nền
+    private AudioSource audioSource;
+    private AudioSource backgroundAudioSource;
     private BoxCollider boxCollider;
-    private bool isVictoryMusicPlaying = false; // Kiểm tra đã phát nhạc chiến thắng chưa
+    private bool isVictoryMusicPlaying = false;
 
     private void Awake()
     {
         boxCollider = GetComponent<BoxCollider>();
-
-        // Tạo 2 AudioSource riêng biệt
         audioSource = gameObject.AddComponent<AudioSource>();
         backgroundAudioSource = gameObject.AddComponent<AudioSource>();
 
-        // Cài đặt cho nhạc nền
-        backgroundAudioSource.loop = true; // Lặp lại
-        backgroundAudioSource.volume = 0.5f; // Âm lượng nhỏ hơn
+        backgroundAudioSource.loop = true;
+        backgroundAudioSource.volume = 0.5f;
 
         currentHealth = maxHealth;
+
+        if (exitZone != null)
+        {
+            exitZone.SetActive(false); // Ẩn vùng chuyển scene ban đầu
+        }
     }
 
     void Start()
     {
-        voiceController = GetComponent<BossVoiceController>();
         currentHealth = maxHealth;
 
         if (bossHealthBar != null)
@@ -45,7 +45,6 @@ public class BOSSHealth : MonoBehaviour
             bossHealthBar.value = currentHealth;
         }
 
-        // Phát nhạc nền khi bắt đầu
         if (backgroundMusic != null)
         {
             backgroundAudioSource.clip = backgroundMusic;
@@ -70,20 +69,16 @@ public class BOSSHealth : MonoBehaviour
 
     private void Die()
     {
-        // Dừng nhạc nền
         if (backgroundAudioSource.isPlaying)
         {
             backgroundAudioSource.Stop();
         }
 
-
-        // Phát âm thanh chết
         if (deathSound != null)
         {
             audioSource.PlayOneShot(deathSound);
         }
 
-        // Hiệu ứng khói
         if (smokePrefab != null)
         {
             Instantiate(smokePrefab, transform.position, Quaternion.identity);
@@ -91,16 +86,15 @@ public class BOSSHealth : MonoBehaviour
 
         StartCoroutine(TimeToDie(2f));
     }
-    private void TriggerVoiceLine()
-    {
-        if (currentHealth > 0)
-        {
-            voiceController.PlayRandomVoiceLine();
-        }
-    }
-        private IEnumerator TimeToDie(float duration)
+
+    private IEnumerator TimeToDie(float duration)
     {
         yield return new WaitForSeconds(duration);
-        gameObject.SetActive(false);
+        gameObject.SetActive(false); // Ẩn Boss
+
+        if (exitZone != null)
+        {
+            exitZone.SetActive(true); // Hiện vùng chuyển scene
+        }
     }
 }

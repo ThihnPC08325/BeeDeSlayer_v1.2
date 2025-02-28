@@ -1,34 +1,108 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement; // Import để chuyển scene
 
 public class BossManager : MonoBehaviour
 {
-    [SerializeField] private GameObject targetObject; // Object cần kiểm tra
-    [SerializeField] private GameObject assignedObject; // Object được chỉ định hiển thị
-    [SerializeField] private float delay = 5f; // Thời gian chờ sau khi Object biến mất
+    [Header("Boss Settings")] [SerializeField]
+    private GameObject bossPhase1; // Boss Phase 1
 
-    private bool _hasTriggered = false; // Để đảm bảo chỉ kích hoạt 1 lần
+    [SerializeField] private GameObject bossPhase2; // Boss Phase 2
 
-    void Update()
+    [Header("Portal Settings")] [SerializeField]
+    private GameObject fakePortal; // Cổng giả
+
+    [SerializeField] private GameObject realPortal; // Cổng thật
+    [SerializeField] private ParticleSystem fakePortalParticles;
+    [SerializeField] private ParticleSystem realPortalParticles;
+
+    [Header("Timing Settings")] [SerializeField]
+    private float delay = 10f; // Thời gian chờ trước khi hiện Boss Phase 2
+
+    private bool _hasTriggeredPhase2 = false;
+    private bool _hasTriggeredRealPortal = false;
+    private bool _hasBossPhase2Spawned = false; // Check xem Boss Phase 2 đã từng xuất hiện chưa
+
+
+    private void Start()
     {
-        // Kiểm tra nếu targetObject không tồn tại hoặc bị vô hiệu, và chưa kích hoạt
-        if (!_hasTriggered && (!targetObject || !targetObject.activeInHierarchy))
+        // Vô hiệu hóa tất cả các đối tượng cần thiết ban đầu
+        SetGameObjectState(fakePortal, false);
+        SetGameObjectState(realPortal, false);
+        SetGameObjectState(bossPhase2, false);
+        StopParticleSystem(fakePortalParticles);
+        StopParticleSystem(realPortalParticles);
+    }
+
+    private void Update()
+    {
+        // Khi Boss Phase 1 chết -> Hiện cổng giả
+        if (!_hasTriggeredPhase2 && bossPhase1 && !bossPhase1.activeInHierarchy)
         {
-            _hasTriggered = true; // Đánh dấu là đã kích hoạt
-            StartCoroutine(ShowAssignedObjectAfterDelay());
+            _hasTriggeredPhase2 = true;
+            if (fakePortal) fakePortal.SetActive(true);
+            if (fakePortalParticles) fakePortalParticles.Play();
+            StartCoroutine(HandlePhase2Spawn());
+        }
+
+        // Khi Boss Phase 2 xuất hiện, đánh dấu là đã spawn
+        if (bossPhase2.activeInHierarchy)
+        {
+            _hasBossPhase2Spawned = true;
+        }
+
+        // Khi Boss Phase 2 chết (và đã từng xuất hiện) -> Hiện cổng thật
+        if (_hasBossPhase2Spawned && !_hasTriggeredRealPortal && bossPhase2 && !bossPhase2.activeInHierarchy)
+        {
+            _hasTriggeredRealPortal = true;
+            if (realPortal) realPortal.SetActive(true);
+            if (realPortalParticles) realPortalParticles.Play();
         }
     }
 
-    private IEnumerator ShowAssignedObjectAfterDelay()
+    private IEnumerator HandlePhase2Spawn()
     {
-        // Đợi thời gian chỉ định
         yield return new WaitForSeconds(delay);
 
-        // Hiển thị Object được chỉ định
-        if (assignedObject)
+        // Xóa cổng giả, chuyển qua xuất hiện Boss Phase 2
+        DeactivateFakePortal();
+        SetGameObjectState(bossPhase2, true);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player") && realPortal.activeInHierarchy)
         {
-            assignedObject.SetActive(true);
+            LoadNextSceneByBuildIndex();
         }
+    }
+
+    private void DeactivateFakePortal()
+    {
+        SetGameObjectState(fakePortal, false);
+        StopParticleSystem(fakePortalParticles);
+    }
+
+    private static void SetGameObjectState(GameObject obj, bool isActive)
+    {
+        if (obj)
+        {
+            obj.SetActive(isActive);
+        }
+    }
+
+    private static void StopParticleSystem(ParticleSystem particleSystem)
+    {
+        if (particleSystem)
+        {
+            particleSystem.Stop();
+        }
+    }
+
+    private static void LoadNextSceneByBuildIndex()
+    {
+        int currentIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentIndex + 1); // Chuyển sang scene kế tiếp
     }
 }
