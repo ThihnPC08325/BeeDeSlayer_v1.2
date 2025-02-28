@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -4250467010903472269}
   m_Layer: 0
   m_Name: BigExplosion
-  m_TagString: NPC
+  m_TagString: BigExplosion
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
