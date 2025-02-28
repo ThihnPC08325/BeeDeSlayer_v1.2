@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿    using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
@@ -51,6 +51,19 @@ public class PlayerHealth : MonoBehaviour
     {
         UpdateHealth(); // Quản lý mức máu
         UpdateDamageEffect(); // Hiệu ứng fade của damage overlay
+        health = Mathf.Clamp(health, 0, maxHealth);
+        UpdateHealthUI();
+        if (!(damageOverlay.color.a > 0)) return;
+        if (health < 30)
+        {
+            return;
+        }
+        durationTimer += Time.deltaTime;
+        if (!(durationTimer > duration)) return;
+        float tempAlpha = damageOverlay.color.a;
+        tempAlpha = Time.deltaTime * fadeSpeed;
+        damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, tempAlpha);
+
     }
 
     private void UpdateHealth()
@@ -127,6 +140,13 @@ public class PlayerHealth : MonoBehaviour
         lerpTimer = 0f;
         durationTimer = 0f;
         damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, 1);
+    }
+    public void TakeMeteorDamage(float explosionDamage, float dotDamage, int dotTicks, float dotInterval)
+    {
+        Debug.Log($"🔥 Player trúng thiên thạch! Sát thương nổ: {explosionDamage}, DOT: {dotDamage} x {dotTicks} lần");
+
+        TakeDamage(explosionDamage, 0);  // Gây sát thương ngay lập tức
+        ApplyDOT(dotDamage, dotTicks, dotInterval);  // Gây sát thương theo thời gian
     }
 
     public void RestoreHealth(float heal)
