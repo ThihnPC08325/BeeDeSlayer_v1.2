@@ -15,7 +15,7 @@ public class RedHeal : MonoBehaviour
             Destroy(other.gameObject);
         }
 
-        if (other.CompareTag("BigExplosion"))
+        if (other.CompareTag("BigExplosion1"))
         {
             TakeDamage(30);
         }

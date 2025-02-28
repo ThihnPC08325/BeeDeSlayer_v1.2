@@ -3393,6 +3393,7 @@ GameObject:
   - component: {fileID: 1104482409536838915}
   - component: {fileID: 1445956850311147996}
   - component: {fileID: 5039948460877104994}
+  - component: {fileID: -8471027995368111474}
   m_Layer: 0
   m_Name: Redd
   m_TagString: Enemy
@@ -3474,6 +3475,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 100
   animator: {fileID: 5802308560836223212}
+  effects: []
 --- !u!54 &5039948460877104994
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3501,6 +3503,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-8471027995368111474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7792557814361275259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 852a4be647fe20e4096d517a263bfe9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  separationRadius: 2
+  pushForce: 5
 --- !u!1 &7894266208032345753
 GameObject:
   m_ObjectHideFlags: 0
