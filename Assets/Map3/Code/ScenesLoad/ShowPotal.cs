@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ShowPotal : MonoBehaviour
 {
-    [SerializeField] private float targetY = 5f; // Tọa độ Y muốn dừng lại
+    [SerializeField] private float targetY = 38f; // Tọa độ Y muốn dừng lại
     [SerializeField] private float speed = 2f;  // Tốc độ di chuyển
 
     private void Start()

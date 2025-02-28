@@ -16,7 +16,8 @@ public class OnPotal : MonoBehaviour
     {
         while (true)
         {
-            if (healthBoss.currentHealth <= 0)
+            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+            if (healthBoss.currentHealth <= 0 && enemies.Length == 0)
             {
                 potal.SetActive(true);
             }
