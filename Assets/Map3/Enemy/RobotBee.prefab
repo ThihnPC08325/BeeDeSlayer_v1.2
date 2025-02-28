@@ -408,7 +408,7 @@ GameObject:
   - component: {fileID: 8959373738845154286}
   m_Layer: 0
   m_Name: RobotBee
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -506,8 +506,8 @@ MonoBehaviour:
   randomness: 0.5
   normalSpeed: 12
   sprintSpeed: 18
-  attackRange: 26.4
-  detectionRange: 40.4
+  attackRange: 31.4
+  detectionRange: 264.3
   sprintThreshold: 30
   rotationSpeed: 720
   snapThreshold: 5
@@ -579,8 +579,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fireCooldown: 2
   laserDamage: 5
-  laserMaxDistance: 100
-  laserVisibleDuration: 0.5
+  laserMaxDistance: 113.5
+  laserVisibleDuration: 1.92
   delayAttack: 1.5
   laserStartPosition: {fileID: 2198417823796902913}
   BombPrefabs: {fileID: 8200009122967094023, guid: c342250470bd39546bb1e19b98e1bebe, type: 3}
