@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -122,7 +122,7 @@ public class Boss4Health : MonoBehaviour
     {
         // Boss chết sẽ chuyển qua phase 2 (triệu hồi cổng)
         isPhase2 = true;
-
+        
         // Triệu hồi cổng sau khi boss chết
         if (gate != null)
         {
