@@ -33,6 +33,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: c05d2925f6562b144b0f695e943a6361, type: 2}
     - target: {fileID: 3643049471734727935, guid: b1e05065c2d19ed45bd2f4c6d3a187e7, type: 3}
+      propertyPath: m_RenderMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3643049471734727935, guid: b1e05065c2d19ed45bd2f4c6d3a187e7, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: c05d2925f6562b144b0f695e943a6361, type: 2}
@@ -113,16 +117,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7021870252997999473, guid: b1e05065c2d19ed45bd2f4c6d3a187e7, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7021870252997999473, guid: b1e05065c2d19ed45bd2f4c6d3a187e7, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
-      value: 0.73584884
+      value: 0.7924528
       objectReference: {fileID: 0}
     - target: {fileID: 7021870252997999473, guid: b1e05065c2d19ed45bd2f4c6d3a187e7, type: 3}
       propertyPath: InitialModule.startColor.maxColor.g
-      value: 0.735849
+      value: 0.72056544
       objectReference: {fileID: 0}
     - target: {fileID: 7021870252997999473, guid: b1e05065c2d19ed45bd2f4c6d3a187e7, type: 3}
       propertyPath: InitialModule.startColor.maxColor.r
-      value: 0
+      value: 0.4672481
       objectReference: {fileID: 0}
     - target: {fileID: 7074996847366835655, guid: b1e05065c2d19ed45bd2f4c6d3a187e7, type: 3}
       propertyPath: speed
@@ -191,3 +199,4 @@ MonoBehaviour:
   damage: 15
   lifetime: 5
   penertration: 0.5
+  duration: 3

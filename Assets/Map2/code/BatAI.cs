@@ -52,7 +52,7 @@ public class BatAI : MonoBehaviour
                 _attackTimer -= Time.deltaTime;
 
                 // Kiểm tra khoảng cách và thời gian để tấn công
-                if (_attackTimer <= 0f && Time.time >= _nextAttackTime && Vector3.Distance(transform.position, _player.position) <= attackRange)
+                if (CanAttack())
                 {
                     StartCoroutine(ShootProjectileCone());
                     ResetAttackTimer();
@@ -80,6 +80,17 @@ public class BatAI : MonoBehaviour
         // Đặt điểm đích của agent là vị trí của người chơi
         _agent.SetDestination(_player.position);
     }
+    
+    private bool CanAttack()
+    {
+        if (_attackTimer > 0f || Time.time < _nextAttackTime)
+            return false;
+
+        // Kiểm tra khoảng cách bằng sqrMagnitude hiệu quả hơn
+        float distanceToPlayerSqr = (_player.position - transform.position).sqrMagnitude;
+        return !(distanceToPlayerSqr > attackRange * attackRange);
+    }
+
 
     private IEnumerator ShootProjectileCone()
     {

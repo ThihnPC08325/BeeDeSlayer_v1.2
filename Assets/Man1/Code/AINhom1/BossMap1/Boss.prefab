@@ -108,8 +108,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.699402, y: 1.7205604, z: 2.840603}
-  m_Center: {x: 0.08108576, y: 0.3602761, z: -0.11384145}
+  m_Size: {x: 2.3466673, y: 1.7205604, z: 2.840603}
+  m_Center: {x: 0.07162786, y: 0.3602761, z: -0.11384146}
 --- !u!114 &4591832288563985506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,6 +128,7 @@ MonoBehaviour:
   bossHealthBar: {fileID: 0}
   deathSound: {fileID: 8300000, guid: 9cd747839bf96d24b98ceaea5b63b41e, type: 3}
   backgroundMusic: {fileID: 8300000, guid: a0b24958029d3684386f53effa00fe33, type: 3}
+  exitZone: {fileID: 0}
 --- !u!114 &7091171875022120669
 MonoBehaviour:
   m_ObjectHideFlags: 0

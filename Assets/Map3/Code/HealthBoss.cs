@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using static EnemyManager;
+using UnityEngine.SceneManagement;
 
 public class HealthBoss : MonoBehaviour, IPooledObject
 {
@@ -58,6 +59,7 @@ public class HealthBoss : MonoBehaviour, IPooledObject
 
         // Deactivate the enemy GameObject
         gameObject.SetActive(false);
+        LevelLoader.Instance.LoadLevel(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public virtual void OnObjectSpawn()
