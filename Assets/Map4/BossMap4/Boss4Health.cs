@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class Boss4Health : MonoBehaviour
 {
@@ -15,7 +14,6 @@ public class Boss4Health : MonoBehaviour
     [SerializeField] private Material phase2Material;
     [SerializeField] private Renderer bossRenderer;
     [SerializeField] private Light bossLight;
-    [SerializeField] private GameObject gate; // Cánh cổng
 
     private AudioSource audioSource;
     private AudioSource backgroundAudioSource;
@@ -120,15 +118,6 @@ public class Boss4Health : MonoBehaviour
 
     private IEnumerator DeathSequence()
     {
-        // Boss chết sẽ chuyển qua phase 2 (triệu hồi cổng)
-        isPhase2 = true;
-        
-        // Triệu hồi cổng sau khi boss chết
-        if (gate != null)
-        {
-            gate.SetActive(true); // Bật cổng khi boss chết
-        }
-
         float tiltDuration = 5f;
         float sinkDuration = 5f;
         float changeAppearanceDelay = 4f;
@@ -142,14 +131,20 @@ public class Boss4Health : MonoBehaviour
         yield return StartCoroutine(MoveOverTime(sinkTargetPosition, sinkDuration));
         yield return new WaitForSeconds(changeAppearanceDelay);
 
-        if (bossRenderer != null && phase2Material != null)
-            bossRenderer.material = phase2Material;
+        if (!isPhase2)
+        {
+            if (bossRenderer != null && phase2Material != null)
+                bossRenderer.material = phase2Material;
 
-        yield return StartCoroutine(RotateOverTime(originalRotation, tiltDuration));
-        Vector3 riseTargetPosition = sinkTargetPosition + Vector3.up * 500f;
-        yield return StartCoroutine(MoveOverTime(riseTargetPosition, riseDuration));
-
-        Revive();
+            yield return StartCoroutine(RotateOverTime(originalRotation, tiltDuration));
+            Vector3 riseTargetPosition = sinkTargetPosition + Vector3.up * 500f;
+            yield return StartCoroutine(MoveOverTime(riseTargetPosition, riseDuration));
+            Revive();
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private IEnumerator RotateOverTime(Quaternion targetRotation, float duration)
@@ -182,7 +177,7 @@ public class Boss4Health : MonoBehaviour
     {
         if (isPhase2)
         {
-            Destroy(gameObject); // Sau khi phase 2, boss sẽ bị hủy
+            Destroy(gameObject);
             return;
         }
 
@@ -198,13 +193,6 @@ public class Boss4Health : MonoBehaviour
         }
 
         boxCollider.enabled = true;
-
-        // Cổng sẽ chỉ xuất hiện khi boss chết ở phase 2
-        if (gate != null && !gate.activeInHierarchy)
-        {
-            gate.SetActive(true); // Triệu hồi cổng khi boss chết lần thứ 2
-        }
-
         isReviving = false;
     }
 }
