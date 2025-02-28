@@ -14,6 +14,8 @@ TagManager:
   - Landmine
   - WayPoints
   - NPC
+  - BigExplosion
+  - BigExplosion1
   layers:
   - Default
   - TransparentFX
@@ -30,6 +32,23 @@ TagManager:
   - Rock
   - RocKet
   - PostProcessing
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   m_SortingLayers:
   - name: Default
     uniqueID: 0
