@@ -20,8 +20,6 @@ public class BossManager : MonoBehaviour
     [Header("Timing Settings")] [SerializeField]
     private float delay = 10f; // Thời gian chờ trước khi hiện Boss Phase 2
 
-    [SerializeField] private string nextSceneName; // Tên Scene mới khi qua cổng thật
-
     private bool _hasTriggeredPhase2 = false;
     private bool _hasTriggeredRealPortal = false;
     private bool _hasBossPhase2Spawned = false; // Check xem Boss Phase 2 đã từng xuất hiện chưa
@@ -76,7 +74,7 @@ public class BossManager : MonoBehaviour
     {
         if (other.CompareTag("Player") && realPortal.activeInHierarchy)
         {
-            SceneManager.LoadScene(nextSceneName);
+            LoadNextSceneByBuildIndex();
         }
     }
 
@@ -100,5 +98,11 @@ public class BossManager : MonoBehaviour
         {
             particleSystem.Stop();
         }
+    }
+
+    private static void LoadNextSceneByBuildIndex()
+    {
+        int currentIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentIndex + 1); // Chuyển sang scene kế tiếp
     }
 }

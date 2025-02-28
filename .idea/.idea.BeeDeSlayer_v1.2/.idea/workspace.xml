@@ -19,7 +19,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c933cd77-bcb5-4d27-b4b4-183ec09fa04a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Assets/Man1/Code/PlayerNote.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Man1/Code/PlayerNote.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.BeeDeSlayer_v1.2/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BeeDeSlayer_v1.2/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Map2/code/BossManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Map2/code/BossManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Map3/Code/HealthBoss.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Map3/Code/HealthBoss.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Map3/MiniMap.renderTexture" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Map3/MiniMap.renderTexture" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Map3/Map3.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Map3/Map3.unity" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,6 +46,16 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
@@ -138,7 +152,8 @@
       <workItem from="1740662506486" duration="1529000" />
       <workItem from="1740667466052" duration="597000" />
       <workItem from="1740668145003" duration="1102000" />
-      <workItem from="1740711848906" duration="362000" />
+      <workItem from="1740711848906" duration="1523000" />
+      <workItem from="1740713424432" duration="1237000" />
     </task>
     <task id="LOCAL-00001" summary="Refactor code for consistency, clarity, and optimization.&#10;&#10;Standardized naming conventions across multiple scripts, improved readability by reducing repetitive control structures, and optimized performance with caching and better condition checks. Added minor enhancements like confusion toggles and maintained adherence to coding best practices.">
       <option name="closed" value="true" />
