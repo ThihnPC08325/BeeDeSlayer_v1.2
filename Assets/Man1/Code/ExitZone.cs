@@ -7,7 +7,13 @@ public class ExitZone : MonoBehaviour
     {
         if (other.CompareTag("Player")) // Kiểm tra nếu Player chạm vào
         {
-            SceneManager.LoadScene("Map2"); // Thay "NextScene" bằng tên scene tiếp theo
+            LoadNextSceneByBuildIndex();
         }
+    }
+
+    private static void LoadNextSceneByBuildIndex()
+    {
+        int currentIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentIndex + 1); // Chuyển sang scene kế tiếp
     }
 }
