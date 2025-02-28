@@ -13,7 +13,6 @@ TagManager:
   - Note
   - Landmine
   - WayPoints
-  - BigExplosion1
   - NPC
   layers:
   - Default
@@ -31,7 +30,23 @@ TagManager:
   - Rock
   - RocKet
   - PostProcessing
-
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   m_SortingLayers:
   - name: Default
     uniqueID: 0
