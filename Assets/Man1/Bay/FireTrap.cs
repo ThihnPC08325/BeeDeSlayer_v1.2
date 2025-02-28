@@ -10,29 +10,24 @@ public class FireTrap : MonoBehaviour
     [SerializeField] private bool _isActive = true;
     [SerializeField] private ParticleSystem _fireEffect;
     [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private float zMin = -50f; // Giới hạn nhỏ nhất của trục Z
+    [SerializeField] private float zMax = 50f;  // Giới hạn lớn nhất của trục Z
 
-    [SerializeField] private Transform[] spawnPoints; // Danh sách vị trí bẫy có thể xuất hiện
+
 
     private void Start()
     {
         _fireEffect = GetComponentInChildren<ParticleSystem>();
-        _audioSource = GetComponent<AudioSource>();
-
-        if (_audioSource == null)
-        {
-            _audioSource = gameObject.AddComponent<AudioSource>();
-        }
+        _audioSource = GetComponent<AudioSource>() ?? gameObject.AddComponent<AudioSource>();
 
         ActivateTrap();
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (!_isActive) return;
-        if (!other.CompareTag("Player")) return;
+        if (!_isActive || !other.CompareTag("Player")) return;
 
         PlayerHealth player = other.GetComponent<PlayerHealth>();
-
         if (player != null)
         {
             player.TakeDamage(damagePerSecond * Time.deltaTime, 0f);
@@ -57,9 +52,7 @@ public class FireTrap : MonoBehaviour
         _isActive = false;
         if (_fireEffect != null) _fireEffect.Stop();
 
-        // Đặt bẫy đến vị trí mới trước khi kích hoạt lại
-        RelocateTrap();
-
+        RelocateTrap(); // Đặt lại vị trí trước khi kích hoạt lại
         Invoke(nameof(ReactivateTrap), rechargeTime);
     }
 
@@ -70,9 +63,17 @@ public class FireTrap : MonoBehaviour
 
     private void RelocateTrap()
     {
-        if (spawnPoints.Length == 0) return;
+        // Lấy vị trí hiện tại
+        Vector3 newPosition = transform.position;
 
-        int randomIndex = Random.Range(0, spawnPoints.Length);
-        transform.position = spawnPoints[randomIndex].position;
+        // Random giá trị mới cho trục Z trong khoảng giới hạn
+        newPosition.z = Random.Range(zMin, zMax);
+
+        // Cập nhật vị trí
+        transform.position = newPosition;
+
+        Debug.Log($"🔥 FireTrap di chuyển đến Z: {newPosition.z}");
     }
+
+    
 }
