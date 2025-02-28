@@ -20088,7 +20088,7 @@ PrefabInstance:
     - target: {fileID: 9029555349058084421, guid: bdd6e4ae6fe26bd4ba5852b3387ddf26, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 36e1a78ba6e0ce04f9810cb6938f9601, type: 3}
+      objectReference: {fileID: 21300000, guid: f34ccd389c3186041b528b9e444c53a1, type: 3}
     - target: {fileID: 9029555349058084421, guid: bdd6e4ae6fe26bd4ba5852b3387ddf26, type: 3}
       propertyPath: m_RaycastTarget
       value: 0
@@ -34225,6 +34225,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1617309664780838276, guid: 342ded0b45a1e874aaa728d3882ffd67, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e401489c3dc79cc418d2b4569a04f390, type: 2}
     - target: {fileID: 3560794057642801842, guid: 342ded0b45a1e874aaa728d3882ffd67, type: 3}
       propertyPath: m_LocalPosition.x
       value: 17.5
