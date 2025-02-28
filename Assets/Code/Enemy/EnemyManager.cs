@@ -16,7 +16,10 @@ public class EnemyManager : MonoBehaviour
         Skeleton,
         Spider,
         BrokenFly,
-        Worm
+        Worm,
+        BlueDragon,
+        Redd,
+        Purple,
     }
 
     [System.Serializable]
@@ -70,6 +73,12 @@ public class EnemyManager : MonoBehaviour
 
     private GameObject CreateNewPoolObject(GameObject prefab, Transform parent, int index)
     {
+        if (prefab == null)
+        {
+            Debug.LogError("Prefab is null! Cannot instantiate object.");
+            return null;
+        }
+
         GameObject obj = Instantiate(prefab, parent);
         obj.name = $"{prefab.name}_Pool_{index}";
         obj.SetActive(false);
@@ -78,9 +87,9 @@ public class EnemyManager : MonoBehaviour
 
     public GameObject SpawnFromPool(EnemyType enemyType, Vector3 position, Quaternion rotation)
     {
-        if (!poolDictionary.ContainsKey(enemyType))
+        if (!poolDictionary.ContainsKey(enemyType) || poolDictionary[enemyType] == null)
         {
-            Debug.LogWarning($"Pool for enemy type {enemyType} doesn't exist! 🚫");
+            Debug.LogWarning($"Pool for enemy type {enemyType} doesn't exist or is null! 🚫");
             return null;
         }
 
@@ -120,7 +129,7 @@ public class EnemyManager : MonoBehaviour
 
     public void ReturnToPool(GameObject obj, EnemyType enemyType)
     {
-        if (!poolDictionary.ContainsKey(enemyType))
+        if (!poolDictionary.ContainsKey(enemyType) || obj == null)
             return;
 
         obj.SetActive(false);
