@@ -1,16 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SceneLoadDelay : MonoBehaviour
 {
     [SerializeField] private GameObject loaderUI;
     [SerializeField] private Slider proressSlider;
-
-    public void LoadScene(int sceneIndex)
+    [SerializeField] private int sceneIndex;
+    private void Start()
     {
-        StartCoroutine(SceneLoad(sceneIndex));
+        StartCoroutine(SceneLoad(SceneManager.GetActiveScene().buildIndex +1));
+    }
+    public void LoadScene()
+    {
+        StartCoroutine(SceneLoad(SceneManager.GetActiveScene().buildIndex + 1));
     }
     private IEnumerator SceneLoad(int sceneIndex)
     {
