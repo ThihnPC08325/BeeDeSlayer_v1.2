@@ -64,8 +64,11 @@ public class GhostProfessor : MonoBehaviour
 
         if (noteCounter != null && noteCounter.CollectedNoteCount >= 4)
         {
+            Time.timeScale = 0f;
             passwordPanel.SetActive(true);
+            hintUI.SetActive(false);
             EnableCursor(); // Hiển thị con trỏ chuột khi nhập mật khẩu
+            
         }
     }
 
@@ -74,6 +77,7 @@ public class GhostProfessor : MonoBehaviour
         hintUI.SetActive(false);
         passwordPanel.SetActive(false);
         DisableCursor(); // Ẩn con trỏ chuột khi thoát
+        Time.timeScale = 1f;
     }
 
     private void LookAtPlayer()
@@ -89,6 +93,7 @@ public class GhostProfessor : MonoBehaviour
         if (passwordInput.text == correctPassword)
         {
             sceneChanger.LoadTargetScene();
+            Time.timeScale=1f;
         }
         else
         {
@@ -100,11 +105,13 @@ public class GhostProfessor : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.None; // Cho phép di chuyển chuột
         Cursor.visible = true; // Hiện con trỏ chuột
+        Time.timeScale = 0f;
     }
 
     private void DisableCursor()
     {
         Cursor.lockState = CursorLockMode.Locked; // Khóa con trỏ vào màn hình
         Cursor.visible = false; // Ẩn con trỏ chuột
+        Time.timeScale = 1f;
     }
 }
