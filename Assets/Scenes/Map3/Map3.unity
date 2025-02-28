@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18916973, g: 0.20944616, b: 0.18124436, a: 1}
+  m_IndirectSpecularColor: {r: 0.18916973, g: 0.2094461, b: 0.18124436, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1492,7 +1492,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6299606110445655020, guid: 6ec160ae58303464087d78ccca115949, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1777,6 +1777,10 @@ PrefabInstance:
       propertyPath: backHealthBar
       value: 
       objectReference: {fileID: 643636574}
+    - target: {fileID: 319768852100845310, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
+      propertyPath: damageOverlay
+      value: 
+      objectReference: {fileID: 148756011}
     - target: {fileID: 319768852100845310, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
       propertyPath: frontHealthBar
       value: 

@@ -7994,6 +7994,7 @@ MonoBehaviour:
   bossHealthBar: {fileID: 1140603522}
   deathSound: {fileID: 8300000, guid: 206215063e161cb469cef6f3d12cfe76, type: 3}
   backgroundMusic: {fileID: 8300000, guid: 395cdfdf998d2904096e5af1e8ec5c55, type: 3}
+  exitZone: {fileID: 0}
 --- !u!65 &493678246
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14757,7 +14758,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6299606110445655020, guid: 6ec160ae58303464087d78ccca115949, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16968,6 +16969,10 @@ PrefabInstance:
       propertyPath: backHealthBar
       value: 
       objectReference: {fileID: 1903253849}
+    - target: {fileID: 319768852100845310, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
+      propertyPath: damageOverlay
+      value: 
+      objectReference: {fileID: 678759745}
     - target: {fileID: 319768852100845310, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
       propertyPath: frontHealthBar
       value: 
@@ -19625,6 +19630,7 @@ MonoBehaviour:
   bossHealthBar: {fileID: 1140603522}
   deathSound: {fileID: 8300000, guid: 206215063e161cb469cef6f3d12cfe76, type: 3}
   backgroundMusic: {fileID: 8300000, guid: 395cdfdf998d2904096e5af1e8ec5c55, type: 3}
+  exitZone: {fileID: 0}
 --- !u!65 &1362943239
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -21456,6 +21462,7 @@ MonoBehaviour:
   bossHealthBar: {fileID: 1140603522}
   deathSound: {fileID: 8300000, guid: 206215063e161cb469cef6f3d12cfe76, type: 3}
   backgroundMusic: {fileID: 8300000, guid: 395cdfdf998d2904096e5af1e8ec5c55, type: 3}
+  exitZone: {fileID: 0}
 --- !u!65 &1535376354
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22525,6 +22532,7 @@ MonoBehaviour:
   bossHealthBar: {fileID: 1140603522}
   deathSound: {fileID: 8300000, guid: 206215063e161cb469cef6f3d12cfe76, type: 3}
   backgroundMusic: {fileID: 8300000, guid: 395cdfdf998d2904096e5af1e8ec5c55, type: 3}
+  exitZone: {fileID: 0}
 --- !u!65 &1793284955
 BoxCollider:
   m_ObjectHideFlags: 0
