@@ -2,35 +2,37 @@
 using UnityEngine.SceneManagement;
 using TMPro;
 using System.Collections;
+using System.Linq;
 
 public class NPCDialogue : MonoBehaviour
 {
-    [Header("References")]
-    public LoadingZoneController loadingZone; // Tham chiếu đến LoadingZoneController
-    public TextMeshProUGUI dialogueText; // Tham chiếu đến UI hiển thị hội thoại
-    public TextMeshProUGUI interactText; // Hiển thị "Nhấn E để nói chuyện"
+    [Header("References")] [SerializeField]
+    private LoadingZoneController loadingZone; // Tham chiếu đến LoadingZoneController
 
-    [Header("Dialogue")]
-    [TextArea(3, 5)]
-    public string[] dialogueGuide = {
+    [SerializeField] private TextMeshProUGUI dialogueText; // Tham chiếu đến UI hiển thị hội thoại
+    [SerializeField] private TextMeshProUGUI interactText; // Hiển thị "Nhấn E để nói chuyện"
+
+    [Header("Dialogue")] [TextArea(3, 5)] [SerializeField]
+    private string[] dialogueGuide =
+    {
         "Bạn ơi, hãy giúp tôi với, tôi đã bị con quái vật kia biến thành cái Tivi như thế này.",
         "Hãy giúp tôi bằng cách tìm 4 cái laptop xung quanh thế giới vô định này để tải lên những dữ liệu mà quái vật kia đánh cắp.",
         "Sau khi hoàn thành, hãy quay lại tìm tôi... còn một việc quan trọng nữa tôi cần bạn giúp."
     };
 
-    [TextArea(3, 5)]
-    public string[] dialogueComplete = {
+    [TextArea(3, 5)] [SerializeField] private string[] dialogueComplete =
+    {
         "Cảm ơn bạn, cuối cùng hãy giúp tôi điều cuối cùng...",
         "Hãy đánh bại con quái vật kia đi, tôi sắp chịu không nổi nữa rồi...",
         "Hãy.... giúp tôi....."
     };
 
-    private bool isPlayerNear = false; // Kiểm tra người chơi có gần không
-    private bool hasSeenGuide = false; // Kiểm tra đã xem hết hướng dẫn chưa
-    private bool hasTaskCompleted = false; // Kiểm tra nhiệm vụ hoàn thành chưa
-    private int currentDialogueIndex = 0; // Chỉ mục câu hiện tại trong hướng dẫn hoặc nhiệm vụ hoàn thành
-    private bool isTyping = false; // Kiểm tra có đang chạy hiệu ứng đánh chữ không
-    private bool isCompleteDialogue = false; // Kiểm tra đang hiển thị đoạn kết hay không
+    private bool _isPlayerNear = false; // Kiểm tra người chơi có gần không
+    private bool _hasSeenGuide = false; // Kiểm tra đã xem hết hướng dẫn chưa
+    private bool _hasTaskCompleted = false; // Kiểm tra nhiệm vụ hoàn thành chưa
+    private int _currentDialogueIndex = 0; // Chỉ mục câu hiện tại trong hướng dẫn hoặc nhiệm vụ hoàn thành
+    private bool _isTyping = false; // Kiểm tra có đang chạy hiệu ứng đánh chữ không
+    private bool _isCompleteDialogue = false; // Kiểm tra đang hiển thị đoạn kết hay không
 
     void Start()
     {
@@ -39,7 +41,7 @@ public class NPCDialogue : MonoBehaviour
 
     void Update()
     {
-        if (isPlayerNear && Input.GetKeyDown(KeyCode.E))
+        if (_isPlayerNear && Input.GetKeyDown(KeyCode.E))
         {
             Interact();
         }
@@ -47,68 +49,63 @@ public class NPCDialogue : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            isPlayerNear = true;
-            interactText.gameObject.SetActive(true); // Hiện "Nhấn E để nói chuyện"
-        }
+        if (!other.CompareTag("Player")) return;
+        _isPlayerNear = true;
+        interactText.gameObject.SetActive(true); // Hiện "Nhấn E để nói chuyện"
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            isPlayerNear = false;
-            interactText.gameObject.SetActive(false); // Ẩn hướng dẫn khi rời khỏi NPC
-            dialogueText.gameObject.SetActive(false); // Ẩn hội thoại khi rời NPC
-        }
+        if (!other.CompareTag("Player")) return;
+        _isPlayerNear = false;
+        interactText.gameObject.SetActive(false); // Ẩn hướng dẫn khi rời khỏi NPC
+        dialogueText.gameObject.SetActive(false); // Ẩn hội thoại khi rời NPC
     }
 
-    public void Interact()
+    private void Interact()
     {
         dialogueText.gameObject.SetActive(true); // Hiện hộp thoại khi nói chuyện
 
-        if (!hasSeenGuide) // Nếu chưa xem hết hướng dẫn
+        if (_isTyping) return; // Nếu đang chạy hiệu ứng chữ, không thực hiện thêm hành động
+
+        if (!_hasSeenGuide)
         {
-            if (!isTyping) // Nếu không đang chạy hiệu ứng chữ, hiển thị câu tiếp theo
+            DisplayDialogue(dialogueGuide, () =>
             {
-                if (currentDialogueIndex < dialogueGuide.Length)
-                {
-                    StartCoroutine(TypeText(dialogueGuide[currentDialogueIndex]));
-                    currentDialogueIndex++;
-                }
-                else
-                {
-                    hasSeenGuide = true; // Đánh dấu đã xem hết hướng dẫn
-                    currentDialogueIndex = 0; // Reset chỉ mục để dùng cho đoạn kết
-                    ShowLaptopProgress();
-                }
-            }
+                _hasSeenGuide = true;
+                _currentDialogueIndex = 0; // Reset chỉ mục
+                ShowLaptopProgress(); // Hiển thị tiến độ thu thập laptop
+            });
         }
-        else if (hasTaskCompleted) // Nếu nhiệm vụ hoàn thành, hiển thị đoạn kết
+        else if (_hasTaskCompleted)
         {
-            if (!isTyping)
+            DisplayDialogue(dialogueComplete, () =>
             {
-                if (currentDialogueIndex < dialogueComplete.Length)
-                {
-                    StartCoroutine(TypeText(dialogueComplete[currentDialogueIndex]));
-                    currentDialogueIndex++;
-                }
-                else
-                {
-                    StartCoroutine(LoadNewSceneAfterDelay(5f)); // Sau khi đọc xong, load map mới
-                }
-            }
+                StartCoroutine(LoadNewSceneAfterDelay(5f)); // Chuyển sang màn mới sau khi hoàn tất
+            });
         }
         else
         {
-            ShowLaptopProgress();
+            ShowLaptopProgress(); // Nếu không có gì, hiển thị tiến độ thu thập laptop
+        }
+    }
+
+    private void DisplayDialogue(string[] dialogues, System.Action onComplete)
+    {
+        if (_currentDialogueIndex < dialogues.Length)
+        {
+            StartCoroutine(TypeText(dialogues[_currentDialogueIndex]));
+            _currentDialogueIndex++;
+        }
+        else
+        {
+            onComplete?.Invoke(); // Gọi callback khi hoàn thành
         }
     }
 
     private IEnumerator TypeText(string text)
     {
-        isTyping = true;
+        _isTyping = true;
         dialogueText.text = "";
 
         foreach (char letter in text.ToCharArray())
@@ -117,7 +114,7 @@ public class NPCDialogue : MonoBehaviour
             yield return new WaitForSeconds(0.05f); // Tốc độ đánh chữ
         }
 
-        isTyping = false;
+        _isTyping = false;
     }
 
     private void ShowLaptopProgress()
@@ -128,9 +125,9 @@ public class NPCDialogue : MonoBehaviour
 
         if (totalLaptopsLoaded >= 4) // Nếu đã đủ 4 laptop
         {
-            hasTaskCompleted = true;
-            isCompleteDialogue = true;
-            currentDialogueIndex = 0; // Reset index để bắt đầu hội thoại kết
+            _hasTaskCompleted = true;
+            _isCompleteDialogue = true;
+            _currentDialogueIndex = 0; // Reset index để bắt đầu hội thoại kết
             Interact(); // Bắt đầu hiển thị đoạn kết
         }
         else
@@ -141,23 +138,17 @@ public class NPCDialogue : MonoBehaviour
         StartCoroutine(HideDialogueAfterDelay(5f)); // Tự động ẩn hộp thoại sau 5s
     }
 
-    private int GetTotalLaptopsLoaded()
+    private static int GetTotalLaptopsLoaded()
     {
-        int total = 0;
         LoadingZoneController[] allZones = FindObjectsOfType<LoadingZoneController>();
 
-        foreach (var zone in allZones)
-        {
-            total += zone.LaptopsLoaded;
-        }
-
-        return total;
+        return allZones.Sum(zone => zone.LaptopsLoaded);
     }
 
-    private IEnumerator LoadNewSceneAfterDelay(float delay)
+    private static IEnumerator LoadNewSceneAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        SceneManager.LoadScene("BossMap2"); // Thay tên scene bạn muốn
+        SceneManager.LoadScene("BossMap2");
     }
 
     private IEnumerator HideDialogueAfterDelay(float delay)

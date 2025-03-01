@@ -25,12 +25,10 @@ public class TankerEnemyHealth : MonoBehaviour, IPooledObject
     {
         Debug.Log("tank nhan dame");
         currentHealth -= damage;
-        if (currentHealth <= 0f)
-        {
-            currentHealth = 0f;
-            _boxCollider.enabled = false;
-            Die();
-        }
+        if (!(currentHealth <= 0f)) return;
+        currentHealth = 0f;
+        _boxCollider.enabled = false;
+        Die();
     }
 
     private void Die()

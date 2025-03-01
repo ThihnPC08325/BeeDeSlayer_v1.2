@@ -64,19 +64,17 @@ public class BomBomcontroller : MonoBehaviour
 
     private void StartExplosion()
     {
-        if (!_isExploding)
+        if (_isExploding) return;
+        _isExploding = true;
+        Debug.Log("BomBom bắt đầu phát nổ!");
+
+        // Bắt đầu hiệu ứng nhấp nháy
+        if (bomRenderer)
         {
-            _isExploding = true;
-            Debug.Log("BomBom bắt đầu phát nổ!");
-
-            // Bắt đầu hiệu ứng nhấp nháy
-            if (bomRenderer)
-            {
-                _flashCoroutine = StartCoroutine(FlashEffect());
-            }
-
-            Invoke(nameof(Explode), explosionDelay);
+            _flashCoroutine = StartCoroutine(FlashEffect());
         }
+
+        Invoke(nameof(Explode), explosionDelay);
     }
 
     private void Explode()

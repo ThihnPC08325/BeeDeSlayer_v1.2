@@ -53,12 +53,10 @@ public class BossManager : MonoBehaviour
         }
 
         // Khi Boss Phase 2 chết (và đã từng xuất hiện) -> Hiện cổng thật
-        if (_hasBossPhase2Spawned && !_hasTriggeredRealPortal && bossPhase2 && !bossPhase2.activeInHierarchy)
-        {
-            _hasTriggeredRealPortal = true;
-            if (realPortal) realPortal.SetActive(true);
-            if (realPortalParticles) realPortalParticles.Play();
-        }
+        if (!_hasBossPhase2Spawned || _hasTriggeredRealPortal || !bossPhase2 || bossPhase2.activeInHierarchy) return;
+        _hasTriggeredRealPortal = true;
+        if (realPortal) realPortal.SetActive(true);
+        if (realPortalParticles) realPortalParticles.Play();
     }
 
     private IEnumerator HandlePhase2Spawn()
@@ -68,14 +66,6 @@ public class BossManager : MonoBehaviour
         // Xóa cổng giả, chuyển qua xuất hiện Boss Phase 2
         DeactivateFakePortal();
         SetGameObjectState(bossPhase2, true);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player") && realPortal.activeInHierarchy)
-        {
-            LoadNextSceneByBuildIndex();
-        }
     }
 
     private void DeactivateFakePortal()
@@ -98,11 +88,5 @@ public class BossManager : MonoBehaviour
         {
             particleSystem.Stop();
         }
-    }
-
-    private static void LoadNextSceneByBuildIndex()
-    {
-        int currentIndex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(currentIndex + 1); // Chuyển sang scene kế tiếp
     }
 }

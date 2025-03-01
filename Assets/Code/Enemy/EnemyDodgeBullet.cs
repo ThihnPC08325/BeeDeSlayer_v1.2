@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class EnemyDodgeBullet : MonoBehaviour
 {
-    [Header("Dodge Settings")]
-    [SerializeField] private float dodgeDistance = 3f;
+    [Header("Dodge Settings")] [SerializeField]
+    private float dodgeDistance = 3f;
+
     [SerializeField] private float quickDodgeDistance = 5f;
     [SerializeField] private float dodgeTime = 0.5f;
     [SerializeField] private float quickDodgeTime = 0.3f;
@@ -15,19 +16,21 @@ public class EnemyDodgeBullet : MonoBehaviour
     [SerializeField] private float maxDetectionDistance = 10f;
     [SerializeField] private float maxTimeToReact = 0.5f;
 
-    [Header("LOD Settings")]
-    [SerializeField] private float highLODDistance = 10f;
+    [Header("LOD Settings")] [SerializeField]
+    private float highLODDistance = 10f;
+
     [SerializeField] private float mediumLODDistance = 20f;
     [SerializeField] private float lowLODDistance = 30f;
 
-    [Header("Learning Settings")]
-    [SerializeField] private int maxMemorySize = 10;
+    [Header("Learning Settings")] [SerializeField]
+    private int maxMemorySize = 10;
+
     [SerializeField] private float learningRate = 0.1f;
 
-    private bool canDodge = true;
-    private Transform playerTransform;
-    private LODLevel currentLODLevel = LODLevel.High;
-    private readonly List<Vector3> successfulDodges = new();
+    private bool _canDodge = true;
+    private Transform _playerTransform;
+    private LODLevel _currentLODLevel = LODLevel.High;
+    private readonly List<Vector3> _successfulDodges = new();
 
     private enum LODLevel
     {
@@ -39,94 +42,88 @@ public class EnemyDodgeBullet : MonoBehaviour
 
     private void Start()
     {
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         StartCoroutine(UpdateLODLevel());
     }
 
     private void Update()
     {
-        if (ShouldProcessAI())
+        if (!ShouldProcessAI()) return;
+        List<BulletThreat> threats = DetectIncomingBullets();
+        if (threats.Count > 0)
         {
-            List<BulletThreat> threats = DetectIncomingBullets();
-            if (threats.Count > 0)
-            {
-                StartCoroutine(DodgeBullets(threats));
-            }
+            StartCoroutine(DodgeBullets(threats));
         }
     }
 
     private IEnumerator UpdateLODLevel()
     {
         WaitForSeconds wait = new WaitForSeconds(0.5f); // Cache WaitForSeconds
-        Vector3 playerPos, myPos;
         float sqrHighDist = highLODDistance * highLODDistance;
         float sqrMediumDist = mediumLODDistance * mediumLODDistance;
         float sqrLowDist = lowLODDistance * lowLODDistance;
 
         while (true)
         {
-            playerPos = playerTransform.position;
-            myPos = transform.position;
+            var playerPos = _playerTransform.position;
+            var myPos = transform.position;
             float sqrDistance = (playerPos - myPos).sqrMagnitude; // Dùng sqrMagnitude thay vì Distance
 
-            currentLODLevel = sqrDistance <= sqrHighDist ? LODLevel.High :
-                             sqrDistance <= sqrMediumDist ? LODLevel.Medium :
-                             sqrDistance <= sqrLowDist ? LODLevel.Low :
-                             LODLevel.VeryLow;
+            _currentLODLevel = sqrDistance <= sqrHighDist ? LODLevel.High :
+                sqrDistance <= sqrMediumDist ? LODLevel.Medium :
+                sqrDistance <= sqrLowDist ? LODLevel.Low :
+                LODLevel.VeryLow;
 
             yield return wait;
         }
     }
 
     private static readonly Dictionary<LODLevel, float> LODMultipliers = new()
-{
-    { LODLevel.High, 1f },
-    { LODLevel.Medium, 0.75f },
-    { LODLevel.Low, 0.5f },
-    { LODLevel.VeryLow, 0.25f }
-};
+    {
+        { LODLevel.High, 1f },
+        { LODLevel.Medium, 0.75f },
+        { LODLevel.Low, 0.5f },
+        { LODLevel.VeryLow, 0.25f }
+    };
 
     private static readonly Dictionary<LODLevel, int> ProcessFrameIntervals = new()
-{
-    { LODLevel.High, 1 },
-    { LODLevel.Medium, 2 },
-    { LODLevel.Low, 4 },
-    { LODLevel.VeryLow, 0 }
-};
+    {
+        { LODLevel.High, 1 },
+        { LODLevel.Medium, 2 },
+        { LODLevel.Low, 4 },
+        { LODLevel.VeryLow, 0 }
+    };
 
     private bool ShouldProcessAI()
     {
-        int interval = ProcessFrameIntervals[currentLODLevel];
+        int interval = ProcessFrameIntervals[_currentLODLevel];
         return interval > 0 && Time.frameCount % interval == 0;
     }
 
-    private float GetLODMultiplier() => LODMultipliers[currentLODLevel];
+    private float GetLODMultiplier() => LODMultipliers[_currentLODLevel];
 
     private List<BulletThreat> DetectIncomingBullets()
     {
         List<BulletThreat> threats = new();
 
-        if (currentLODLevel == LODLevel.VeryLow)
+        if (_currentLODLevel == LODLevel.VeryLow)
             return threats;
 
         float currentDetectionRadius = bulletDetectionRadius * GetLODMultiplier();
         float currentMaxDetectionDistance = maxDetectionDistance * GetLODMultiplier();
 
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position, currentDetectionRadius, transform.forward, currentMaxDetectionDistance, bulletLayer);
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position, currentDetectionRadius, transform.forward,
+            currentMaxDetectionDistance, bulletLayer);
 
         foreach (RaycastHit hit in hits)
         {
-            if (hit.collider.TryGetComponent<Rigidbody>(out var bulletRb))
-            {
-                float distanceToBullet = Vector3.Distance(transform.position, hit.point);
-                float timeToImpact = distanceToBullet / bulletRb.velocity.magnitude;
+            if (!hit.collider.TryGetComponent<Rigidbody>(out var bulletRb)) continue;
+            float distanceToBullet = Vector3.Distance(transform.position, hit.point);
+            float timeToImpact = distanceToBullet / bulletRb.velocity.magnitude;
 
-                if (timeToImpact <= maxTimeToReact * GetLODMultiplier())
-                {
-                    Vector3 predictedImpactPoint = hit.point + bulletRb.velocity * timeToImpact;
-                    threats.Add(new BulletThreat(bulletRb.velocity.normalized, predictedImpactPoint, timeToImpact));
-                }
-            }
+            if (!(timeToImpact <= maxTimeToReact * GetLODMultiplier())) continue;
+            Vector3 predictedImpactPoint = hit.point + bulletRb.velocity * timeToImpact;
+            threats.Add(new BulletThreat(bulletRb.velocity.normalized, predictedImpactPoint, timeToImpact));
         }
 
         threats.Sort((a, b) => a.TimeToImpact.CompareTo(b.TimeToImpact));
@@ -135,9 +132,9 @@ public class EnemyDodgeBullet : MonoBehaviour
 
     private IEnumerator DodgeBullets(List<BulletThreat> threats)
     {
-        if (!canDodge) yield break;
+        if (!_canDodge) yield break;
 
-        canDodge = false;
+        _canDodge = false;
 
         Vector3 dodgeDirection = CalculateBestDodgeDirection(threats);
         bool isQuickDodge = threats[0].TimeToImpact < quickDodgeTime;
@@ -161,7 +158,7 @@ public class EnemyDodgeBullet : MonoBehaviour
         LearnFromSuccessfulDodge(dodgeDirection);
 
         yield return new WaitForSeconds(dodgeCooldown);
-        canDodge = true;
+        _canDodge = true;
     }
 
     private Vector3 CalculateBestDodgeDirection(List<BulletThreat> threats)
@@ -171,6 +168,7 @@ public class EnemyDodgeBullet : MonoBehaviour
         {
             averageThreatDirection += threat.Direction;
         }
+
         averageThreatDirection /= threats.Count;
 
         Vector3 dodgeDirection = Vector3.Cross(averageThreatDirection, Vector3.up).normalized;
@@ -183,27 +181,26 @@ public class EnemyDodgeBullet : MonoBehaviour
         }
 
         // Áp dụng kinh nghiệm từ các lần né trước
-        if (successfulDodges.Count > 0)
+        if (_successfulDodges.Count <= 0) return dodgeDirection.normalized;
+        Vector3 learnedDirection = Vector3.zero;
+        foreach (var successfulDodge in _successfulDodges)
         {
-            Vector3 learnedDirection = Vector3.zero;
-            foreach (var successfulDodge in successfulDodges)
-            {
-                learnedDirection += successfulDodge;
-            }
-            learnedDirection /= successfulDodges.Count;
-
-            dodgeDirection = Vector3.Lerp(dodgeDirection, learnedDirection, learningRate);
+            learnedDirection += successfulDodge;
         }
+
+        learnedDirection /= _successfulDodges.Count;
+
+        dodgeDirection = Vector3.Lerp(dodgeDirection, learnedDirection, learningRate);
 
         return dodgeDirection.normalized;
     }
 
     private void LearnFromSuccessfulDodge(Vector3 dodgeDirection)
     {
-        successfulDodges.Add(dodgeDirection);
-        if (successfulDodges.Count > maxMemorySize)
+        _successfulDodges.Add(dodgeDirection);
+        if (_successfulDodges.Count > maxMemorySize)
         {
-            successfulDodges.RemoveAt(0);
+            _successfulDodges.RemoveAt(0);
         }
     }
 

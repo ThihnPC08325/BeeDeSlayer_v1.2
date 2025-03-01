@@ -19,25 +19,25 @@ public class LoadingZoneController : MonoBehaviour
     [SerializeField] private AudioClip loadingCompleteSound;
 
     public int LaptopsLoaded { get; private set; } = 0;
-    private static int totalLaptopsLoaded = 4; // Theo dõi tổng số laptop
+    private static int _totalLaptopsLoaded = 4; // Theo dõi tổng số laptop
 
     [SerializeField] private int laptopID; // ID riêng của laptop này
-    private static int nextLaptopID = 1; // Biến static để cấp phát ID tự động
+    private static int _nextLaptopID = 1; // Biến static để cấp phát ID tự động
 
-    private float currentProgress = 0f;
-    private bool playerInZone = false;
-    private bool isZoneCompleted = false;
-    private AudioSource audioSource;
+    private float _currentProgress = 0f;
+    private bool _playerInZone = false;
+    private bool _isZoneCompleted = false;
+    private AudioSource _audioSource;
 
     void Awake()
     {
-        audioSource = gameObject.AddComponent<AudioSource>();
+        _audioSource = gameObject.AddComponent<AudioSource>();
         InitializeUI();
 
         if (laptopID == 0)
         {
-            laptopID = nextLaptopID;
-            nextLaptopID++;
+            laptopID = _nextLaptopID;
+            _nextLaptopID++;
         }
     }
 
@@ -48,7 +48,7 @@ public class LoadingZoneController : MonoBehaviour
 
     void Update()
     {
-        if (playerInZone && !isZoneCompleted)
+        if (_playerInZone && !_isZoneCompleted)
         {
             UpdateProgress();
         }
@@ -70,22 +70,22 @@ public class LoadingZoneController : MonoBehaviour
 
     private void UpdateProgress()
     {
-        if (isZoneCompleted) return;
+        if (_isZoneCompleted) return;
 
-        currentProgress += Time.deltaTime / loadingTime;
-        currentProgress = Mathf.Clamp01(currentProgress);
+        _currentProgress += Time.deltaTime / loadingTime;
+        _currentProgress = Mathf.Clamp01(_currentProgress);
 
-        if (progressBar != null)
+        if (progressBar)
         {
-            progressBar.value = currentProgress;
+            progressBar.value = _currentProgress;
         }
 
-        if (percentageText != null)
+        if (percentageText)
         {
-            percentageText.text = $"{(currentProgress * 100):F1}%";
+            percentageText.text = $"{(_currentProgress * 100):F1}%";
         }
 
-        if (currentProgress >= 1f)
+        if (_currentProgress >= 1f)
         {
             OnLoadingComplete();
         }
@@ -93,34 +93,30 @@ public class LoadingZoneController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            playerInZone = true;
+        if (!other.CompareTag("Player")) return;
+        _playerInZone = true;
 
-            if (!isZoneCompleted)
+        if (!_isZoneCompleted)
+        {
+            if (enterSound != null)
             {
-                if (enterSound != null)
-                {
-                    audioSource.PlayOneShot(enterSound);
-                }
-                ShowProgressUI();
+                _audioSource.PlayOneShot(enterSound);
             }
-            else
-            {
-                ShowCompletionUI();
-            }
+            ShowProgressUI();
+        }
+        else
+        {
+            ShowCompletionUI();
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (!other.CompareTag("Player")) return;
+        _playerInZone = false;
+        if (!_isZoneCompleted)
         {
-            playerInZone = false;
-            if (!isZoneCompleted)
-            {
-                HideAndResetProgress();
-            }
+            HideAndResetProgress();
         }
     }
 
@@ -143,24 +139,22 @@ public class LoadingZoneController : MonoBehaviour
             progressBarContainer.SetActive(false);
         }
 
-        if (!isZoneCompleted)
+        if (_isZoneCompleted) return;
+        _currentProgress = 0f;
+        if (progressBar != null)
         {
-            currentProgress = 0f;
-            if (progressBar != null)
-            {
-                progressBar.value = 0;
-            }
+            progressBar.value = 0;
         }
     }
 
     private void ShowCompletionUI()
     {
-        if (completionText != null)
+        if (completionText)
         {
             completionText.gameObject.SetActive(true);
             completionText.text = "Đã hoàn thành";
         }
-        if (progressBarContainer != null)
+        if (progressBarContainer)
         {
             progressBarContainer.SetActive(false);
         }
@@ -176,21 +170,21 @@ public class LoadingZoneController : MonoBehaviour
 
     private void OnLoadingComplete()
     {
-        if (loadingCompleteSound != null)
+        if (loadingCompleteSound)
         {
-            audioSource.PlayOneShot(loadingCompleteSound);
+            _audioSource.PlayOneShot(loadingCompleteSound);
         }
 
      
 
-        isZoneCompleted = true;
+        _isZoneCompleted = true;
         LaptopsLoaded++; // Cập nhật số laptop đã tải
-        totalLaptopsLoaded++; // Cập nhật tổng số laptop đã tải trên toàn bộ game
+        _totalLaptopsLoaded++; // Cập nhật tổng số laptop đã tải trên toàn bộ game
 
         // 🟢 Log số laptop đã tải xong
         Debug.Log($"Đã tải xong laptop ID {laptopID}");
 
-        isZoneCompleted = true;
+        _isZoneCompleted = true;
         ShowCompletionUI();
         HideProgressUI();
 
@@ -202,7 +196,7 @@ public class LoadingZoneController : MonoBehaviour
 
     private void HideProgressUI()
     {
-        if (progressBarContainer != null)
+        if (progressBarContainer)
         {
             progressBarContainer.SetActive(false);
         }
@@ -212,7 +206,7 @@ public class LoadingZoneController : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
-        if (completionText != null)
+        if (completionText)
         {
             completionText.gameObject.SetActive(false);
         }
@@ -221,8 +215,8 @@ public class LoadingZoneController : MonoBehaviour
     // Reset trạng thái hoàn thành của zone
     public void ResetZone()
     {
-        currentProgress = 0f;
-        isZoneCompleted = false;
+        _currentProgress = 0f;
+        _isZoneCompleted = false;
 
         if (progressBar != null)
         {
@@ -233,7 +227,7 @@ public class LoadingZoneController : MonoBehaviour
     }
 
     // Reset tất cả các zone khi game khởi động
-    public void ResetAllZones()
+    public static void ResetAllZones()
     {
         LoadingZoneController[] allZones = FindObjectsOfType<LoadingZoneController>();
         foreach (var zone in allZones)
