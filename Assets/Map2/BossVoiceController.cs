@@ -46,7 +46,7 @@ public class BossVoiceController : MonoBehaviour
         }
     }
 
-    public void PlayRandomVoiceLine()
+    private void PlayRandomVoiceLine()
     {
         if (_remainingVoiceLines.Count == 0 || _isPlaying) return;
 
@@ -65,12 +65,5 @@ public class BossVoiceController : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         _isPlaying = false;
-    }
-
-    // Thêm function để dừng auto play nếu cần
-    public void StopAutoPlay()
-    {
-        autoPlayVoiceLines = false;
-        StopAllCoroutines();
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization; // Để quản lý scene
 using UnityEngine.UI; // Để xử lý UI
 
 public class DeathZone : MonoBehaviour

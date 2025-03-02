@@ -45,9 +45,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundEffects:
-  - _soundType: 2
-    _clip: {fileID: 8300000, guid: c6039449e16b37b4f9685419a2644510, type: 3}
-    _volume: 1
-    _is3D: 0
-    _maxDistance: 0
-    _minDistance: 0
+  - soundType: 2
+    clip: {fileID: 8300000, guid: bd36cf3e41d6f9541875d98a4e185249, type: 3}
+    volume: 1
+    pitch: 1
+    stereoPan: 0
+    loop: 0
+    is3D: 0
+    spread: 0
+    dopplerLevel: 1
+    minDistance: 1
+    maxDistance: 100
