@@ -18,7 +18,8 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: 8615256057410938557}
   - {fileID: 786883137322654574}
-  m_RendererFeatureMap: bde60217bd898f776e9bdc570b92eb0a
+  - {fileID: 6597556890202135427}
+  m_RendererFeatureMap: bde60217bd898f776e9bdc570b92eb0a83dbed49093b8f5b
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -74,6 +75,26 @@ MonoBehaviour:
   fetchColorBuffer: 1
   requirements: 0
   passMaterial: {fileID: 2100000, guid: cbc38204f0020fc4e8df28a6d4a3cc28, type: 2}
+  passIndex: 0
+  bindDepthStencilAttachment: 0
+  m_Version: 1
+--- !u!114 &6597556890202135427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
+  m_Name: M2NearTornadoEff
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  injectionPoint: 600
+  fetchColorBuffer: 1
+  requirements: 0
+  passMaterial: {fileID: 2100000, guid: d0a0b78732b4b264f88babbc856edf0f, type: 2}
   passIndex: 0
   bindDepthStencilAttachment: 0
   m_Version: 1
