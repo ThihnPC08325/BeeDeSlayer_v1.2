@@ -56,4 +56,5 @@ public class SceneChanger : MonoBehaviour
         Debug.Log($"Scene loaded: {scene.name}");
         DynamicGI.UpdateEnvironment();
     }
+    
 }
