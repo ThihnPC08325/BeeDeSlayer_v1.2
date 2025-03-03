@@ -14,7 +14,8 @@ public class BazookaSkill : MonoBehaviour
     [Header("Animation")]
     [SerializeField] private Animator playerAnimator;       // Animator của cánh tay hoặc model súng Bazooka
 
-    private bool _canFire = true;
+    private bool _canFire = true; // Kiểm tra xem có thể bắn hay không
+
 
     void Update()
     {
@@ -25,17 +26,16 @@ public class BazookaSkill : MonoBehaviour
         }
     }
 
+
     private void FireRocket()
     {
-        if (!_canFire) return;
-        _canFire = false;
+        if (!_canFire) return; // Nếu không thể bắn, không làm gì cả
+        _canFire = false; // Đặt _canFire thành false để ngừng việc bắn cho đến khi cooldown kết thúc
 
         // Kích hoạt animation bằng cách gọi trigger "FireBazooka"
         if (playerAnimator)
         {
-            playerAnimator.SetTrigger(FireBazooka);
-            // Nếu cần, bạn có thể reset trigger sau một khoảng thời gian bằng coroutine
-            // StartCoroutine(ResetBazookaTrigger(0.5f)); // 0.5f là thời gian chờ, điều chỉnh theo length của animation
+            playerAnimator.SetTrigger(FireBazooka); // Gọi trigger "FireBazooka" trong Animator để thực hiện hoạt ảnh bắn
         }
 
         // Instantiate Rocket tại vị trí firePoint với rotation của firePoint
@@ -43,25 +43,28 @@ public class BazookaSkill : MonoBehaviour
         Rigidbody rb = rocket.GetComponent<Rigidbody>();
         if (rb)
         {
-            rb.AddForce(firePoint.forward * rocketSpeed, ForceMode.Impulse);
+            rb.AddForce(firePoint.forward * rocketSpeed, ForceMode.Impulse); // Thêm lực để tên lửa bay theo hướng của firePoint
         }
 
+        // Khởi động Coroutine để quản lý cooldown
         StartCoroutine(RocketCooldown());
     }
 
-    // Coroutine để reset trigger sau khi animation hoàn thành (nếu cần)
+
     private IEnumerator ResetBazookaTrigger(float delay)
     {
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSeconds(delay); // Đợi một khoảng thời gian delay
         if (playerAnimator != null)
         {
-            playerAnimator.ResetTrigger("FireBazooka");
+            playerAnimator.ResetTrigger("FireBazooka"); // Reset trigger "FireBazooka" trong Animator
         }
     }
 
+
     private IEnumerator RocketCooldown()
     {
-        yield return new WaitForSeconds(cooldownTime);
-        _canFire = true;
+        yield return new WaitForSeconds(cooldownTime); // Đợi trong khoảng thời gian cooldownTime (ví dụ 5 giây)
+        _canFire = true; // Sau khi cooldown kết thúc, cho phép bắn tên lửa tiếp
     }
+
 }
