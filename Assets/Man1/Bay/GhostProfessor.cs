@@ -4,19 +4,19 @@ using UnityEngine.UI;
 
 public class GhostProfessor : MonoBehaviour
 {
-    public string[] hints;
-    public GameObject hintUI;
-    public GameObject passwordPanel;
-    public TMP_InputField passwordInput;
-    public Button submitButton;
-    public string correctPassword = "1234";
+    [SerializeField] private string[] hints;
+    [SerializeField] private GameObject hintUI;
+    [SerializeField] private GameObject passwordPanel;
+    [SerializeField] private TMP_InputField passwordInput;
+    [SerializeField] private Button submitButton;
+    [SerializeField] private string correctPassword = "1234";
 
     private TextMeshProUGUI _hintText;
     private bool _isBeeNearby = false;
     private Transform _player;
 
-    public NoteCounter noteCounter;
-    public SceneChanger sceneChanger;
+    [SerializeField] private NoteCounter noteCounter;
+    [SerializeField] private SceneChanger sceneChanger;
 
     private void Start()
     {
@@ -58,7 +58,7 @@ public class GhostProfessor : MonoBehaviour
         if (!_isBeeNearby) return;
 
         string hint = hints[Random.Range(0, hints.Length)];
-        _hintText.text = $"👻 Ghost: {hint}";
+        _hintText.text = $"\ud83d\udc7b Ghost: {hint}";
 
         hintUI.SetActive(true);
 
@@ -96,7 +96,7 @@ public class GhostProfessor : MonoBehaviour
         }
         else
         {
-            _hintText.text = "👻 Ghost: Sai mật khẩu! Thử lại đi.";
+            _hintText.text = "\ud83d\udc7b Ghost: Sai mật khẩu! Thử lại đi.";
         }
     }
 

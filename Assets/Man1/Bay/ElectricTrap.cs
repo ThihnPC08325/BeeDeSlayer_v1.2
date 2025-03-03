@@ -2,12 +2,12 @@
 
 public class ElectricTrap : MonoBehaviour
 {
-    public float damagePerSecond = 10f;  // Sát thương mỗi giây
-    public float slowMultiplier = 0.5f;  // Giảm tốc độ Bee xuống 50%
-    public float slowDuration = 2f;      // Bee bị chậm trong 2 giây
-    public float activeTime = 3f;        // Bẫy hoạt động trong 3 giây
-    public float rechargeTime = 5f;      // Bẫy sạc lại trong 5 giây
-    public AudioClip electricTrapSound;  // Âm thanh khi bẫy kích hoạt
+    [SerializeField] private float damagePerSecond = 10f;  // Sát thương mỗi giây
+    [SerializeField] private float slowMultiplier = 0.5f;  // Giảm tốc độ Bee xuống 50%
+    [SerializeField] private float slowDuration = 2f;      // Bee bị chậm trong 2 giây
+    [SerializeField] private float activeTime = 3f;        // Bẫy hoạt động trong 3 giây
+    [SerializeField] private float rechargeTime = 5f;      // Bẫy sạc lại trong 5 giây
+    [SerializeField] private AudioClip electricTrapSound;  // Âm thanh khi bẫy kích hoạt
 
     private bool _isActive = true;
     private ParticleSystem _electricEffect;
