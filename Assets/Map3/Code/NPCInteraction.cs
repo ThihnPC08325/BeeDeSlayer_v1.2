@@ -40,7 +40,7 @@ public class NPCInteraction : MonoBehaviour
             }
             else
             {
-                ShowDialogue("Bạn đã đánh bại boss! Đây là phần thưởng của bạn!");
+                ShowDialogue("Bạn đã làm được rồi! Đây là phần thưởng của bạn,hãy đi tới cánh cổng kia thử thách cuối cùng đang chờ bạn");
                 GiveReward();
             }
         }
