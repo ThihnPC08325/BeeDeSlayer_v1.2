@@ -14,17 +14,17 @@ public class AmmoDamageConfig
 public class DamageSystem : MonoBehaviour
 {
     [SerializeField] private List<AmmoDamageConfig> ammoConfigs;
-    private Dictionary<AmmoType, AmmoDamageConfig> damageConfigDict;
+    private Dictionary<AmmoType, AmmoDamageConfig> _damageConfigDict;
 
     private void Awake()
     {
         // Khởi tạo dictionary để tra cứu nhanh
-        damageConfigDict = ammoConfigs.ToDictionary(config => config.type);
+        _damageConfigDict = ammoConfigs.ToDictionary(config => config.type);
     }
 
     public float CalculateDamage(AmmoType ammoType, float distance, float targetArmor)
     {
-        if (!damageConfigDict.TryGetValue(ammoType, out var config))
+        if (!_damageConfigDict.TryGetValue(ammoType, out var config))
             return 0f;
 
         float damage = config.baseDamage;
@@ -42,7 +42,7 @@ public class DamageSystem : MonoBehaviour
         return damage;
     }
 
-    private float CalculateShotgunDamage(float baseDamage, float distance)
+    private static float CalculateShotgunDamage(float baseDamage, float distance)
     {
         // Số viên đạn trong một phát bắn
         int bulletCount = 8;

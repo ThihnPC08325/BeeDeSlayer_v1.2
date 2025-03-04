@@ -11,8 +11,9 @@ public class RegisterUser : MonoBehaviour
     [SerializeField] private TMP_InputField usernameInput;
     [SerializeField] private TMP_InputField passwordInput;
     [SerializeField] private TMP_InputField confirmPasswordInput;
-    [SerializeField] private const string Link = "https://phamduchuan.name.vn/PHP/Register.php";
     [SerializeField] private TextMeshProUGUI resultText;
+
+    private const string Link = "https://phamduchuan.name.vn/PHP/Register.php";
 
     /// <summary>
     /// Đăng ký người dùng
@@ -58,7 +59,6 @@ public class RegisterUser : MonoBehaviour
         if (password == confirmPassword) return true;
         resultText.text = "Mật khẩu không khớp!";
         return false;
-
     }
 
     /// <summary>
@@ -86,7 +86,9 @@ public class RegisterUser : MonoBehaviour
             {
                 var jsonResponse = JsonUtility.FromJson<ServerResponse>(responseText);
 
-                resultText.text = jsonResponse.status == "success" ? "Đăng ký thành công! Đăng nhập để vào game." : $"Lỗi: {jsonResponse.message}";
+                resultText.text = jsonResponse.status == "success"
+                    ? "Đăng ký thành công! Đăng nhập để vào game."
+                    : $"Lỗi: {jsonResponse.message}";
             }
             else
             {

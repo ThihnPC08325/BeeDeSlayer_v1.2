@@ -42,7 +42,7 @@ public class Boss1Projectile : MonoBehaviour
             if (playerHealth != null)
             {
                 playerHealth.TakeDamage(damage, penetration);
-                playerHealth.ApplyDOT(dotDamage, dotTicks, dotInterval);
+                playerHealth.ApplyDot(dotDamage, dotTicks, dotInterval);
             }
 
             PlayerDebuffEffect playerDebuff = other.GetComponent<PlayerDebuffEffect>();

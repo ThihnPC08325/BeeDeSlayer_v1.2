@@ -10,8 +10,9 @@ using UnityEngine.InputSystem;
 
 public class SwitchingWeapon : MonoBehaviour
 {
-    private PlayerInput playerInput;
-    private InputAction bullet;
+    private static readonly int Reload = Animator.StringToHash("Reload");
+    private PlayerInput _playerInput;
+    private InputAction _bullet;
 
     public enum AmmoType
     {
@@ -50,16 +51,16 @@ public class SwitchingWeapon : MonoBehaviour
     [SerializeField] private Color criticalColor = Color.red;
     [SerializeField] private float warningThreshold = 0.25f; // Ngưỡng cảnh báo khi người chơi gần hết đạn (%)
 
-    private float lastScrollTime;
-    private int weaponCount;
-    private const string MOUSE_SCROLL_AXIS = "Mouse ScrollWheel";
-    private const float SCROLL_THRESHOLD = 0f;
-    private Transform[] weaponTransforms;
-    private Dictionary<AmmoType, List<WeaponAmmo>> ammoTypeMap;
+    private float _lastScrollTime;
+    private int _weaponCount;
+    private const string MouseScrollAxis = "Mouse ScrollWheel";
+    private const float ScrollThreshold = 0f;
+    private Transform[] _weaponTransforms;
+    private Dictionary<AmmoType, List<WeaponAmmo>> _ammoTypeMap;
     private Dictionary<AmmoType, WeaponAmmo[]> _ammoCache;
     private Queue<StringBuilder> _stringBuilderPool;
-    private const int POOL_SIZE = 5;
-    private float timeReloadBullet;
+    private const int PoolSize = 5;
+    private float _timeReloadBullet;
 
     //void OnEnable()
     //{
@@ -76,11 +77,11 @@ public class SwitchingWeapon : MonoBehaviour
     private void Awake()
     {
         // Cache weapon transforms
-        weaponCount = transform.childCount;
-        weaponTransforms = new Transform[weaponCount];
-        for (int i = 0; i < weaponCount; i++)
+        _weaponCount = transform.childCount;
+        _weaponTransforms = new Transform[_weaponCount];
+        for (int i = 0; i < _weaponCount; i++)
         {
-            weaponTransforms[i] = transform.GetChild(i);
+            _weaponTransforms[i] = transform.GetChild(i);
         }
 
         // Tạo map cho ammo types
@@ -102,20 +103,20 @@ public class SwitchingWeapon : MonoBehaviour
         }
     }
 
-    private bool CanSwitchWeapon() => Time.time - lastScrollTime >= scrollCooldown;
+    private bool CanSwitchWeapon() => Time.time - _lastScrollTime >= scrollCooldown;
 
     private int GetNewWeaponIndex()
     {
         // Xử lý scroll input
-        float scrollInput = Input.GetAxis(MOUSE_SCROLL_AXIS);
-        if (Mathf.Abs(scrollInput) > SCROLL_THRESHOLD)
+        float scrollInput = Input.GetAxis(MouseScrollAxis);
+        if (Mathf.Abs(scrollInput) > ScrollThreshold)
         {
-            lastScrollTime = Time.time;
+            _lastScrollTime = Time.time;
             return HandleScrollInput(scrollInput);
         }
 
         // Xử lý numeric input
-        for (int i = 0; i < weaponCount; i++)
+        for (int i = 0; i < _weaponCount; i++)
         {
             if (Input.GetKeyDown(KeyCode.Alpha1 + i))
                 return i;
@@ -126,8 +127,8 @@ public class SwitchingWeapon : MonoBehaviour
 
     private void InitializePooling()
     {
-        _stringBuilderPool = new Queue<StringBuilder>(POOL_SIZE);
-        for (int i = 0; i < POOL_SIZE; i++)
+        _stringBuilderPool = new Queue<StringBuilder>(PoolSize);
+        for (int i = 0; i < PoolSize; i++)
         {
             _stringBuilderPool.Enqueue(new StringBuilder(20)); // Predefine capacity
         }
@@ -136,11 +137,11 @@ public class SwitchingWeapon : MonoBehaviour
     private void CacheComponents()
     {
         // Cache weapon transforms - Chỉ thực hiện 1 lần
-        weaponCount = transform.childCount;
-        weaponTransforms = new Transform[weaponCount];
-        for (int i = 0; i < weaponCount; i++)
+        _weaponCount = transform.childCount;
+        _weaponTransforms = new Transform[_weaponCount];
+        for (int i = 0; i < _weaponCount; i++)
         {
-            weaponTransforms[i] = transform.GetChild(i);
+            _weaponTransforms[i] = transform.GetChild(i);
         }
 
         // Tối ưu dictionary bằng cách nhóm theo AmmoType
@@ -158,23 +159,21 @@ public class SwitchingWeapon : MonoBehaviour
 
     private void ReleaseStringBuilder(StringBuilder sb)
     {
-        if (_stringBuilderPool.Count < POOL_SIZE)
-        {
-            sb.Clear();
-            _stringBuilderPool.Enqueue(sb);
-        }
+        if (_stringBuilderPool.Count >= PoolSize) return;
+        sb.Clear();
+        _stringBuilderPool.Enqueue(sb);
     }
 
     private void InitializeAmmoTypeMap()
     {
-        ammoTypeMap = new Dictionary<AmmoType, List<WeaponAmmo>>();
+        _ammoTypeMap = new Dictionary<AmmoType, List<WeaponAmmo>>();
         foreach (WeaponAmmo ammo in weaponAmmos)
         {
-            if (!ammoTypeMap.ContainsKey(ammo.ammoType))
+            if (!_ammoTypeMap.ContainsKey(ammo.ammoType))
             {
-                ammoTypeMap[ammo.ammoType] = new List<WeaponAmmo>();
+                _ammoTypeMap[ammo.ammoType] = new List<WeaponAmmo>();
             }
-            ammoTypeMap[ammo.ammoType].Add(ammo);
+            _ammoTypeMap[ammo.ammoType].Add(ammo);
         }
     }
 
@@ -183,8 +182,8 @@ public class SwitchingWeapon : MonoBehaviour
         int newIndex = selectedWeaponIndex + (scrollValue > 0 ? 1 : -1);
 
         // Wrap around
-        if (newIndex >= weaponCount) return 0;
-        if (newIndex < 0) return weaponCount - 1;
+        if (newIndex >= _weaponCount) return 0;
+        if (newIndex < 0) return _weaponCount - 1;
 
         return newIndex;
     }
@@ -195,9 +194,9 @@ public class SwitchingWeapon : MonoBehaviour
 
         selectedWeaponIndex = index;
 
-        for (int i = 0; i < weaponCount; i++)
+        for (int i = 0; i < _weaponCount; i++)
         {
-            weaponTransforms[i].gameObject.SetActive(i == selectedWeaponIndex);
+            _weaponTransforms[i].gameObject.SetActive(i == selectedWeaponIndex);
         }
 
         UpdateBulletDisplay();
@@ -205,18 +204,18 @@ public class SwitchingWeapon : MonoBehaviour
 
     private bool IsValidWeaponIndex(int index)
     {
-        return index >= 0 && index < weaponCount;
+        return index >= 0 && index < _weaponCount;
     }
 
     public void ValidateInitialWeapon()
     {
-        if (weaponCount == 0)
+        if (_weaponCount == 0)
         {
             Debug.LogError("No weapons found!");
             return;
         }
 
-        selectedWeaponIndex = Mathf.Clamp(selectedWeaponIndex, 0, weaponCount - 1);
+        selectedWeaponIndex = Mathf.Clamp(selectedWeaponIndex, 0, _weaponCount - 1);
     }
 
     private void UpdateAmmoDisplay()
@@ -259,12 +258,10 @@ public class SwitchingWeapon : MonoBehaviour
 
     public void UseAmmo(int amount = 1)
     {
-        if (IsValidWeaponIndex(selectedWeaponIndex))
-        {
-            WeaponAmmo currentWeapon = weaponAmmos[selectedWeaponIndex];
-            currentWeapon.currentAmmo = Mathf.Max(0, currentWeapon.currentAmmo - amount);
-            UpdateBulletDisplay();
-        }
+        if (!IsValidWeaponIndex(selectedWeaponIndex)) return;
+        WeaponAmmo currentWeapon = weaponAmmos[selectedWeaponIndex];
+        currentWeapon.currentAmmo = Mathf.Max(0, currentWeapon.currentAmmo - amount);
+        UpdateBulletDisplay();
     }
 
     public bool HasAmmo()
@@ -280,22 +277,15 @@ public class SwitchingWeapon : MonoBehaviour
 
     public int RestoreAmmo(AmmoType ammoType, int ammo)
     {
-        if (_ammoCache.TryGetValue(ammoType, out var weapons))
+        if (!_ammoCache.TryGetValue(ammoType, out var weapons)) return 0;
+        int totalAmmoAdded = weapons.Sum(weapon => weapon.AddAmmo(ammo));
+
+        if (weapons.Any(w => Array.IndexOf(weaponAmmos, w) == selectedWeaponIndex))
         {
-            int totalAmmoAdded = 0;
-            foreach (var weapon in weapons)
-            {
-                totalAmmoAdded += weapon.AddAmmo(ammo);
-            }
-
-            if (weapons.Any(w => Array.IndexOf(weaponAmmos, w) == selectedWeaponIndex))
-            {
-                UpdateBulletDisplay();
-            }
-
-            return totalAmmoAdded;
+            UpdateBulletDisplay();
         }
-        return 0;
+
+        return totalAmmoAdded;
     }
 
 
@@ -306,19 +296,17 @@ public class SwitchingWeapon : MonoBehaviour
         {
             if (currentWeapon.currentAmmo != currentWeapon.maxAmmo)
             {
-                currentWeapon.animator.SetTrigger("Reload");
+                currentWeapon.animator.SetTrigger(Reload);
                 StartCoroutine(Rebullet());
-                return;
             }
             else
             {
                 Debug.Log("Đạn đã đầy");
-                return;
             }
         }
         else
         {
-            Debug.LogError($"Animator not assigned for weapon: {currentWeapon.weaponName}");
+            System.Diagnostics.Debug.Assert(currentWeapon != null, nameof(currentWeapon) + " != null");
         }
     }
 
@@ -330,16 +318,16 @@ public class SwitchingWeapon : MonoBehaviour
         AnimationClip[] clips = controller.animationClips;
         foreach (AnimationClip clip in clips)
         {
-            timeReloadBullet = clip.length;
+            _timeReloadBullet = clip.length;
         }
-        Debug.Log(timeReloadBullet);
-        yield return new WaitForSeconds(timeReloadBullet);
+        Debug.Log(_timeReloadBullet);
+        yield return new WaitForSeconds(_timeReloadBullet);
         currentWeapon.currentAmmo = currentWeapon.maxAmmo;
         UpdateBulletDisplay();
     }
     private void UpdateBulletDisplay()
     {
-        if (ammoText == null || !IsValidWeaponIndex(selectedWeaponIndex)) return;
+        if (!ammoText || !IsValidWeaponIndex(selectedWeaponIndex)) return;
 
         WeaponAmmo currentWeapon = weaponAmmos[selectedWeaponIndex];
         currentWeapon.animator.Play("Idle");

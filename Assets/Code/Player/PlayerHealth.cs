@@ -17,9 +17,9 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private float duration;
     [SerializeField] private float fadeSpeed;
 
-    private float durationTimer;
-    private float lerpTimer;
-    private DefenseSystem defenseSystem;
+    private float _durationTimer;
+    private float _lerpTimer;
+    private DefenseSystem _defenseSystem;
 
     private void OnEnable()
     {
@@ -35,7 +35,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void Awake()
     {
-        defenseSystem = GetComponent<DefenseSystem>();
+        _defenseSystem = GetComponent<DefenseSystem>();
         health = maxHealth;
         defense = maxDefense;
     }
@@ -58,8 +58,8 @@ public class PlayerHealth : MonoBehaviour
         {
             return;
         }
-        durationTimer += Time.deltaTime;
-        if (!(durationTimer > duration)) return;
+        _durationTimer += Time.deltaTime;
+        if (!(_durationTimer > duration)) return;
         float tempAlpha = damageOverlay.color.a;
         tempAlpha = Time.deltaTime * fadeSpeed;
         damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, tempAlpha);
@@ -79,10 +79,10 @@ public class PlayerHealth : MonoBehaviour
         if (damageOverlay.color.a <= 0 || health < 30) return;
 
         // Tăng thời gian effect timer:
-        durationTimer += Time.deltaTime;
+        _durationTimer += Time.deltaTime;
 
         // Nếu quá thời gian hiệu ứng -> giảm dần tempAlpha (hiệu ứng fade):
-        if (!(durationTimer > duration)) return;
+        if (!(_durationTimer > duration)) return;
         float tempAlpha = damageOverlay.color.a;
         tempAlpha -= Time.deltaTime * fadeSpeed;
         tempAlpha = Mathf.Clamp(tempAlpha, 0, 1);
@@ -100,8 +100,8 @@ public class PlayerHealth : MonoBehaviour
         {
             frontHealthBar.fillAmount = hFraction;
             backHealthBar.color = Color.red;
-            lerpTimer += Time.deltaTime;
-            float percent = lerpTimer / chipSpeed;
+            _lerpTimer += Time.deltaTime;
+            float percent = _lerpTimer / chipSpeed;
             percent = percent * percent; //Cho hiệu ứng đẹp hơn
             backHealthBar.fillAmount = Mathf.Lerp(fillBackHealth, hFraction, percent);
         }
@@ -110,19 +110,19 @@ public class PlayerHealth : MonoBehaviour
         {
             backHealthBar.color = Color.green;
             backHealthBar.fillAmount = hFraction;
-            lerpTimer += Time.deltaTime;
-            float percent = lerpTimer / chipSpeed;
+            _lerpTimer += Time.deltaTime;
+            float percent = _lerpTimer / chipSpeed;
             percent = percent * percent; //Cho hiệu ứng đẹp hơn
             frontHealthBar.fillAmount = Mathf.Lerp(fillFrontHealth, backHealthBar.fillAmount, percent);
         }
     }
 
-    public void ApplyDOT(float dotDamage, int dotTicks, float dotInterval)
+    public void ApplyDot(float dotDamage, int dotTicks, float dotInterval)
     {
-        StartCoroutine(DOTCoroutine(dotDamage, dotTicks, dotInterval));
+        StartCoroutine(DotCoroutine(dotDamage, dotTicks, dotInterval));
     }
 
-    private IEnumerator DOTCoroutine(float dotDamage, int dotTicks, float dotInterval)
+    private IEnumerator DotCoroutine(float dotDamage, int dotTicks, float dotInterval)
     {
         for (int i = 0; i < dotTicks; i++)
         {
@@ -134,11 +134,11 @@ public class PlayerHealth : MonoBehaviour
     public void TakeDamage(float damage, float penetration)
     {
         float healthBeforeDamage = health;
-        float finalDamage = defenseSystem.CalculateDamage(damage, defense, penetration);
+        float finalDamage = _defenseSystem.CalculateDamage(damage, defense, penetration);
         health = Mathf.Max(health - finalDamage, 0);
         float healthActuallyDamage = health - healthBeforeDamage;
-        lerpTimer = 0f;
-        durationTimer = 0f;
+        _lerpTimer = 0f;
+        _durationTimer = 0f;
         damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, 1);
     }
     public void TakeMeteorDamage(float explosionDamage, float dotDamage, int dotTicks, float dotInterval)
@@ -146,7 +146,7 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log($"🔥 Player trúng thiên thạch! Sát thương nổ: {explosionDamage}, DOT: {dotDamage} x {dotTicks} lần");
 
         TakeDamage(explosionDamage, 0);  // Gây sát thương ngay lập tức
-        ApplyDOT(dotDamage, dotTicks, dotInterval);  // Gây sát thương theo thời gian
+        ApplyDot(dotDamage, dotTicks, dotInterval);  // Gây sát thương theo thời gian
     }
 
     public void RestoreHealth(float heal)
@@ -154,6 +154,6 @@ public class PlayerHealth : MonoBehaviour
         float healthBeforePickup = health;
         health = Mathf.Min(health + heal, maxHealth);
         float healthActuallyHeal = health - healthBeforePickup;
-        lerpTimer = 0f;
+        _lerpTimer = 0f;
     }
 }

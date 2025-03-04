@@ -13,13 +13,10 @@ public class NoteCounter : ScriptableObject
     {
 #if UNITY_EDITOR
         // Chỉ reset trong Unity Editor khi nhấn nút Play
-        if (!Application.isPlaying)
-        {
-            return; // Tránh reset khi chạy trong Editor nhưng không Play
-        }
+        if (Application.isPlaying) ResetNoteCount(); // Reset chỉ khi bắt đầu Play
+        // Tránh reset khi chạy trong Editor nhưng không Play
 #endif
 
-        ResetNoteCount(); // Reset chỉ khi bắt đầu Play
     }
 
     public void IncrementNoteCount()

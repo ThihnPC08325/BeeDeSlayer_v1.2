@@ -91,7 +91,7 @@ public class GhostProfessor : MonoBehaviour
     {
         if (passwordInput.text == correctPassword)
         {
-            sceneChanger.LoadTargetScene();
+            SceneChanger.LoadTargetScene();
             Time.timeScale = 1f;
         }
         else

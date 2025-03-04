@@ -4,14 +4,13 @@ using System.Collections.Generic;
 public class NoteScript : MonoBehaviour
 {
     private bool _noteStatus = false;
-    public GameObject note;
-
+    [SerializeField] internal GameObject note;
     [SerializeField] private string noteID;
     [SerializeField] private NoteData noteData; // Tham chiếu tới NoteData ScriptableObject
     [SerializeField] private List<Transform> possiblePositions;
     [SerializeField] private NoteCounter noteCounter; // Tham chiếu tới NoteCounter ScriptableObject
 
-    void Start()
+    private void Start()
     {
         // Kiểm tra nếu note đã được nhặt trước đó thông qua NoteData
         if (noteData.IsNoteCollected(noteID))
@@ -47,7 +46,7 @@ public class NoteScript : MonoBehaviour
         return noteID;
     }
 
-    public void ActivateNote()
+    private void ActivateNote()
     {
         gameObject.SetActive(true);
 

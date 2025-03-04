@@ -1,20 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ImpactEffectPool : MonoBehaviour
 {
-    private static ImpactEffectPool instance;
+    private static ImpactEffectPool _instance;
     public static ImpactEffectPool Instance
     {
         get
         {
-            if (instance == null)
+            if (_instance == null)
             {
                 var obj = new GameObject("ImpactEffectPool");
-                instance = obj.AddComponent<ImpactEffectPool>();
+                _instance = obj.AddComponent<ImpactEffectPool>();
             }
-            return instance;
+            return _instance;
         }
     }
 
@@ -31,13 +32,13 @@ public class ImpactEffectPool : MonoBehaviour
     [System.Serializable]
     public class Pool
     {
-        [SerializeField] private EffectType _effectType;
-        [SerializeField] private GameObject _prefab;
-        [SerializeField] private int _size;
+        [SerializeField] private EffectType effectType;
+        [SerializeField] private GameObject prefab;
+        [SerializeField] private int size;
 
-        public EffectType EffectType => _effectType;
-        public GameObject Prefab => _prefab;
-        public int Size => _size;
+        public EffectType EffectType => effectType;
+        public GameObject Prefab => prefab;
+        public int Size => size;
 
         // Cache transform để tránh GetComponent liên tục
         private Transform _containerTransform;
@@ -49,17 +50,17 @@ public class ImpactEffectPool : MonoBehaviour
     }
 
     [SerializeField] private List<Pool> pools = new();
-    private readonly Dictionary<EffectType, Queue<GameObject>> poolDictionary = new();
-    private readonly Dictionary<EffectType, Pool> poolReference = new();
+    private readonly Dictionary<EffectType, Queue<GameObject>> _poolDictionary = new();
+    private readonly Dictionary<EffectType, Pool> _poolReference = new();
 
     [SerializeField] private Transform poolRoot;
-    private const string POOL_ROOT_NAME = "---POOL---";
+    private const string PoolRootName = "---POOL---";
 
     private void Awake()
     {
-        if (instance == null)
+        if (_instance == null)
         {
-            instance = this;
+            _instance = this;
             InitializePoolSystem();
         }
         else
@@ -76,8 +77,8 @@ public class ImpactEffectPool : MonoBehaviour
 
     private void SetupPoolRoot()
     {
-        poolRoot = poolRoot ? poolRoot : GameObject.Find(POOL_ROOT_NAME)?.transform;
-        poolRoot = poolRoot != null ? poolRoot : new GameObject(POOL_ROOT_NAME).transform;
+        poolRoot = poolRoot ? poolRoot : GameObject.Find(PoolRootName)?.transform;
+        poolRoot = poolRoot != null ? poolRoot : new GameObject(PoolRootName).transform;
         transform.SetParent(poolRoot);
     }
 
@@ -90,7 +91,7 @@ public class ImpactEffectPool : MonoBehaviour
     {
         foreach (Pool pool in pools)
         {
-            if (pool.Prefab == null)
+            if (!pool.Prefab)
             {
                 Debug.LogError($"Invalid pool configuration detected for {pool.EffectType}!");
                 continue;
@@ -105,13 +106,13 @@ public class ImpactEffectPool : MonoBehaviour
             var objectPool = new Queue<GameObject>(pool.Size);
             yield return StartCoroutine(PrewarmPoolAsync(pool, objectPool));
 
-            poolDictionary[pool.EffectType] = objectPool;
-            poolReference[pool.EffectType] = pool;
+            _poolDictionary[pool.EffectType] = objectPool;
+            _poolReference[pool.EffectType] = pool;
         }
     }
 
 
-    private IEnumerator PrewarmPoolAsync(Pool pool, Queue<GameObject> objectPool)
+    private static IEnumerator PrewarmPoolAsync(Pool pool, Queue<GameObject> objectPool)
     {
         for (int i = 0; i < pool.Size; i++)
         {
@@ -125,7 +126,7 @@ public class ImpactEffectPool : MonoBehaviour
         }
     }
 
-    private void CreateNewInstance(Pool pool, Queue<GameObject> objectPool)
+    private static void CreateNewInstance(Pool pool, Queue<GameObject> objectPool)
     {
         var obj = Instantiate(pool.Prefab, pool.ContainerTransform);
         obj.SetActive(false);
@@ -138,7 +139,7 @@ public class ImpactEffectPool : MonoBehaviour
     {
         if (!ValidatePoolExistence(type)) return null;
 
-        var pool = poolDictionary[type];
+        var pool = _poolDictionary[type];
         var obj = pool.Count > 0 ? pool.Dequeue() : CreateNewPoolObject(type);
 
         SetupSpawnedObject(obj, position, rotation);
@@ -147,18 +148,18 @@ public class ImpactEffectPool : MonoBehaviour
 
     private bool ValidatePoolExistence(EffectType type)
     {
-        if (poolDictionary.ContainsKey(type)) return true;
+        if (_poolDictionary.ContainsKey(type)) return true;
         Debug.LogWarning($"Pool with type {type} doesn't exist!");
         return false;
     }
 
     private GameObject CreateNewPoolObject(EffectType tag)
     {
-        var pool = poolReference[tag];
+        var pool = _poolReference[tag];
         return Instantiate(pool.Prefab, pool.ContainerTransform);
     }
 
-    private void SetupSpawnedObject(GameObject obj, Vector3 position, Quaternion rotation)
+    private static void SetupSpawnedObject(GameObject obj, Vector3 position, Quaternion rotation)
     {
         obj.SetActive(true);
         obj.transform.SetPositionAndRotation(position, rotation);
@@ -169,7 +170,7 @@ public class ImpactEffectPool : MonoBehaviour
         if (!ValidatePoolExistence(type)) return;
 
         obj.SetActive(false);
-        obj.transform.SetParent(poolReference[type].ContainerTransform);
-        poolDictionary[type].Enqueue(obj);
+        obj.transform.SetParent(_poolReference[type].ContainerTransform);
+        _poolDictionary[type].Enqueue(obj);
     }
 }

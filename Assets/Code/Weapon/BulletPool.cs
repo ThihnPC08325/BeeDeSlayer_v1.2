@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class BulletPool : MonoBehaviour
 {
@@ -9,17 +10,13 @@ public class BulletPool : MonoBehaviour
     {
         get
         {
-            if (s_Instance == null)
-            {
-                // Tìm trong scene
-                s_Instance = FindObjectOfType<BulletPool>();
-                if (s_Instance == null)
-                {
-                    // Nếu không tìm thấy, tạo mới
-                    var obj = new GameObject("PlayerBulletPool");
-                    s_Instance = obj.AddComponent<BulletPool>();
-                }
-            }
+            if (s_Instance) return s_Instance;
+            // Tìm trong scene
+            s_Instance = FindObjectOfType<BulletPool>();
+            if (s_Instance) return s_Instance;
+            // Nếu không tìm thấy, tạo mới
+            var obj = new GameObject("PlayerBulletPool");
+            s_Instance = obj.AddComponent<BulletPool>();
             return s_Instance;
         }
     }
@@ -34,13 +31,13 @@ public class BulletPool : MonoBehaviour
     [System.Serializable]
     public class Pool
     {
-        [SerializeField] private PoolType _type;
-        [SerializeField] private GameObject _prefab;
-        [SerializeField] private int _size;
+        [SerializeField] private PoolType type;
+        [SerializeField] private GameObject prefab;
+        [SerializeField] private int size;
 
-        public PoolType Type => _type;
-        public GameObject Prefab => _prefab;
-        public int Size => _size;
+        public PoolType Type => type;
+        public GameObject Prefab => prefab;
+        public int Size => size;
     }
 
     [SerializeField] private List<Pool> pools;
@@ -95,7 +92,7 @@ public class BulletPool : MonoBehaviour
         }
     }
 
-    private void CreateNewInstance(Pool pool, Transform container, Queue<GameObject> objectPool)
+    private static void CreateNewInstance(Pool pool, Transform container, Queue<GameObject> objectPool)
     {
         var obj = Instantiate(pool.Prefab, container);
         obj.SetActive(false);

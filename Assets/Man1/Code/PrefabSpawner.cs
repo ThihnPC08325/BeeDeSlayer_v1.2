@@ -2,15 +2,15 @@
 
 public class PrefabSpawner : MonoBehaviour
 {
-    public GameObject prefabToSpawn; // Prefab cần spawn
-    public float spawnInterval = 5f; // Khoảng thời gian spawn mỗi lần
-    public float spawnHeight = 10f; // Độ cao mà prefab sẽ spawn
+    [SerializeField] private GameObject prefabToSpawn; // Prefab cần spawn
+    [SerializeField] private float spawnInterval = 5f; // Khoảng thời gian spawn mỗi lần
+    [SerializeField] private float spawnHeight = 10f; // Độ cao mà prefab sẽ spawn
 
     // Giới hạn khu vực spawn (tọa độ bản đồ)
-    public float xMin = -10f;
-    public float xMax = 10f;
-    public float zMin = -10f;
-    public float zMax = 10f;
+    [SerializeField] private float xMin = -10f;
+    [SerializeField] private float xMax = 10f;
+    [SerializeField] private float zMin = -10f;
+    [SerializeField] private float zMax = 10f;
 
     private void Start()
     {

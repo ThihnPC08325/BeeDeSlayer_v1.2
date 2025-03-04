@@ -15,20 +15,20 @@ public class ARGun : MonoBehaviour
     [SerializeField] private float shootingDelay;
     [SerializeField] private ShootMode currentShootMode;
 
-    private Vector3 gravity = Physics.gravity; // Sử dụng trọng lực mặc định của Unity
+    private readonly Vector3 _gravity = Physics.gravity; // Sử dụng trọng lực mặc định của Unity
     private void UpdateBulletTrajectory(Rigidbody bulletRb, float deltaTime)
     {
         // Áp dụng trọng lực
-        bulletRb.velocity += gravity * deltaTime;
+        bulletRb.velocity += _gravity * deltaTime;
     }
 
-    private WeaponRecoilSystem recoilSystem;
-    private CalculateMuzzleVelocity calculateMuzzleVelocity;
-    private bool isShooting, readyToShoot;
-    bool allowReset = true;
-    private readonly int bulletPerBurst = 3;
-    private int currentBurst;
-    private readonly float lastShotTime;
+    private WeaponRecoilSystem _recoilSystem;
+    private CalculateMuzzleVelocity _calculateMuzzleVelocity;
+    private bool _isShooting, _readyToShoot;
+    private bool _allowReset = true;
+    private const int BulletPerBurst = 3;
+    private int _currentBurst;
+    private readonly float _lastShotTime;
 
     private enum ShootMode
     {
@@ -58,23 +58,21 @@ public class ARGun : MonoBehaviour
 
     private void Awake()
     {
-        readyToShoot = true;
-        currentBurst = bulletPerBurst;
-        recoilSystem = GetComponent<WeaponRecoilSystem>();
-        calculateMuzzleVelocity = GetComponent<CalculateMuzzleVelocity>();
+        _readyToShoot = true;
+        _currentBurst = BulletPerBurst;
+        _recoilSystem = GetComponent<WeaponRecoilSystem>();
+        _calculateMuzzleVelocity = GetComponent<CalculateMuzzleVelocity>();
     }
 
-    void Update()
+    private void Update()
     {
-        // Kiểm tra đầu vào để bắn
-        if (currentShootMode == ShootMode.Single || currentShootMode == ShootMode.Burst)
+        _isShooting = currentShootMode switch
         {
-            isShooting = Input.GetButtonDown("Fire1");
-        }
-        else if (currentShootMode == ShootMode.Auto)
-        {
-            isShooting = Input.GetButton("Fire1");
-        }
+            // Kiểm tra đầu vào để bắn
+            ShootMode.Single or ShootMode.Burst => Input.GetButtonDown("Fire1"),
+            ShootMode.Auto => Input.GetButton("Fire1"),
+            _ => _isShooting
+        };
 
         // Kiểm tra để đổi chế độ bắn
         if (Input.GetKeyDown(KeyCode.B))
@@ -82,16 +80,16 @@ public class ARGun : MonoBehaviour
             SwitchShootMode();
         }
 
-        if (readyToShoot && isShooting && weaponSwitcher.HasAmmo())
+        if (_readyToShoot && _isShooting && weaponSwitcher.HasAmmo())
         {
-            currentBurst = bulletPerBurst;
+            _currentBurst = BulletPerBurst;
             FireWeapon();
-            recoilSystem.ApplyRecoil();
+            _recoilSystem.ApplyRecoil();
             weaponSwitcher.UseAmmo();
         }
 
-        recoilSystem.HandleRecoil();
-        recoilSystem.HandleSpread();
+        _recoilSystem.HandleRecoil();
+        _recoilSystem.HandleSpread();
     }
 
     private void SwitchShootMode()
@@ -115,9 +113,9 @@ public class ARGun : MonoBehaviour
 
     private void FireWeapon()
     {
-        if (!readyToShoot) return;
+        if (!_readyToShoot) return;
 
-        readyToShoot = false;
+        _readyToShoot = false;
         PlayMuzzleEffect();
         FireBullet();
         HandleShootingModes();
@@ -131,7 +129,7 @@ public class ARGun : MonoBehaviour
     private void FireBullet()
     {
         Vector3 shootingDirection = BulletDirectionCalculator.CalculateDirection(bulletSpawn);
-        float muzzleVelocity = calculateMuzzleVelocity.MuzzleVelocity();
+        float muzzleVelocity = _calculateMuzzleVelocity.MuzzleVelocity();
 
         GameEvents.TriggerWeaponFire(bulletSpawn.position, shootingDirection, muzzleVelocity);
 
@@ -160,21 +158,21 @@ public class ARGun : MonoBehaviour
 
     private void HandleShootingModes()
     {
-        if (allowReset)
+        if (_allowReset)
         {
             Invoke(nameof(ResetShoot), shootingDelay);
-            allowReset = false;
+            _allowReset = false;
         }
 
-        if (currentShootMode != ShootMode.Burst || currentBurst <= 1) return;
-        currentBurst--;
+        if (currentShootMode != ShootMode.Burst || _currentBurst <= 1) return;
+        _currentBurst--;
         Invoke(nameof(FireWeapon), shootingDelay);
     }
 
     private void ResetShoot()
     {
-        readyToShoot = true;
-        allowReset = true;
+        _readyToShoot = true;
+        _allowReset = true;
     }
 
 }

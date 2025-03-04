@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -17,9 +18,9 @@ public class PauseMenu : MonoBehaviour
     public Button quitButton;
     public Button backButton;
 
-    private bool isPaused = false;
+    private bool _isPaused = false;
 
-    void Start()
+    private void Start()
     {
         pauseMenuUI.SetActive(false);
         settingsMenuUI.SetActive(false);
@@ -35,23 +36,21 @@ public class PauseMenu : MonoBehaviour
         mouseSensitivitySlider.onValueChanged.AddListener(SetMouseSensitivity);
     }
 
-    void Update()
+    private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (isPaused)
-                ResumeGame();
-            else
-                PauseGame();
-        }
+        if (!Input.GetKeyDown(KeyCode.Escape)) return;
+        if (_isPaused)
+            ResumeGame();
+        else
+            PauseGame();
     }
 
-    void PauseGame()
+    private void PauseGame()
     {
         Debug.Log("PauseGame Called"); // Kiểm tra xem nó có chạy không
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
-        isPaused = true;
+        _isPaused = true;
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -64,7 +63,7 @@ public class PauseMenu : MonoBehaviour
         pauseMenuUI.SetActive(false);
         settingsMenuUI.SetActive(false);
         Time.timeScale = 1f;
-        isPaused = false;
+        _isPaused = false;
 
         // Ẩn con trỏ khi quay lại game
         Cursor.lockState = CursorLockMode.Locked;
@@ -86,7 +85,7 @@ public class PauseMenu : MonoBehaviour
     public void GoToMainMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene(0);
     }
 
     public void QuitGame()

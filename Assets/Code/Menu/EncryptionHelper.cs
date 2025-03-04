@@ -42,30 +42,28 @@ public class EncryptionHelper
             throw new ArgumentException("Dữ liệu mã hóa không hợp lệ.");
         }
 
-        using (Aes aesAlg = Aes.Create())
+        using Aes aesAlg = Aes.Create();
+        byte[] keyBytes = Encoding.UTF8.GetBytes(Key);
+        byte[] ivBytes = Encoding.UTF8.GetBytes(Iv);
+
+        // Kiểm tra độ dài của key và iv
+        if (keyBytes.Length != 16)
+            throw new ArgumentException("Key length must be 24 bytes for AES-192.");
+        if (ivBytes.Length != 16)
+            throw new ArgumentException("IV length must be 16 bytes.");
+
+        aesAlg.Key = keyBytes;
+        aesAlg.IV = ivBytes;
+
+        ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+        using (MemoryStream msDecrypt = new MemoryStream(cipherBytes))
         {
-            byte[] keyBytes = Encoding.UTF8.GetBytes(Key);
-            byte[] ivBytes = Encoding.UTF8.GetBytes(Iv);
-
-            // Kiểm tra độ dài của key và iv
-            if (keyBytes.Length != 16)
-                throw new ArgumentException("Key length must be 24 bytes for AES-192.");
-            if (ivBytes.Length != 16)
-                throw new ArgumentException("IV length must be 16 bytes.");
-
-            aesAlg.Key = keyBytes;
-            aesAlg.IV = ivBytes;
-
-            ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
-
-            using (MemoryStream msDecrypt = new MemoryStream(cipherBytes))
+            using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
             {
-                using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                using (StreamReader srDecrypt = new StreamReader(csDecrypt))
                 {
-                    using (StreamReader srDecrypt = new StreamReader(csDecrypt))
-                    {
-                        return srDecrypt.ReadToEnd();
-                    }
+                    return srDecrypt.ReadToEnd();
                 }
             }
         }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
 {
@@ -22,108 +23,106 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float dashSpeed = 30f;
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private int maxDashes = 2;
-
+    
     [Header("Animation")]
-    [SerializeField] private Animator ArGunReload;
-    [SerializeField] private Animator KBGunReload;
+    [SerializeField] private Animator arGunReload;
+    [SerializeField] private Animator kbGunReload;
     #endregion
 
     #region private
-    private float originalSpeed;
-    private CharacterController controller;
-    private Vector2 moveInput;
-    private Vector3 velocity;
-    private bool isGrounded;
-    private int jumpsRemaining;
-    private bool isDashing;
-    private int remainingDashes;
-    private float dashEndTime;
+    private float _originalSpeed;
+    private CharacterController _controller;
+    private Vector2 _moveInput;
+    private Vector3 _velocity;
+    private bool _isGrounded;
+    private int _jumpsRemaining;
+    private bool _isDashing;
+    private int _remainingDashes;
+    private float _dashEndTime;
 
-    private PlayerInput playerInput;
-    private InputAction moveAction;
-    private InputAction jumpAction;
-    private InputAction dashAction;
-    private InputAction reload;
+    private PlayerInput _playerInput;
+    private InputAction _moveAction;
+    private InputAction _jumpAction;
+    private InputAction _dashAction;
+    private InputAction _reload;
     #endregion
 
     private void Awake()
     {
-        controller = GetComponent<CharacterController>();
-        playerInput = new PlayerInput();
-        originalSpeed = moveSpeed;
+        _controller = GetComponent<CharacterController>();
+        _playerInput = new PlayerInput();
+        _originalSpeed = moveSpeed;
     }
 
     private void OnEnable()
     {
-        moveAction = playerInput.Player.Move;
-        moveAction.Enable();
+        _moveAction = _playerInput.Player.Move;
+        _moveAction.Enable();
 
-        jumpAction = playerInput.Player.Jump;
-        jumpAction.Enable();
+        _jumpAction = _playerInput.Player.Jump;
+        _jumpAction.Enable();
 
-        dashAction = playerInput.Player.Dash;
-        dashAction.Enable();
+        _dashAction = _playerInput.Player.Dash;
+        _dashAction.Enable();
 
-        reload = playerInput.Player.Reload;
-        reload.Enable();
+        _reload = _playerInput.Player.Reload;
+        _reload.Enable();
     }
 
     private void OnDisable()
     {
-        moveAction.Disable();
-        jumpAction.Disable();
-        dashAction.Disable();
+        _moveAction.Disable();
+        _jumpAction.Disable();
+        _dashAction.Disable();
     }
 
     private void FixedUpdate()
     {
-        isGrounded = controller.isGrounded;
-        if (isGrounded && velocity.y < 0)
-        {
-            velocity.y = -2f;
-            jumpsRemaining = maxJumps;
-            remainingDashes = maxDashes;
-        }
+        _isGrounded = _controller.isGrounded;
+        if (!_isGrounded || !(_velocity.y < 0)) return;
+        _velocity.y = -2f;
+        _jumpsRemaining = maxJumps;
+        _remainingDashes = maxDashes;
     }
 
     private void Update()
     {
         HandleMovement();
         ApplyGravity();
-        if (!dashAction.triggered || remainingDashes <= 0) return;
+        if (!_dashAction.triggered || _remainingDashes <= 0) return;
         StartCoroutine(Dash());
-        remainingDashes--;
+        _remainingDashes--;
     }
     public void ApplySlow(float slowPercentage)
     {
-        moveSpeed = originalSpeed * (1 - slowPercentage);
+        moveSpeed = _originalSpeed * (1 - slowPercentage);
     }
 
     public void RemoveSlow()
     {
-        moveSpeed = originalSpeed;
+        moveSpeed = _originalSpeed;
     }
     private void HandleMovement()
     {
-        moveInput = moveAction.ReadValue<Vector2>();
-        Vector3 move = transform.right * moveInput.x + transform.forward * moveInput.y;
+        _moveInput = _moveAction.ReadValue<Vector2>();
+        Vector3 move = transform.right * _moveInput.x + transform.forward * _moveInput.y;
 
-        if (isDashing)
+        if (_isDashing)
         {
-            if (Time.time >= dashEndTime)
+            if (Time.time >= _dashEndTime)
             {
-                isDashing = false;
+                _isDashing = false;
             }
             else
             {
-                controller.Move(move.normalized * (dashSpeed * Time.deltaTime));
+                _controller.Move(move.normalized * (dashSpeed * Time.deltaTime));
                 return;
             }
         }
 
         //---MOVE---
         float targetSpeed = move.magnitude * moveSpeed * currentSpeedModifier;
-        float currentSpeed = new Vector3(controller.velocity.x, 0, controller.velocity.z).magnitude;
+        float currentSpeed = new Vector3(_controller.velocity.x, 0, _controller.velocity.z).magnitude;
 
         currentSpeed = targetSpeed > currentSpeed ? Mathf.MoveTowards(currentSpeed, targetSpeed, acceleration * Time.deltaTime) : Mathf.MoveTowards(currentSpeed, targetSpeed, deceleration * Time.deltaTime);
 
@@ -131,57 +130,55 @@ public class PlayerController : MonoBehaviour
 
         if (move.magnitude > 0.1f)
         {
-            controller.Move(move.normalized * (currentSpeed * Time.deltaTime));
+            _controller.Move(move.normalized * (currentSpeed * Time.deltaTime));
         }
 
-        if (isGrounded)
+        if (_isGrounded)
         {
-            controller.Move(move * (moveSpeed * Time.deltaTime));
+            _controller.Move(move * (moveSpeed * Time.deltaTime));
         }
         else
         {
             //---AIR CONTROL---
-            controller.Move(move * (moveSpeed * airControl * Time.deltaTime));
+            _controller.Move(move * (moveSpeed * airControl * Time.deltaTime));
         }
 
         //---JUMP---
-        if (jumpAction.triggered && jumpsRemaining > 0)
-        {
-            velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
-            jumpsRemaining--;
-        }
+        if (!_jumpAction.triggered || _jumpsRemaining <= 0) return;
+        _velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
+        _jumpsRemaining--;
     }
 
     private void ApplyGravity()
     {
-        velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
+        _velocity.y += gravity * Time.deltaTime;
+        _controller.Move(_velocity * Time.deltaTime);
     }
 
     private IEnumerator Dash()
     {
-        isDashing = true;
-        dashEndTime = Time.time + dashDuration;
+        _isDashing = true;
+        _dashEndTime = Time.time + dashDuration;
 
         // Đọc input hiện tại để xác định hướng dash
-        Vector2 input = moveAction.ReadValue<Vector2>();
+        Vector2 input = _moveAction.ReadValue<Vector2>();
 
         // Dash theo hướng input
         Vector3 dashDirection = transform.TransformDirection(new Vector3(input.x, 0, input.y)).normalized;
 
         // Tính toán vận tốc dash
-        velocity = dashDirection * dashSpeed;
+        _velocity = dashDirection * dashSpeed;
 
         // Thực hiện dash
-        while (Time.time < dashEndTime)
+        while (Time.time < _dashEndTime)
         {
-            controller.Move(velocity * Time.deltaTime);
+            _controller.Move(_velocity * Time.deltaTime);
             yield return null;
         }
 
         // Kết thúc dash
-        isDashing = false;
-        velocity = Vector3.zero;
+        _isDashing = false;
+        _velocity = Vector3.zero;
     }
 
     public void ApplySpeedModifier(float modifier)
@@ -195,8 +192,8 @@ public class PlayerController : MonoBehaviour
     }
     private void OnReload() 
     {
-        ArGunReload.Play("ArGunReload");
-        KBGunReload.Play("KBGunReload");
+        arGunReload.Play("ArGunReload");
+        kbGunReload.Play("KBGunReload");
     }
     private IEnumerator SlowDown(float multiplier, float duration)
     {

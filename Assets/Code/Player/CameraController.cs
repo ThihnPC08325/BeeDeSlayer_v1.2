@@ -107,12 +107,10 @@ public class CameraController : MonoBehaviour
     // Apply confusion for a set duration
     public void ApplyConfusion(float duration)
     {
-        if (!_isConfused)
-        {
-            _isConfused = true;
-            Debug.Log("Camera Confusion Activated! X and Y swapped.");
-            Invoke(nameof(RemoveConfusion), duration);
-        }
+        if (_isConfused) return;
+        _isConfused = true;
+        Debug.Log("Camera Confusion Activated! X and Y swapped.");
+        Invoke(nameof(RemoveConfusion), duration);
     }
 
     private void RemoveConfusion()

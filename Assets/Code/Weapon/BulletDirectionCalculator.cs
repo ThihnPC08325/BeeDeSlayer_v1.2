@@ -2,19 +2,19 @@
 
 public class BulletDirectionCalculator : MonoBehaviour
 {
-    private const float TWO_PI = 2f * Mathf.PI;
-    private static Vector3 DEFAULT_DIRECTION = Vector3.forward;
+    private const float TwoPI = 2f * Mathf.PI;
+    private static readonly Vector3 DefaultDirection = Vector3.forward;
 
-    private static float[] precomputedSin;
-    private static float[] precomputedCos;
-    private const int PRECOMPUTE_STEPS = 180;
-    private static bool isInitialized = false;
-    private static Transform cachedBulletSpawn;
-    private static Vector3 lastKnownDirection;
+    private static float[] _precomputedSin;
+    private static float[] _precomputedCos;
+    private const int PrecomputeSteps = 180;
+    private static bool _isInitialized = false;
+    private static Transform _cachedBulletSpawn;
+    private static Vector3 _lastKnownDirection;
 
     // Cache Quaternion để tái sử dụng
-    private static Quaternion[] cachedRotations;
-    private const int ROTATION_CACHE_SIZE = 360;
+    private static Quaternion[] _cachedRotations;
+    private const int RotationCacheSize = 360;
 
     private void Awake()
     {
@@ -23,70 +23,68 @@ public class BulletDirectionCalculator : MonoBehaviour
 
     private static void InitializeIfNeeded()
     {
-        if (!isInitialized)
+        if (_isInitialized) return;
+        // Khởi tạo các mảng
+        _precomputedSin = new float[PrecomputeSteps];
+        _precomputedCos = new float[PrecomputeSteps];
+        _cachedRotations = new Quaternion[RotationCacheSize];
+
+        // Precompute các giá trị
+        for (int i = 0; i < PrecomputeSteps; i++)
         {
-            // Khởi tạo các mảng
-            precomputedSin = new float[PRECOMPUTE_STEPS];
-            precomputedCos = new float[PRECOMPUTE_STEPS];
-            cachedRotations = new Quaternion[ROTATION_CACHE_SIZE];
-
-            // Precompute các giá trị
-            for (int i = 0; i < PRECOMPUTE_STEPS; i++)
-            {
-                float angle = (TWO_PI * i) / PRECOMPUTE_STEPS;
-                precomputedSin[i] = Mathf.Sin(angle);
-                precomputedCos[i] = Mathf.Cos(angle);
-            }
-
-            for (int i = 0; i < ROTATION_CACHE_SIZE; i++)
-            {
-                cachedRotations[i] = Quaternion.Euler(0, i, 0);
-            }
-
-            isInitialized = true;
+            float angle = (TwoPI * i) / PrecomputeSteps;
+            _precomputedSin[i] = Mathf.Sin(angle);
+            _precomputedCos[i] = Mathf.Cos(angle);
         }
+
+        for (int i = 0; i < RotationCacheSize; i++)
+        {
+            _cachedRotations[i] = Quaternion.Euler(0, i, 0);
+        }
+
+        _isInitialized = true;
     }
 
     public static Vector3 CalculateDirection(Transform bulletSpawn)
     {
         InitializeIfNeeded();
 
-        if (bulletSpawn == null)
+        if (!bulletSpawn)
         {
             Debug.LogError("BulletSpawn transform is null!");
-            return lastKnownDirection != Vector3.zero ? lastKnownDirection : DEFAULT_DIRECTION;
+            return _lastKnownDirection != Vector3.zero ? _lastKnownDirection : DefaultDirection;
         }
 
         // Cache bulletSpawn reference
-        if (cachedBulletSpawn != bulletSpawn)
+        if (_cachedBulletSpawn && _cachedBulletSpawn != bulletSpawn)
         {
-            cachedBulletSpawn = bulletSpawn;
+            _cachedBulletSpawn = bulletSpawn;
         }
 
         // Tính toán direction với độ ổn định cao hơn
         Vector3 baseDirection = bulletSpawn.TransformDirection(Vector3.forward);
         Quaternion initialRotation = Quaternion.LookRotation(baseDirection);
 
-        int angleIndex = Random.Range(0, PRECOMPUTE_STEPS);
+        int angleIndex = Random.Range(0, PrecomputeSteps);
         float u1 = Mathf.Clamp01(1f - Random.value); // Đảm bảo giá trị hợp lệ
         float sqrtLog = Mathf.Sqrt(-2f * Mathf.Log(u1));
 
-        float spreadX = sqrtLog * precomputedCos[angleIndex];
-        float spreadY = sqrtLog * precomputedSin[angleIndex];
+        float spreadX = sqrtLog * _precomputedCos[angleIndex];
+        float spreadY = sqrtLog * _precomputedSin[angleIndex];
 
-        int rotationIndex = Mathf.Abs(Mathf.RoundToInt(spreadY)) % ROTATION_CACHE_SIZE;
+        int rotationIndex = Mathf.Abs(Mathf.RoundToInt(spreadY)) % RotationCacheSize;
 
-        Vector3 finalDirection = initialRotation * cachedRotations[rotationIndex] * Vector3.forward;
-        lastKnownDirection = finalDirection;
+        Vector3 finalDirection = initialRotation * _cachedRotations[rotationIndex] * Vector3.forward;
+        _lastKnownDirection = finalDirection;
 
         return finalDirection;
     }
 
     // Thêm method để reset calculator khi cần
-    public static void Reset()
+    public void Reset()
     {
-        isInitialized = false;
-        cachedBulletSpawn = null;
-        lastKnownDirection = Vector3.zero;
+        _isInitialized = false;
+        _cachedBulletSpawn = null;
+        _lastKnownDirection = Vector3.zero;
     }
 }

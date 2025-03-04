@@ -9,15 +9,10 @@ public class LookAtMouse : MonoBehaviour
     private void FixedUpdate()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit raycastHit;
 
-        if (Physics.Raycast(ray, out raycastHit))
-        {
-            if (raycastHit.collider != null)
-            {
-                Vector3 direction = raycastHit.point - weapon.transform.position;
-                weapon.rotation = Quaternion.LookRotation(direction);
-            }
-        }
+        if (!Physics.Raycast(ray, out var raycastHit)) return;
+        if (!raycastHit.collider) return;
+        Vector3 direction = raycastHit.point - weapon.transform.position;
+        weapon.rotation = Quaternion.LookRotation(direction);
     }
 }

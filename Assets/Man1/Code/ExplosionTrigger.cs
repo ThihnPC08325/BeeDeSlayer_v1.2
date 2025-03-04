@@ -13,7 +13,7 @@ public class ExplosionTrigger : MonoBehaviour
     private bool _hasExploded = false;  // Kiểm tra đã nổ hay chưa
     private Transform _playerCamera;    // Tham chiếu đến camera của player
 
-    void Start()
+    private void Start()
     {
         // Lấy camera của player
         _playerCamera = Camera.main.transform;
@@ -37,10 +37,10 @@ public class ExplosionTrigger : MonoBehaviour
         }
 
         // Kiểm tra nếu player nằm trong bán kính rung camera
-        if (_playerCamera != null && Vector3.Distance(transform.position, _playerCamera.position) <= cameraShakeRadius)
+        if (_playerCamera && Vector3.Distance(transform.position, _playerCamera.position) <= cameraShakeRadius)
         {
             CameraS  shake = _playerCamera.GetComponent<CameraS>();
-            if (shake != null)
+            if (shake)
             {
                 StartCoroutine(shake.Shake(shakeDuration, shakeMagnitude));
             }

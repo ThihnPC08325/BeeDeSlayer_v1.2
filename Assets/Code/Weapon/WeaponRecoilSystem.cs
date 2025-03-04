@@ -26,76 +26,76 @@ public class WeaponRecoilSystem : MonoBehaviour
     #endregion
 
     #region Private Fields
-    private Vector3 currentRotation;
-    private Vector3 targetRotation;
-    private Vector3 initialPosition;
-    private float currentRecoilZ;
-    private float targetRecoilZ;
-    private float currentSpread;
-    private float lastShotTime;
-    private int currentPatternIndex;
+    private Vector3 _currentRotation;
+    private Vector3 _targetRotation;
+    private Vector3 _initialPosition;
+    private float _currentRecoilZ;
+    private float _targetRecoilZ;
+    private float _currentSpread;
+    private float _lastShotTime;
+    private int _currentPatternIndex;
 
     // Cached components
-    private Transform cachedTransform;
-    private readonly Vector3 forwardVector = Vector3.forward;
-    private Vector2 cachedPerlinOffset;
-    private float lastPerlinUpdateTime;
-    private const float PERLIN_UPDATE_INTERVAL = 0.05f; // Update Perlin noise mỗi 50ms
+    private Transform _cachedTransform;
+    private readonly Vector3 _forwardVector = Vector3.forward;
+    private Vector2 _cachedPerlinOffset;
+    private float _lastPerlinUpdateTime;
+    private const float PerlinUpdateInterval = 0.05f; // Update Perlin noise mỗi 50ms
     #endregion
 
     private void Awake()
     {
-        cachedTransform = transform;
-        initialPosition = cachedTransform.localPosition;
+        _cachedTransform = transform;
+        _initialPosition = _cachedTransform.localPosition;
         UpdatePerlinOffset();
     }
 
     public void ApplyRecoil()
     {
-        if (currentPatternIndex >= recoilPattern.pattern.Length)
-            currentPatternIndex = 0;
+        if (_currentPatternIndex >= recoilPattern.pattern.Length)
+            _currentPatternIndex = 0;
 
-        Vector2 recoil = recoilPattern.pattern[currentPatternIndex];
+        Vector2 recoil = recoilPattern.pattern[_currentPatternIndex];
         recoil += GetPerlinNoiseOffset() * randomness;
 
-        float recoilZ = Mathf.Min(recoilPattern.zPattern[currentPatternIndex], maxRecoilZ);
+        float recoilZ = Mathf.Min(recoilPattern.zPattern[_currentPatternIndex], maxRecoilZ);
 
         ApplyRecoilForces(recoil, recoilZ);
         UpdateSpread();
 
-        currentPatternIndex++;
-        lastShotTime = Time.time;
+        _currentPatternIndex++;
+        _lastShotTime = Time.time;
     }
 
     private void UpdatePerlinOffset()
     {
         float time = Time.time;
-        cachedPerlinOffset.x = Mathf.PerlinNoise(time, 0) * 2 - 1;
-        cachedPerlinOffset.y = Mathf.PerlinNoise(0, time) * 2 - 1;
-        lastPerlinUpdateTime = time;
+        _cachedPerlinOffset.x = Mathf.PerlinNoise(time, 0) * 2 - 1;
+        _cachedPerlinOffset.y = Mathf.PerlinNoise(0, time) * 2 - 1;
+        _lastPerlinUpdateTime = time;
     }
 
     private Vector2 GetPerlinNoiseOffset()
     {
-        if (Time.time - lastPerlinUpdateTime >= PERLIN_UPDATE_INTERVAL)
+        if (Time.time - _lastPerlinUpdateTime >= PerlinUpdateInterval)
         {
             UpdatePerlinOffset();
         }
-        return cachedPerlinOffset;
+        return _cachedPerlinOffset;
     }
 
     private void ApplyRecoilForces(Vector2 recoil, float recoilZ)
     {
-        targetRotation *= recoilDecayRate;
-        targetRotation += new Vector3(-recoil.y, recoil.x, 0f);
+        _targetRotation *= recoilDecayRate;
+        _targetRotation += new Vector3(-recoil.y, recoil.x, 0f);
 
-        targetRecoilZ = -recoilZ;
-        cachedTransform.localPosition -= forwardVector * recoilZ;
+        _targetRecoilZ = -recoilZ;
+        _cachedTransform.localPosition -= _forwardVector * recoilZ;
     }
 
     private void UpdateSpread()
     {
-        currentSpread = Mathf.Min(currentSpread + spreadIncreaseRate, maxSpread);
+        _currentSpread = Mathf.Min(_currentSpread + spreadIncreaseRate, maxSpread);
     }
 
     public void HandleRecoil()
@@ -104,17 +104,17 @@ public class WeaponRecoilSystem : MonoBehaviour
         float lerpFactor = recoilSpeed * deltaTime;
         float returnFactor = returnSpeed * deltaTime;
 
-        currentRotation = Vector3.Slerp(currentRotation, targetRotation, lerpFactor);
-        targetRotation = Vector3.Slerp(targetRotation, Vector3.zero, returnFactor);
+        _currentRotation = Vector3.Slerp(_currentRotation, _targetRotation, lerpFactor);
+        _targetRotation = Vector3.Slerp(_targetRotation, Vector3.zero, returnFactor);
 
-        currentRecoilZ = Mathf.Lerp(currentRecoilZ, 0f, returnFactor);
+        _currentRecoilZ = Mathf.Lerp(_currentRecoilZ, 0f, returnFactor);
 
-        cachedTransform.SetLocalPositionAndRotation(Vector3.Lerp(cachedTransform.localPosition, initialPosition, returnFactor), Quaternion.Euler(currentRotation.x, currentRotation.y, currentRecoilZ));
+        _cachedTransform.SetLocalPositionAndRotation(Vector3.Lerp(_cachedTransform.localPosition, _initialPosition, returnFactor), Quaternion.Euler(_currentRotation.x, _currentRotation.y, _currentRecoilZ));
     }
 
     public void HandleSpread()
     {
-        if (Time.time - lastShotTime > 0.1f)
-            currentSpread = Mathf.Max(0, currentSpread - spreadDecreaseRate * Time.deltaTime);
+        if (Time.time - _lastShotTime > 0.1f)
+            _currentSpread = Mathf.Max(0, _currentSpread - spreadDecreaseRate * Time.deltaTime);
     }
 }

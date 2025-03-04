@@ -4,8 +4,7 @@ using System.Collections.Generic;
 
 public class SceneChanger : MonoBehaviour
 {
-    private static readonly System.Random Random = new System.Random();
-    private readonly List<string> _scenes = new List<string> { "Man1.1", "Man1.2", "Man1.3", "Man1.4" };
+    private readonly List<string> _scenes = new() { "Man1.1", "Man1.2", "Man1.3", "Man1.4" };
     private const string TargetScene = "Man1.5";
 
     [SerializeField] private NoteCounter noteCounter;
@@ -19,13 +18,14 @@ public class SceneChanger : MonoBehaviour
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
-
+    
     private void LoadRandomScene()
     {
         string currentSceneName = SceneManager.GetActiveScene().name;
         List<string> availableScenes = new List<string>(_scenes);
         availableScenes.Remove(currentSceneName);
-        string nextScene = availableScenes[Random.Next(availableScenes.Count)];
+        int randomIndex = Random.Range(0, availableScenes.Count);
+        string nextScene = availableScenes[randomIndex];
         Debug.Log($"Loading random scene: {nextScene}");
         SceneManager.LoadScene(nextScene);
     }
@@ -45,7 +45,7 @@ public class SceneChanger : MonoBehaviour
         }
     }
 
-    public void LoadTargetScene()
+    public static void LoadTargetScene()
     {
         Debug.Log($"Loading target scene: {TargetScene}");
         SceneManager.LoadScene(TargetScene);

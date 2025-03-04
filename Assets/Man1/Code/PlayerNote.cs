@@ -20,14 +20,12 @@ public class PlayerNote : MonoBehaviour
 
     private void Update()
     {
-        if (_activeNote && Input.GetKeyDown(KeyCode.E))
-        {
-            Debug.Log("Nhấn E, mở note");
-            _activeNote.ToggleNote();
-            noteData.CollectNote(_activeNote.GetNoteID());
-            _activeNote.gameObject.SetActive(false);
-            interactMessage.SetActive(false); // Ẩn message sau khi nhặt note
-        }
+        if (!_activeNote || !Input.GetKeyDown(KeyCode.E)) return;
+        Debug.Log("Nhấn E, mở note");
+        _activeNote.ToggleNote();
+        noteData.CollectNote(_activeNote.GetNoteID());
+        _activeNote.gameObject.SetActive(false);
+        interactMessage.SetActive(false); // Ẩn message sau khi nhặt note
     }
 
     private void OnTriggerEnter(Collider col)

@@ -3,20 +3,20 @@ using UnityEngine;
 
 public readonly struct SimpleMuzzleVelocityCalculator
 {
-    private readonly float barrelArea;
-    private readonly float barrelVolume;
+    private readonly float _barrelArea;
+    private readonly float _barrelVolume;
 
     public SimpleMuzzleVelocityCalculator(float bulletDiameter, float barrelLength)
     {
         float bulletRadius = bulletDiameter * 0.5f;
-        barrelArea = math.PI * bulletRadius * bulletRadius;
-        barrelVolume = barrelArea * barrelLength;
+        _barrelArea = math.PI * bulletRadius * bulletRadius;
+        _barrelVolume = _barrelArea * barrelLength;
     }
 
     public float Calculate(float bulletMass, float averagePressure)
     {
         // Tính công thực hiện bởi khí gas
-        float work = averagePressure * barrelVolume;
+        float work = averagePressure * _barrelVolume;
         // Động năng chuyển thành vận tốc đầu nòng
         return math.sqrt(2f * work / bulletMass);
     }
@@ -33,15 +33,15 @@ public class CalculateMuzzleVelocity : MonoBehaviour
     [SerializeField] private float averagePressure = 15000000f; // Áp suất trung bình
 
     // Bộ tính toán
-    private SimpleMuzzleVelocityCalculator calculator;
+    private SimpleMuzzleVelocityCalculator _calculator;
 
     private void Awake()
     {
-        calculator = new SimpleMuzzleVelocityCalculator(bulletDiameter, barrelLength);
+        _calculator = new SimpleMuzzleVelocityCalculator(bulletDiameter, barrelLength);
     }
 
     public float MuzzleVelocity()
     {
-        return calculator.Calculate(bulletMass, averagePressure);
+        return _calculator.Calculate(bulletMass, averagePressure);
     }
 }
