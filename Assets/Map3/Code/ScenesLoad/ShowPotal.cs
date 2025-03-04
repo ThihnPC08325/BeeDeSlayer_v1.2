@@ -17,7 +17,7 @@ public class ShowPotal : MonoBehaviour
         while (transform.position.y < targetY)
         {
             // Di chuyển object lên trên theo thời gian
-            transform.position += Vector3.up * speed * Time.deltaTime;
+            transform.position += Vector3.up * (speed * Time.deltaTime);
             yield return null;
         }
 

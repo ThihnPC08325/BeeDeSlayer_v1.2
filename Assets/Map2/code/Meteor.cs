@@ -13,26 +13,22 @@ public class Meteor : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (!other.CompareTag("Player")) return;
+        PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
+        if (playerHealth == null) return;
+        Debug.Log($"🔥 Meteor trúng Player! Gây {explosionDamage} sát thương + {dotDamage} DOT x {dotTicks}");
+
+        // Gây sát thương ngay lập tức
+        playerHealth.TakeMeteorDamage(explosionDamage, dotDamage, dotTicks, dotInterval);
+
+        // Hiệu ứng nổ
+        if (explosionEffect != null)
         {
-            PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
-            if (playerHealth != null)
-            {
-                Debug.Log($"🔥 Meteor trúng Player! Gây {explosionDamage} sát thương + {dotDamage} DOT x {dotTicks}");
-
-                // Gây sát thương ngay lập tức
-                playerHealth.TakeMeteorDamage(explosionDamage, dotDamage, dotTicks, dotInterval);
-
-                // Hiệu ứng nổ
-                if (explosionEffect != null)
-                {
-                    Instantiate(explosionEffect, transform.position, Quaternion.identity);
-                }
-
-                // Hủy meteor sau khi va chạm
-                Destroy(gameObject);
-            }
+            Instantiate(explosionEffect, transform.position, Quaternion.identity);
         }
+
+        // Hủy meteor sau khi va chạm
+        Destroy(gameObject);
     }
 
     public void Activate(float meteorDamage, float dotDmg, int ticks, float interval)

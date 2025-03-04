@@ -95,26 +95,24 @@ public class NPCInteraction : MonoBehaviour
     private void MarkBossAsDefeated()
     {
         _bossDefeated = true;
-        StartCoroutine(TeleportNPCWithDelay());
+        StartCoroutine(TeleportNpcWithDelay());
     }
 
-    private IEnumerator TeleportNPCWithDelay()
+    private IEnumerator TeleportNpcWithDelay()
     {
         yield return new WaitForSeconds(0.5f); // Delay để tránh lỗi khi Boss chưa hoàn toàn bị hủy
 
-        if (teleportEffect != null)
+        if (teleportEffect)
         {
             Instantiate(teleportEffect, transform.position, Quaternion.identity);
         }
 
-        if (teleportDestination != null)
-        {
-            transform.position = teleportDestination.position;
+        if (!teleportDestination) yield break;
+        transform.position = teleportDestination.position;
 
-            if (teleportEffect != null)
-            {
-                Instantiate(teleportEffect, transform.position, Quaternion.identity);
-            }
+        if (teleportEffect)
+        {
+            Instantiate(teleportEffect, transform.position, Quaternion.identity);
         }
     }
 }

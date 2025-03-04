@@ -6,7 +6,7 @@ public class FullscreenPassController : MonoBehaviour
 {
     [SerializeField] private ScriptableRendererFeature map2FullscreenEffect;
 
-    void Start()    
+    private void Start()    
     {
         map2FullscreenEffect.SetActive(false);
     }

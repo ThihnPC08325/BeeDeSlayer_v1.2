@@ -1,28 +1,29 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 public class BreakableCrate : MonoBehaviour
 {
     [SerializeField] private GameObject[] lootItems; // Danh sách vật phẩm có thể rơi ra
     //[SerializeField] private GameObject brokenCratePrefab; // Prefab thùng vỡ
     [SerializeField] private float maxHealth = 50; // Máu của thùng
-    [SerializeField] private Transform Spawnpoint;
-    private float currentHealth;
+    [SerializeField] private Transform spawnpoint;
+    private float _currentHealth;
 
-    void Start()
+    private void Start()
     {
-        currentHealth = maxHealth;
+        _currentHealth = maxHealth;
     }
 
     public void TakeDamage(float damage)
     {
-        currentHealth -= damage;
-        if (currentHealth <= 0)
+        _currentHealth -= damage;
+        if (_currentHealth <= 0)
         {
             BreakCrate();
         }
     }
 
-    void BreakCrate()
+    private void BreakCrate()
     {
         //if (brokenCratePrefab != null)
         //{
@@ -32,12 +33,11 @@ public class BreakableCrate : MonoBehaviour
         DropLoot();
         Destroy(gameObject);
     }
-    void DropLoot()
+
+    private void DropLoot()
     {
-        if (lootItems.Length > 0)
-        {
-            int randomIndex = Random.Range(0, lootItems.Length);
-            Instantiate(lootItems[randomIndex], Spawnpoint.position, Quaternion.identity);
-        }
+        if (lootItems.Length <= 0) return;
+        int randomIndex = Random.Range(0, lootItems.Length);
+        Instantiate(lootItems[randomIndex], spawnpoint.position, Quaternion.identity);
     }
 }

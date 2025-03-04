@@ -9,10 +9,10 @@ public class OnPotal : MonoBehaviour
     private void Start()
     {
         potal.SetActive(false);
-        StartCoroutine(Onpotal());
+        StartCoroutine(OnPortal());
     }
 
-    private IEnumerator Onpotal()
+    private IEnumerator OnPortal()
     {
         while (true)
         {

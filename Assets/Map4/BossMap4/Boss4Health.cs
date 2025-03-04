@@ -16,22 +16,22 @@ public class Boss4Health : MonoBehaviour
     [SerializeField] private Renderer bossRenderer;
     [SerializeField] private Light bossLight;
 
-    private AudioSource audioSource;
-    private AudioSource backgroundAudioSource;
-    private BoxCollider boxCollider;
-    private bool isReviving = false;
-    private bool isPhase2 = false;
-    private Vector3 originalPosition;
-    private Quaternion originalRotation;
+    private AudioSource _audioSource;
+    private AudioSource _backgroundAudioSource;
+    private BoxCollider _boxCollider;
+    private bool _isReviving = false;
+    private bool _isPhase2 = false;
+    private Vector3 _originalPosition;
+    private Quaternion _originalRotation;
 
     private void Awake()
     {
-        boxCollider = GetComponent<BoxCollider>();
-        audioSource = gameObject.AddComponent<AudioSource>();
-        backgroundAudioSource = gameObject.AddComponent<AudioSource>();
+        _boxCollider = GetComponent<BoxCollider>();
+        _audioSource = gameObject.AddComponent<AudioSource>();
+        _backgroundAudioSource = gameObject.AddComponent<AudioSource>();
 
-        backgroundAudioSource.loop = true;
-        backgroundAudioSource.volume = 0.5f;
+        _backgroundAudioSource.loop = true;
+        _backgroundAudioSource.volume = 0.5f;
 
         if (bossRenderer == null)
             bossRenderer = GetComponentInChildren<Renderer>();
@@ -40,35 +40,33 @@ public class Boss4Health : MonoBehaviour
             bossLight.enabled = false;
 
         currentHealth = maxHealth;
-        originalPosition = transform.position;
-        originalRotation = transform.rotation;
+        _originalPosition = transform.position;
+        _originalRotation = transform.rotation;
     }
 
-    void Start()
+    private void Start()
     {
         currentHealth = maxHealth;
-        if (bossHealthBar != null)
+        if (bossHealthBar)
         {
             bossHealthBar.maxValue = maxHealth;
             bossHealthBar.value = currentHealth;
         }
 
-        if (backgroundMusic != null)
-        {
-            backgroundAudioSource.clip = backgroundMusic;
-            backgroundAudioSource.Play();
-        }
+        if (!backgroundMusic) return;
+        _backgroundAudioSource.clip = backgroundMusic;
+        _backgroundAudioSource.Play();
     }
 
     public void TakeDamage(float damage)
     {
-        if (isReviving) return;
+        if (_isReviving) return;
 
         currentHealth -= damage;
         if (currentHealth <= 0f)
         {
             currentHealth = 0f;
-            boxCollider.enabled = false;
+            _boxCollider.enabled = false;
             if (bossHealthBar != null) bossHealthBar.gameObject.SetActive(false);
             Die();
         }
@@ -81,22 +79,22 @@ public class Boss4Health : MonoBehaviour
 
     private void Die()
     {
-        if (backgroundAudioSource.isPlaying)
-            backgroundAudioSource.Stop();
+        if (_backgroundAudioSource.isPlaying)
+            _backgroundAudioSource.Stop();
 
-        if (deathSound != null)
-            audioSource.PlayOneShot(deathSound);
+        if (deathSound)
+            _audioSource.PlayOneShot(deathSound);
 
-        if (smokePrefab != null)
+        if (smokePrefab)
             Instantiate(smokePrefab, transform.position, Quaternion.identity);
 
-        if (skyboxPhase2 != null && !isPhase2)
+        if (skyboxPhase2 && !_isPhase2)
         {
             RenderSettings.skybox = skyboxPhase2;
             DynamicGI.UpdateEnvironment();
         }
 
-        if (bossLight != null)
+        if (bossLight)
             StartCoroutine(IncreaseLightIntensity());
 
         StartCoroutine(DeathSequence());
@@ -105,7 +103,7 @@ public class Boss4Health : MonoBehaviour
     private IEnumerator IncreaseLightIntensity()
     {
         bossLight.enabled = true;
-        float duration = 5f;
+        const float duration = 5f;
         float elapsed = 0f;
         bossLight.intensity = 0f;
 
@@ -119,26 +117,26 @@ public class Boss4Health : MonoBehaviour
 
     private IEnumerator DeathSequence()
     {
-        float tiltDuration = 5f;
-        float sinkDuration = 5f;
-        float changeAppearanceDelay = 4f;
-        float riseDuration = 5f;
+        const float tiltDuration = 5f;
+        const float sinkDuration = 5f;
+        const float changeAppearanceDelay = 4f;
+        const float riseDuration = 5f;
 
         Quaternion tiltedRotation =
-            Quaternion.Euler(90f, originalRotation.eulerAngles.y, originalRotation.eulerAngles.z);
+            Quaternion.Euler(90f, _originalRotation.eulerAngles.y, _originalRotation.eulerAngles.z);
         yield return StartCoroutine(RotateOverTime(tiltedRotation, tiltDuration));
         yield return new WaitForSeconds(0.5f);
 
-        Vector3 sinkTargetPosition = originalPosition + Vector3.down * 500f;
+        Vector3 sinkTargetPosition = _originalPosition + Vector3.down * 500f;
         yield return StartCoroutine(MoveOverTime(sinkTargetPosition, sinkDuration));
         yield return new WaitForSeconds(changeAppearanceDelay);
 
-        if (!isPhase2)
+        if (!_isPhase2)
         {
-            if (bossRenderer != null && phase2Material != null)
+            if (bossRenderer && phase2Material)
                 bossRenderer.material = phase2Material;
 
-            yield return StartCoroutine(RotateOverTime(originalRotation, tiltDuration));
+            yield return StartCoroutine(RotateOverTime(_originalRotation, tiltDuration));
             Vector3 riseTargetPosition = sinkTargetPosition + Vector3.up * 500f;
             yield return StartCoroutine(MoveOverTime(riseTargetPosition, riseDuration));
             Revive();
@@ -178,24 +176,24 @@ public class Boss4Health : MonoBehaviour
 
     private void Revive()
     {
-        if (isPhase2)
+        if (_isPhase2)
         {
             Destroy(gameObject);
             return;
         }
 
-        isPhase2 = true;
+        _isPhase2 = true;
         maxHealth *= 10;
         currentHealth = maxHealth;
 
-        if (bossHealthBar != null)
+        if (bossHealthBar)
         {
             bossHealthBar.maxValue = maxHealth;
             bossHealthBar.value = currentHealth;
             bossHealthBar.gameObject.SetActive(true);
         }
 
-        boxCollider.enabled = true;
-        isReviving = false;
+        _boxCollider.enabled = true;
+        _isReviving = false;
     }
 }

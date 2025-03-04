@@ -23,7 +23,7 @@ public class ProjectileController : MonoBehaviour
         _rb.useGravity = false;
 
         // Nếu tìm thấy người chơi, tính toán hướng bay của viên đạn
-        if (_target != null)
+        if (_target)
         {
             Vector3 direction = (_target.position - transform.position).normalized;
 

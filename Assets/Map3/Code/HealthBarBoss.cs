@@ -7,9 +7,9 @@ public class HealthBarBoss : MonoBehaviour
 {
     [SerializeField] private Slider healthBar;
     [SerializeField] private Slider easeHealthBar;
-    private float lerpSpeed = 0.3f;
+    private const float LerpSpeed = 0.3f;
 
-    [SerializeField] HealthBoss bossHealth;
+    [SerializeField] private HealthBoss bossHealth;
 
     private void Start()
     {
@@ -35,7 +35,7 @@ public class HealthBarBoss : MonoBehaviour
 
         if (!Mathf.Approximately(healthBar.value, easeHealthBar.value))
         {
-            easeHealthBar.value = Mathf.Lerp(easeHealthBar.value, bossHealth.currentHealth, lerpSpeed);
+            easeHealthBar.value = Mathf.Lerp(easeHealthBar.value, bossHealth.currentHealth, LerpSpeed);
         }
     }
 }

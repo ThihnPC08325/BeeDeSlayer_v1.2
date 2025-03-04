@@ -4,7 +4,6 @@ using static EnemyManager;
 
 public class BatEnemyHealth : MonoBehaviour, IPooledObject
 {
-    private static readonly int BatDie = Animator.StringToHash("bat_die");
     [SerializeField] private float maxHealth;
     [SerializeField] private float currentHealth;
     [SerializeField] private ItemDropManager itemDropManager;
@@ -12,6 +11,9 @@ public class BatEnemyHealth : MonoBehaviour, IPooledObject
     private BoxCollider _boxCollider;
     private Animator _animator;
     private BatAI _batController;
+    
+    // Animation parameter hash
+    private static readonly int BatDie = Animator.StringToHash("bat_die");
 
     private void Awake()
     {

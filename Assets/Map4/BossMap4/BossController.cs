@@ -114,7 +114,7 @@ public class BossController : MonoBehaviour
         // Kiểm tra nếu Boss còn hoạt động
         if (!gameObject.activeInHierarchy) return;
 
-        if (_player == null) return;
+        if (!_player) return;
         // Spawn 3 quả bom
         for (int i = 0; i < 3; i++)
         {
@@ -163,7 +163,7 @@ public class BossController : MonoBehaviour
         Destroy(bomb);
     }
 
-    void OnBossDeath()
+    private void OnBossDeath()
     {
         // Ngừng các hành động như bắn và spawn bom khi Boss chết
         CancelInvoke(nameof(ShootProjectiles));

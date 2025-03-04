@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class laserGame : MonoBehaviour
@@ -11,27 +10,25 @@ public class laserGame : MonoBehaviour
     public string targetTag = "Player"; // Tag của đối tượng cần bắn
     public GameObject explosionEffectPrefab;  // Particle Effect khi viên đạn phát nổ
     public AudioClip shootSound; // Âm thanh bắn
-    private AudioSource audioSource; // Tham chiếu đến AudioSource
+    private AudioSource _audioSource; // Tham chiếu đến AudioSource
 
-    private LineRenderer laserLine;
-    private float fireTimer;
+    private LineRenderer _laserLine;
+    private float _fireTimer;
 
-    void Awake()
+    private void Awake()
     {
-        laserLine = GetComponent<LineRenderer>();
-        audioSource = gameObject.AddComponent<AudioSource>(); // Thêm AudioSource
+        _laserLine = GetComponent<LineRenderer>();
+        _audioSource = gameObject.AddComponent<AudioSource>(); // Thêm AudioSource
     }
 
-    void Update()
+    private void Update()
     {
-        fireTimer += Time.deltaTime;
+        _fireTimer += Time.deltaTime;
 
         // Nếu đã đến thời gian bắn tiếp theo
-        if (fireTimer >= fireRate)
-        {
-            fireTimer = 0; // Reset thời gian
-            CheckAndFire(); // Kiểm tra và bắn nếu Player trong phạm vi
-        }
+        if (!(_fireTimer >= fireRate)) return;
+        _fireTimer = 0; // Reset thời gian
+        CheckAndFire(); // Kiểm tra và bắn nếu Player trong phạm vi
     }
 
     private void OnTriggerEnter(Collider other)
@@ -40,7 +37,7 @@ public class laserGame : MonoBehaviour
         Explode();
     }
 
-    void Explode()
+    private void Explode()
     {
         // Tạo hiệu ứng nổ tại vị trí viên đạn
         Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);
@@ -49,7 +46,7 @@ public class laserGame : MonoBehaviour
         Destroy(gameObject);
     }
 
-    void CheckAndFire()
+    private void CheckAndFire()
     {
         // Tìm tất cả các đối tượng trong phạm vi
         Collider[] hits = Physics.OverlapSphere(laserOrigin.position, gunRange);
@@ -57,29 +54,27 @@ public class laserGame : MonoBehaviour
         foreach (Collider hit in hits)
         {
             // Kiểm tra nếu đối tượng có tag là Player
-            if (hit.CompareTag(targetTag))
-            {
-                FireLaser(hit.transform.position); // Gọi hàm bắn laser
-                break; // Ngừng sau khi bắn Player đầu tiên
-            }
+            if (!hit.CompareTag(targetTag)) continue;
+            FireLaser(hit.transform.position); // Gọi hàm bắn laser
+            break; // Ngừng sau khi bắn Player đầu tiên
         }
     }
 
-    void FireLaser(Vector3 targetPosition)
+    private void FireLaser(Vector3 targetPosition)
     {
         Debug.Log("Firing laser...");
-        laserLine.SetPosition(0, laserOrigin.position);
-        laserLine.SetPosition(1, targetPosition);
+        _laserLine.SetPosition(0, laserOrigin.position);
+        _laserLine.SetPosition(1, targetPosition);
 
         // Phát âm thanh khi bắn
-        audioSource.PlayOneShot(shootSound);
+        _audioSource.PlayOneShot(shootSound);
 
-        RaycastHit hit;
-        if (Physics.Raycast(laserOrigin.position, (targetPosition - laserOrigin.position).normalized, out hit, gunRange))
+        if (Physics.Raycast(laserOrigin.position, (targetPosition - laserOrigin.position).normalized,
+                out var hit, gunRange))
         {
             Debug.Log($"Hit: {hit.transform.name}");
             PlayerHealth health = hit.transform.GetComponent<PlayerHealth>();
-            if (health != null)
+            if (health)
             {
                 Debug.Log("Player hit! Applying damage...");
                 health.TakeDamage(10f, 0f);
@@ -89,14 +84,14 @@ public class laserGame : MonoBehaviour
         StartCoroutine(ShootLaser());
     }
 
-    IEnumerator ShootLaser()
+    private IEnumerator ShootLaser()
     {
-        laserLine.enabled = true; // Bật laser
+        _laserLine.enabled = true; // Bật laser
         yield return new WaitForSeconds(laserDuration); // Chờ một chút
-        laserLine.enabled = false; // Tắt laser
+        _laserLine.enabled = false; // Tắt laser
     }
 
-    void OnDrawGizmosSelected()
+    private void OnDrawGizmosSelected()
     {
         // Vẽ vùng phạm vi bắn để dễ kiểm tra trong Scene View
         Gizmos.color = Color.red;

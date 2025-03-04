@@ -27,13 +27,13 @@ public class IsDestroyOnLoad : MonoBehaviour
     [Header("Debug Settings")]
     [SerializeField] private bool showDebugLogs = false;
 
-    private static int instanceCount = 0;
-    private int instanceId;
-    private readonly List<GameObject> preservedChildren = new();
-    private HashSet<string> scenesToDestroySet;
+    private static int _instanceCount = 0;
+    private int _instanceId;
+    private readonly List<GameObject> _preservedChildren = new();
+    private HashSet<string> _scenesToDestroySet;
 
     // Enum định nghĩa cách xử lý các object con
-    public enum ChildHandling
+    private enum ChildHandling
     {
         DestroyWithParent,      // Xóa tất cả con
         PreserveAll,            // Giữ lại tất cả con
@@ -43,55 +43,51 @@ public class IsDestroyOnLoad : MonoBehaviour
 
     private void Awake()
     {
-        instanceId = ++instanceCount;
-        scenesToDestroySet = scenesToDestroyOn != null ? new HashSet<string>(scenesToDestroyOn) : new HashSet<string>();
+        _instanceId = ++_instanceCount;
+        _scenesToDestroySet = scenesToDestroyOn != null ? new HashSet<string>(scenesToDestroyOn) : new HashSet<string>();
 
-        if (!destroyOnSceneChange)
+        if (destroyOnSceneChange) return;
+        try
         {
-            try
-            {
-                DontDestroyOnLoad(gameObject);
-                LogDebug($"Object {gameObject.name} (ID: {instanceId}) marked as DontDestroyOnLoad");
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError($"Failed to set DontDestroyOnLoad: {e.Message}");
-            }
+            DontDestroyOnLoad(gameObject);
+            LogDebug($"Object {gameObject.name} (ID: {_instanceId}) marked as DontDestroyOnLoad");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"Failed to set DontDestroyOnLoad: {e.Message}");
         }
     }
 
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
-        LogDebug($"Object {gameObject.name} (ID: {instanceId}) registered scene load callback");
+        LogDebug($"Object {gameObject.name} (ID: {_instanceId}) registered scene load callback");
     }
 
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
-        LogDebug($"Object {gameObject.name} (ID: {instanceId}) unregistered scene load callback");
+        LogDebug($"Object {gameObject.name} (ID: {_instanceId}) unregistered scene load callback");
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (!destroyOnSceneChange) return;
 
-        if (scenesToDestroySet.Contains(scene.name))
+        if (!_scenesToDestroySet.Contains(scene.name)) return;
+        if (destroyDelay > 0)
         {
-            if (destroyDelay > 0)
-            {
-                StartCoroutine(DestroyWithDelay());
-            }
-            else
-            {
-                DestroyObject();
-            }
+            StartCoroutine(DestroyWithDelay());
+        }
+        else
+        {
+            DestroyObject();
         }
     }
 
     private System.Collections.IEnumerator DestroyWithDelay()
     {
-        LogDebug($"Object {gameObject.name} (ID: {instanceId}) will be destroyed in {destroyDelay} seconds");
+        LogDebug($"Object {gameObject.name} (ID: {_instanceId}) will be destroyed in {destroyDelay} seconds");
         yield return new WaitForSeconds(destroyDelay);
         DestroyObject();
     }
@@ -99,7 +95,7 @@ public class IsDestroyOnLoad : MonoBehaviour
     private void DestroyObject()
     {
         HandleChildren();
-        LogDebug($"Destroying object {gameObject.name} (ID: {instanceId})");
+        LogDebug($"Destroying object {gameObject.name} (ID: {_instanceId})");
         Destroy(gameObject);
     }
 
@@ -165,7 +161,7 @@ public class IsDestroyOnLoad : MonoBehaviour
         {
             DontDestroyOnLoad(child);
         }
-        preservedChildren.Add(child);
+        _preservedChildren.Add(child);
         LogDebug($"Child object {child.name} preserved");
     }
 
@@ -179,10 +175,8 @@ public class IsDestroyOnLoad : MonoBehaviour
 
     private void OnValidate()
     {
-        if (destroyDelay < 0)
-        {
-            destroyDelay = 0;
-            Debug.LogWarning("Destroy delay cannot be negative. Setting to 0.");
-        }
+        if (!(destroyDelay < 0)) return;
+        destroyDelay = 0;
+        Debug.LogWarning("Destroy delay cannot be negative. Setting to 0.");
     }
 }

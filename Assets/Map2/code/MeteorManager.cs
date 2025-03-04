@@ -26,7 +26,7 @@ public class MeteorManager : MonoBehaviour
         GameObject meteor = Instantiate(meteorPrefab, spawnPosition, Quaternion.identity);
         Meteor meteorScript = meteor.GetComponent<Meteor>();
 
-        if (meteorScript != null)
+        if (meteorScript)
         {
             meteorScript.Activate(meteorDamage, dotDamage, dotTicks, dotInterval);
         }
