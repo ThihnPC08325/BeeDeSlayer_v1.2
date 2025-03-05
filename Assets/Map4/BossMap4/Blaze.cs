@@ -1,105 +1,140 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class laserGame : MonoBehaviour
+public class Blaze : MonoBehaviour
 {
-    public Transform laserOrigin; // Vị trí laser
-    public float gunRange = 800f; // Phạm vi bắn
-    public float fireRate = 5f; // Tốc độ bắn
-    public float laserDuration = 0.5f; // Thời gian hiển thị laser
-    public string targetTag = "Player"; // Tag của đối tượng cần bắn
-    public GameObject explosionEffectPrefab;  // Particle Effect khi viên đạn phát nổ
-    public AudioClip shootSound; // Âm thanh bắn
-    private AudioSource audioSource; // Tham chiếu đến AudioSource
+    [SerializeField] private Transform leftEye, rightEye; // Biến tham chiếu đến mắt trái và mắt phải của boss
+    [SerializeField] private Light leftEyeLight, rightEyeLight; // Biến tham chiếu đến đèn sáng của mắt trái và phải của boss
+    [SerializeField] private LineRenderer leftLaser, rightLaser; // Biến tham chiếu đến LineRenderer của laser trái và phải
 
-    private LineRenderer laserLine;
-    private float fireTimer;
+    [SerializeField] private float gunRange = 800f; // Tầm bắn tối đa của súng laser
+    [SerializeField] private float fireRate = 50f; // Tốc độ bắn (số lần bắn trong một giây)
+    [SerializeField] private float chargeTime = 3f; // Thời gian cần thiết để tụ lực (chuẩn bị bắn laser)
+    [SerializeField] private float laserDuration = 20f; // Thời gian tồn tại của laser sau khi bắn
+    [SerializeField] private float laserSpeed = 150f; // Tốc độ di chuyển của laser
+    [SerializeField] private float laserWidth = 5.0f; // Độ rộng của tia laser
 
-    void Awake()
+    [SerializeField] private string targetTag = "Player"; // Tag của mục tiêu (mục tiêu là người chơi sẽ có tag này)
+    [SerializeField] private AudioClip chargeSound, shootSound; // Âm thanh phát ra khi tụ lực và khi bắn laser
+    [SerializeField] private int laserDamage = 10; // Sát thương của laser
+
+    private AudioSource audioSource; // Đối tượng AudioSource để phát âm thanh
+    private bool isAttacking = false;
+    private float attackTimer = 0f;
+
+    private Transform playerTransform; // Thêm biến để tham chiếu tới người chơi
+
+    void Start()
     {
-        laserLine = GetComponent<LineRenderer>();
-        audioSource = gameObject.AddComponent<AudioSource>(); // Thêm AudioSource
+        audioSource = gameObject.AddComponent<AudioSource>();
+
+        leftLaser.enabled = false;
+        rightLaser.enabled = false;
+        leftEyeLight.intensity = 0;
+        rightEyeLight.intensity = 0;
+
+        // Tìm người chơi trong scene
+        playerTransform = GameObject.FindGameObjectWithTag("Player")?.transform;
     }
 
     void Update()
     {
-        fireTimer += Time.deltaTime;
-
-        // Nếu đã đến thời gian bắn tiếp theo
-        if (fireTimer >= fireRate)
+        if (!isAttacking)
         {
-            fireTimer = 0; // Reset thời gian
-            CheckAndFire(); // Kiểm tra và bắn nếu Player trong phạm vi
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        // Phát nổ và hủy viên đạn sau khi va chạm
-        Explode();
-    }
-
-    void Explode()
-    {
-        // Tạo hiệu ứng nổ tại vị trí viên đạn
-        Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);
-
-        // Hủy viên đạn sau khi phát nổ
-        Destroy(gameObject);
-    }
-
-    void CheckAndFire()
-    {
-        // Tìm tất cả các đối tượng trong phạm vi
-        Collider[] hits = Physics.OverlapSphere(laserOrigin.position, gunRange);
-
-        foreach (Collider hit in hits)
-        {
-            // Kiểm tra nếu đối tượng có tag là Player
-            if (hit.CompareTag(targetTag))
+            attackTimer += Time.deltaTime;
+            if (attackTimer >= fireRate)
             {
-                FireLaser(hit.transform.position); // Gọi hàm bắn laser
-                break; // Ngừng sau khi bắn Player đầu tiên
+                attackTimer = 0;
+                StartCoroutine(ChargeAndFire());
             }
         }
     }
 
-    void FireLaser(Vector3 targetPosition)
+    IEnumerator ChargeAndFire()
     {
-        Debug.Log("Firing laser...");
-        laserLine.SetPosition(0, laserOrigin.position);
-        laserLine.SetPosition(1, targetPosition);
+        isAttacking = true;
+        Debug.Log("Boss đang tụ lực...");
 
-        // Phát âm thanh khi bắn
+        leftEyeLight.color = Color.red;
+        rightEyeLight.color = Color.red;
+        leftEyeLight.intensity = 5f;
+        rightEyeLight.intensity = 5f;
+
+        audioSource.PlayOneShot(chargeSound);
+
+        yield return new WaitForSeconds(chargeTime);
+
+        if (playerTransform != null) // Kiểm tra xem người chơi có tồn tại không
+        {
+            // Điều chỉnh độ rộng laser trước khi bắn
+            leftLaser.startWidth = laserWidth;
+            leftLaser.endWidth = laserWidth;
+            rightLaser.startWidth = laserWidth;
+            rightLaser.endWidth = laserWidth;
+
+            // Bắn laser tới vị trí của người chơi
+            StartCoroutine(FireLaser(leftEye, leftLaser, playerTransform.position));
+            StartCoroutine(FireLaser(rightEye, rightLaser, playerTransform.position));
+        }
+
+        // Nếu không tìm thấy người chơi, bạn có thể xử lý ở đây
+        else
+        {
+            Debug.LogWarning("Player not found!");
+        }
+    }
+
+    IEnumerator FireLaser(Transform eye, LineRenderer laser, Vector3 targetPosition)
+    {
+        Debug.Log("Boss bắn laser từ " + eye.name);
         audioSource.PlayOneShot(shootSound);
 
+        laser.enabled = true;
+        Vector3 startPoint = eye.position;
+        Vector3 endPoint = targetPosition;
+        float elapsedTime = 0;
+        float travelTime = Vector3.Distance(startPoint, endPoint) / laserSpeed;
+
+        // Laser raycasting to deal damage
         RaycastHit hit;
-        if (Physics.Raycast(laserOrigin.position, (targetPosition - laserOrigin.position).normalized, out hit, gunRange))
+
+        while (elapsedTime < travelTime)
         {
-            Debug.Log($"Hit: {hit.transform.name}");
-            PlayerHealth health = hit.transform.GetComponent<PlayerHealth>();
-            if (health != null)
+            elapsedTime += Time.deltaTime;
+            Vector3 currentPosition = Vector3.Lerp(startPoint, endPoint, elapsedTime / travelTime);
+            laser.SetPosition(0, eye.position);
+            laser.SetPosition(1, currentPosition);
+
+            // Raycast to detect collision and apply damage if the target is the player
+            if (Physics.Raycast(eye.position, currentPosition - eye.position, out hit, laserSpeed))
             {
-                Debug.Log("Player hit! Applying damage...");
-                health.TakeDamage(10f, 0f);
+                if (hit.collider.CompareTag(targetTag))
+                {
+                    // Call the TakeDamage method from PlayerHealth to apply damage
+                    hit.collider.GetComponent<PlayerHealth>()?.TakeDamage(laserDamage, 0);
+
+                    // Change the color of the player when hit by the laser (you can customize this part)
+                    hit.collider.GetComponent<Renderer>()?.material.SetColor("_Color", Color.red);
+                }
             }
+
+            yield return null;
         }
 
-        StartCoroutine(ShootLaser());
-    }
+        // End laser and reset lights
+        yield return new WaitForSeconds(laserDuration);
 
-    IEnumerator ShootLaser()
-    {
-        laserLine.enabled = true; // Bật laser
-        yield return new WaitForSeconds(laserDuration); // Chờ một chút
-        laserLine.enabled = false; // Tắt laser
+        laser.enabled = false;
+        leftEyeLight.intensity = 0;
+        rightEyeLight.intensity = 0;
+
+        yield return new WaitForSeconds(fireRate - laserDuration - chargeTime);
+        isAttacking = false;
     }
 
     void OnDrawGizmosSelected()
     {
-        // Vẽ vùng phạm vi bắn để dễ kiểm tra trong Scene View
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(laserOrigin.position, gunRange);
+        Gizmos.DrawWireSphere(transform.position, gunRange);
     }
 }
