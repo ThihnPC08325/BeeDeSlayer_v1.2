@@ -29,8 +29,8 @@ public class LoginUser : MonoBehaviour
                 return;
             }
 
-            //string encryptedPassword = EncryptionHelper.EncryptPassword(password);
-            await LoginRequest(username, password);
+            string encryptedPassword = EncryptionHelper.EncryptPassword(password);
+            await LoginRequest(username, encryptedPassword);
         }
         catch (Exception e)
         {
