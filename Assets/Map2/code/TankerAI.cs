@@ -11,8 +11,6 @@ public class TankerAI : MonoBehaviour
         SpecialAttack
     }
 
-    private State _currentState;
-
     [Header("Target & Ranges")] [SerializeField]
     private float detectionRange = 10f;
 
@@ -35,141 +33,143 @@ public class TankerAI : MonoBehaviour
 
     private NavMeshAgent _agent;
     private Animator _animator;
-    private float _normalAttackCooldownTimer;
-    private float _specialAttackCooldownTimer;
-    private bool _isAttacking;
-    private bool _canMove = true;
     private Transform _player;
+    private PlayerHealth _playerHealth;
 
-    private static readonly int IsMoving = Animator.StringToHash("isMoving");
-    private static readonly int TriggerAttack = Animator.StringToHash("TriggerAttack");
-    private static readonly int TriggerSpecialAttack = Animator.StringToHash("TriggerSpecialAttack");
+    private float _normalAttackTimer;
+    private float _specialAttackTimer;
+    private bool _isAttacking;
 
-    private void Start()
+    private State _currentState;
+
+    private static readonly int IsMovingHash = Animator.StringToHash("isMoving");
+    private static readonly int TriggerAttackHash = Animator.StringToHash("TriggerAttack");
+    private static readonly int TriggerSpecialAttackHash = Animator.StringToHash("TriggerSpecialAttack");
+
+    private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
         _animator = GetComponent<Animator>();
-        _player = GameObject.FindGameObjectWithTag("Player").transform;
-        _normalAttackCooldownTimer = 0f;
-        _specialAttackCooldownTimer = 0f;
-        _isAttacking = false;
-        _canMove = true;
+
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        _player = playerObj.transform;
+        _playerHealth = playerObj.GetComponent<PlayerHealth>();
     }
 
     private void Update()
     {
-        if (_isAttacking || !_canMove) return;
+        UpdateCooldowns();
 
-        _normalAttackCooldownTimer -= Time.deltaTime;
-        _specialAttackCooldownTimer -= Time.deltaTime;
-
-        switch (_currentState)
-        {
-            case State.Chase:
-                ChaseState();
-                break;
-            case State.Attack:
-                StartCoroutine(AttackState());
-                break;
-            case State.SpecialAttack:
-                StartCoroutine(SpecialAttackState());
-                break;
-        }
-
-        // Update animation
-        _animator.SetBool(IsMoving, _agent.velocity.magnitude > 0.1f);
-    }
-
-    private void ChaseState()
-    {
-        if (!_canMove) return;
+        if (_isAttacking) return;
 
         float distanceToPlayer = Vector3.Distance(transform.position, _player.position);
-
-        // Look at player
-        Vector3 direction = (_player.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
-
-        if (distanceToPlayer <= attackRange)
+        if (distanceToPlayer <= specialAttackRange && _specialAttackTimer <= 0f)
         {
-            _agent.ResetPath();
-            _animator.SetBool(IsMoving, false);
-
-            if (distanceToPlayer <= specialAttackRange && _specialAttackCooldownTimer <= 0f)
-            {
-                _currentState = State.SpecialAttack;
-            }
-            else if (_normalAttackCooldownTimer <= 0f)
-            {
-                _currentState = State.Attack;
-            }
+            ChangeState(State.SpecialAttack);
+        }
+        else if (distanceToPlayer <= attackRange && _normalAttackTimer <= 0f)
+        {
+            ChangeState(State.Attack);
         }
         else
         {
-            _agent.SetDestination(_player.position);
-            _animator.SetBool(IsMoving, true);
+            ChangeState(State.Chase);
+        }
+
+        HandleState(distanceToPlayer);
+
+        UpdateAnimations();
+    }
+
+    private void UpdateCooldowns()
+    {
+        _normalAttackTimer = Mathf.Max(_normalAttackTimer - Time.deltaTime, 0);
+        _specialAttackTimer = Mathf.Max(_specialAttackTimer - Time.deltaTime, 0);
+    }
+
+    private void ChangeState(State newState)
+    {
+        if (Equals(_currentState, newState)) return;
+        _currentState = newState;
+    }
+
+    private void HandleState(float distanceToPlayer)
+    {
+        switch (_currentState)
+        {
+            case State.Chase:
+                ChasePlayer(distanceToPlayer);
+                break;
+            case State.Attack:
+                StartCoroutine(PerformAttack());
+                break;
+            case State.SpecialAttack:
+                StartCoroutine(PerformSpecialAttack());
+                break;
         }
     }
 
-    private IEnumerator AttackState()
+    private void ChasePlayer(float distanceToPlayer)
+    {
+        if (distanceToPlayer > attackRange)
+        {
+            _agent.SetDestination(_player.position);
+            RotateTowardsPlayer();
+        }
+        else
+        {
+            if (!_agent.isStopped) _agent.ResetPath();
+        }
+    }
+
+    private void RotateTowardsPlayer()
+    {
+        Vector3 direction = (_player.position - transform.position).normalized;
+        direction.y = 0f;
+        Quaternion rotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 5f);
+    }
+
+    private IEnumerator PerformAttack()
     {
         _isAttacking = true;
-        _canMove = false;
         _agent.ResetPath();
-        _animator.SetBool(IsMoving, false);
-        _animator.SetTrigger(TriggerAttack);
-
-        // Lấy độ dài của animation hiện tại
-        AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
-        float animationLength = stateInfo.length;
+        _animator.SetTrigger(TriggerAttackHash);
 
         yield return new WaitForSeconds(attackDelay);
-
-        // Gây sát thương
+        // Trigger damage
         GameEvents.TriggerPlayerHit(normalAttackDamage, normalPen);
 
-        // Chờ animation kết thúc
-        yield return new WaitForSeconds(animationLength - attackDelay);
+        yield return new WaitForSeconds(normalAttackCooldown);
+        _normalAttackTimer = normalAttackCooldown;
 
-        _normalAttackCooldownTimer = normalAttackCooldown;
         _isAttacking = false;
-        _canMove = true;
-        _currentState = State.Chase;
     }
 
-    private IEnumerator SpecialAttackState()
+    private IEnumerator PerformSpecialAttack()
     {
         _isAttacking = true;
-        _canMove = false;
         _agent.ResetPath();
-        _animator.SetBool(IsMoving, false);
-        _animator.SetTrigger(TriggerSpecialAttack);
-
-        // Lấy độ dài của animation hiện tại
-        AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
-        float animationLength = stateInfo.length;
+        _animator.SetTrigger(TriggerSpecialAttackHash);
 
         yield return new WaitForSeconds(attackDelay);
+        // Directly apply special damage
+        if (_playerHealth)
+            _playerHealth.TakeDamage(specialAttackDamage, specialPen);
 
-        // Gây sát thương
-        PlayerHealth playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
-        if (playerHealth)
-        {
-            playerHealth.TakeDamage(specialAttackDamage, specialPen);
-        }
+        yield return new WaitForSeconds(postSpecialAttackDelay);
+        _specialAttackTimer = specialAttackCooldown;
+        _normalAttackTimer = normalAttackCooldown; // reset cả normal attack timer nếu cần
 
-        // Chờ animation kết thúc + thời gian delay sau special attack
-        yield return new WaitForSeconds((animationLength - attackDelay) + postSpecialAttackDelay);
-
-        _specialAttackCooldownTimer = specialAttackCooldown;
-        _normalAttackCooldownTimer = normalAttackCooldown;
         _isAttacking = false;
-        _canMove = true;
-        _currentState = State.Chase;
     }
 
-    // Debug helpers
+    private void UpdateAnimations()
+    {
+        bool isMoving = _agent.velocity.magnitude > 0.1f && !_isAttacking;
+        _animator.SetBool(IsMovingHash, isMoving);
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
