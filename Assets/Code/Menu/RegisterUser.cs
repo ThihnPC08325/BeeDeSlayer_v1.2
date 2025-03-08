@@ -31,7 +31,8 @@ public class RegisterUser : MonoBehaviour
                 return;
 
             // Gửi request đăng ký
-            await RegisterRequest(username, password);
+            string encryptedPassword = EncryptionHelper.EncryptPassword(password);
+            await RegisterRequest(username, encryptedPassword);
         }
         catch (Exception e)
         {
