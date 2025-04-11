@@ -310,6 +310,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: '[Graphy]'
       objectReference: {fileID: 0}
+    - target: {fileID: 177638, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -10737,6 +10741,17 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 634455714}
   m_Mesh: {fileID: -1169194175071857689, guid: 0db040ab07b436c4283023cec6fa22d2, type: 3}
+--- !u!114 &634557272 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3107693949628225526, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
+  m_PrefabInstance: {fileID: 1098329680}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70e1229527cf0374e87944a18089d0db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &648070545 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0a58925694ef7c64ebdb03591b0bea0c, type: 3}
@@ -18850,6 +18865,17 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1025463463}
   m_Mesh: {fileID: -1169194175071857689, guid: 0db040ab07b436c4283023cec6fa22d2, type: 3}
+--- !u!114 &1066081205 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6135021272933700523, guid: fa91ca5138d8513438da2b9d436c05af, type: 3}
+  m_PrefabInstance: {fileID: 1903253847}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1071354886
 GameObject:
   m_ObjectHideFlags: 0
@@ -19133,6 +19159,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 1.244
       objectReference: {fileID: 0}
+    - target: {fileID: 2979443568878690990, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
+      propertyPath: ammoText
+      value: 
+      objectReference: {fileID: 1066081205}
     - target: {fileID: 2979443568878690990, guid: 3ae9f42ae67810a41b235740dd567138, type: 3}
       propertyPath: weaponAmmos.Array.size
       value: 4
@@ -19678,7 +19708,7 @@ MonoBehaviour:
   deathText: {fileID: 596566012}
   deathMessage: {fileID: 596566012}
   delayBeforeRespawn: 2
-  playerController: {fileID: 0}
+  playerController: {fileID: 634557272}
 --- !u!65 &1139554640
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -893,9 +893,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pools:
-  - _effectType: 0
-    _prefab: {fileID: 100002, guid: 3b1513bcb86426b4795879be6a128ed7, type: 3}
-    _size: 40
+  - effectType: 0
+    prefab: {fileID: 0}
+    size: 0
   poolRoot: {fileID: 205406362}
 --- !u!1 &352554838
 GameObject:
@@ -1818,11 +1818,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   possibleDrops:
-  - poolTag: 0
+  - poolTag: 1
     dropChance: 100
     minQuantity: 5
     maxQuantity: 10
-  - poolTag: 0
+  - poolTag: 2
     dropChance: 100
     minQuantity: 5
     maxQuantity: 10
@@ -3937,9 +3937,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pools:
-  - _type: 0
-    _prefab: {fileID: 4440924034055739044, guid: 43e328bae3536a84eaca0891841b6f1d, type: 3}
-    _size: 40
+  - type: 0
+    prefab: {fileID: 0}
+    size: 0
   poolRoot: {fileID: 205406362}
 --- !u!1001 &1289999740
 PrefabInstance:
